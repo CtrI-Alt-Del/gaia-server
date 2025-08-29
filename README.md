@@ -1,1 +1,1 @@
-# gaia-server
+# Gaia Server

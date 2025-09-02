@@ -1,9 +1,12 @@
 import { z } from "zod";
 
 export const envSchema = z.object({
-	DATABASE_URL: z.url(),
+	POSTGRES_URL: z.url(),
+	POSTGRES_DATABASE: z.string(),
+	POSTGRES_USER: z.string(),
+	POSTGRES_PASSWORD: z.string(),
 	PORT: z.coerce.number().default(3333),
-	ENV: z.enum(["dev", "prod", "stating"]),
+	ENV: z.enum(["dev", "prod", "staging"]),
 });
 
 export type Env = z.infer<typeof envSchema>;

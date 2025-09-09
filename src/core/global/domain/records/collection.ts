@@ -1,18 +1,18 @@
-export class Collection<T> {
-	private readonly items: readonly T[];
+export class Collection<Item> {
+	private readonly items: readonly Item[];
 
-	private constructor(items: readonly T[] = []) {
+	private constructor(items: readonly Item[] = []) {
 		this.items = items;
 	}
 
-	public static create<T>(items: readonly T[]): Collection<T> {
+	public static create<Item>(items: readonly Item[]): Collection<Item> {
 		return new Collection(items);
 	}
 
-	public static from<U, T>(
-		items: readonly U[],
-		mapper: (item: U, index: number) => T,
-	): Collection<T> {
+	public static from<Item, NewItem>(
+		items: readonly Item[],
+		mapper: (item: Item, index: number) => NewItem,
+	): Collection<NewItem> {
 		return new Collection(items.map(mapper));
 	}
 
@@ -20,32 +20,32 @@ export class Collection<T> {
 		return new Collection<T>();
 	}
 
-	public add(item: T): Collection<T> {
+	public add(item: Item): Collection<Item> {
 		return new Collection([...this.items, item]);
 	}
 
-	public addMany(other: Collection<T>): Collection<T> {
+	public addMany(other: Collection<Item>): Collection<Item> {
 		return new Collection([...this.items, ...other.toArray()]);
 	}
 
-	public remove(itemToRemove: T): Collection<T> {
+	public remove(itemToRemove: Item): Collection<Item> {
 		const newItems = this.items.filter((item) => item !== itemToRemove);
 		return new Collection(newItems);
 	}
 
-	public map<U>(mapper: (item: T, index: number) => U): Collection<U> {
+	public map<NewItem>(mapper: (item: Item, index: number) => NewItem): Collection<NewItem> {
 		return new Collection(this.items.map(mapper));
 	}
 
-	public filter(predicate: (item: T, index: number) => boolean): Collection<T> {
+	public filter(predicate: (item: Item, index: number) => boolean): Collection<Item> {
 		return new Collection(this.items.filter(predicate));
 	}
 
-	public find(predicate: (item: T, index: number) => boolean): T | undefined {
+	public find(predicate: (item: Item, index: number) => boolean): Item | undefined {
 		return this.items.find(predicate);
 	}
 
-	public sortBy(keyExtractor: (item: T) => string | number): Collection<T> {
+	public sortBy(keyExtractor: (item: Item) => string | number): Collection<Item> {
 		const sortedItems = [...this.items].sort((a, b) => {
 			const keyA = keyExtractor(a);
 			const keyB = keyExtractor(b);
@@ -56,23 +56,23 @@ export class Collection<T> {
 		return new Collection(sortedItems);
 	}
 
-	public includes(item: T): boolean {
+	public includes(item: Item): boolean {
 		return this.items.includes(item);
 	}
 
-	public some(predicate: (item: T) => boolean): boolean {
+	public some(predicate: (item: Item) => boolean): boolean {
 		return this.items.some(predicate);
 	}
 
-	public at(index: number): T | undefined {
+	public at(index: number): Item | undefined {
 		return this.items[index];
 	}
 
-	public removeFirst(): Collection<T> {
+	public removeFirst(): Collection<Item> {
 		return new Collection(this.items.slice(1));
 	}
 
-	public removeLast(): Collection<T> {
+	public removeLast(): Collection<Item> {
 		return new Collection(this.items.slice(0, -1));
 	}
 
@@ -84,15 +84,15 @@ export class Collection<T> {
 		return this.items.length === 0;
 	}
 
-	public get first(): T | undefined {
+	public get first(): Item | undefined {
 		return this.items[0];
 	}
 
-	public get last(): T | undefined {
+	public get last(): Item | undefined {
 		return this.items[this.items.length - 1];
 	}
 
-	public toArray(): readonly T[] {
+	public toArray(): readonly Item[] {
 		return this.items;
 	}
 }

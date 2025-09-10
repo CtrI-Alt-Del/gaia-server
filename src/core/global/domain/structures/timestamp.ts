@@ -42,4 +42,7 @@ export class Timestamp {
 	get bigInteger(): BigInteger {
 		return BigInteger.createFromNumber(this.value.getTime());
 	}
+  toDate(): Date {
+    return this.value;
+  }
 }

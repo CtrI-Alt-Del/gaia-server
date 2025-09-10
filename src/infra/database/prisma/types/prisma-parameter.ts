@@ -1,3 +1,3 @@
-import type { Parameter } from '@prisma/client'
+import type {  Prisma } from '@prisma/client'
 
-export type PrismaParameter = Parameter
+export type PrismaParameter = Prisma.ParameterUncheckedCreateInput

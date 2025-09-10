@@ -12,6 +12,7 @@ type ParameterProps = {
 }
 export class Parameter extends Entity<ParameterProps> {
   static create(dto: ParameterDto): Parameter {
+    console.log('dto', dto)
     return new Parameter(
       {
         name: Text.create(dto.name),

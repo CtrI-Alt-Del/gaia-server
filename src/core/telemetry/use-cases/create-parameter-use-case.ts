@@ -9,6 +9,7 @@ export class CreateParameterUseCase implements UseCase<ParameterDto, void> {
   }
 
   async execute(data: ParameterDto): Promise<void> {
+    console.log('prismaParameter', data)
     const parameter = Parameter.create(data)
     await this.repository.add(parameter)
   }

@@ -1,6 +1,10 @@
-POST http://localhost:3333/telemetry/parameters
+POST http://localhost:3333/telemetry/parameters HTTP/1.1
 Content-Type: application/json
 
 {
-  "name": "Temperature"
+  "factor": 0.1,
+  "name": "Temperature",
+  "numberOfDecimalPlaces": 10,
+  "offset": 0,
+  "unitOfMeasure": "Celsius"
 }

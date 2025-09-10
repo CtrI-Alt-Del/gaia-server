@@ -2,18 +2,18 @@ import { Logical } from "@/core/global/domain/structures/logical";
 import { PlusInteger } from "@/core/global/domain/structures/plus-integer";
 
 export class Collection<Item> {
-	readonly items: readonly Item[];
+	readonly items: Item[];
 
-	private constructor(items: readonly Item[] = []) {
+	private constructor(items: Item[] = []) {
 		this.items = items;
 	}
 
-	static create<Item>(items: readonly Item[]): Collection<Item> {
+	static create<Item>(items: Item[]): Collection<Item> {
 		return new Collection(items);
 	}
 
 	static createFrom<Item, NewItem>(
-		items: readonly Item[],
+		items: Item[],
 		mapper: (item: Item, index: number) => NewItem,
 	): Collection<NewItem> {
 		return new Collection(items.map(mapper));

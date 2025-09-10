@@ -3,11 +3,11 @@ import { Collection, Text, Timestamp } from '@/core/global/domain/structures'
 import { ParameterDto } from '@/core/telemetry/dtos/parameter.dto'
 import { StationDto } from '@/core/telemetry/dtos/station.dto'
 import { Parameter } from '@/core/telemetry/entities/parameter'
-import { Coordinate, UsignedId } from '@/core/telemetry/structures'
+import { Coordinate, UnsignedId } from '@/core/telemetry/structures'
 
 type StationProps = {
   name: Text
-  UID: UsignedId
+  UID: UnsignedId
   location: Coordinate
   lastReadAt: Timestamp
   parameters: Collection<Parameter>
@@ -17,7 +17,7 @@ export class Station extends Entity<StationProps> {
     return new Station(
       {
         name: Text.create(dto.name),
-        UID: UsignedId.create(dto.UID),
+        UID: UnsignedId.create(dto.UID),
         location: Coordinate.create(dto.latitude, dto.longitude),
         lastReadAt: Timestamp.createFromDate(dto.lastReadAt),
         parameters: Collection.createFrom<ParameterDto, Parameter>(
@@ -31,7 +31,7 @@ export class Station extends Entity<StationProps> {
   get name(): Text {
     return this.props.name
   }
-  get UID(): UsignedId {
+  get UID(): UnsignedId {
     return this.props.UID
   }
   get location(): Coordinate {
@@ -59,7 +59,7 @@ export class Station extends Entity<StationProps> {
       this.props.name = Text.create(partialDto.name)
     }
     if (partialDto.UID !== undefined) {
-      this.props.UID = UsignedId.create(partialDto.UID)
+      this.props.UID = UnsignedId.create(partialDto.UID)
     }
     if (partialDto.latitude !== undefined && partialDto.longitude !== undefined) {
       this.props.location = Coordinate.create(partialDto.latitude, partialDto.longitude)

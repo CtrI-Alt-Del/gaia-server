@@ -5,5 +5,4 @@ export type ParameterDto = {
   numberOfDecimalPlaces: number
   factor: number
   offset: number
-  alertRules: any[]
 }

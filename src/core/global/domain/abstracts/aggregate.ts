@@ -1,5 +1,5 @@
 import { Entity } from "@/core/global/domain/abstracts/entity";
-import { Logical } from "@/core/global/domain/records";
+import { Logical } from "@/core/global/domain/structures";
 
 export abstract class Aggregate<Props, AggregableEntity> extends Entity<Props> {
 	private readonly entity: AggregableEntity;
@@ -16,15 +16,16 @@ export abstract class Aggregate<Props, AggregableEntity> extends Entity<Props> {
 		this.entityName = entityName;
 	}
 
-	public getEntity(): AggregableEntity {
-		if (this.isEntityNull().getValue()) {
+	getEntity(): AggregableEntity {
+		if (this.hasEntity().value) {
 			throw new Error(this.entityName);
 		}
 		return this.entity;
 	}
 
-	public isEntityNull(): Logical {
-		const isNullOrUndefined = this.entity === null || this.entity === undefined;
-		return Logical.create(isNullOrUndefined);
+	hasEntity(): Logical {
+		const isEntityNotNullOrUndefined =
+			this.entity !== null || this.entity !== undefined;
+		return Logical.create(isEntityNotNullOrUndefined);
 	}
 }

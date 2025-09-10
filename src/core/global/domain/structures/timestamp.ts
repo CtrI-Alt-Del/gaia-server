@@ -1,32 +1,36 @@
-import { BigInteger } from "@/core/global/domain/records/big-integer";
+import { BigInteger } from "@/core/global/domain/structures/big-integer";
 
 export class Timestamp {
-	private readonly value: Date;
+	readonly value: Date;
 	private constructor(value: Date) {
 		this.value = value;
 	}
-	public static createFromDate(value: Date): Timestamp {
+	static createFromDate(value: Date): Timestamp {
 		return new Timestamp(value);
 	}
-	public static createFromString(value: string): Timestamp {
+	static createFromString(value: string): Timestamp {
 		const date = new Date(value);
 		if (isNaN(date.getTime())) {
 			throw new Error("Value must be a valid date string");
 		}
 		return new Timestamp(date);
 	}
-	public static createFromNumber(value: number): Timestamp {
+	static createFromNumber(value: number): Timestamp {
 		const date = new Date(value);
 		if (isNaN(date.getTime())) {
 			throw new Error("Value must be a valid timestamp number");
 		}
 		return new Timestamp(date);
 	}
-	public static createFromBigInt(value: bigint): Timestamp {
+	static createFromBigInt(value: bigint): Timestamp {
 		const date = new Date(Number(value));
 		return new Timestamp(date);
 	}
-	public toBigInteger(): BigInteger {
-		return BigInteger.create(this.value.getTime());
+	static createFromNow(): Timestamp {
+		return new Timestamp(new Date());
+	}
+
+	get bigInteger(): BigInteger {
+		return BigInteger.createFromNumber(this.value.getTime());
 	}
 }

@@ -1,4 +1,4 @@
-import { Id, Logical } from "@/core/global/domain/records";
+import { Id, Logical } from "@/core/global/domain/structures";
 
 export class Entity<Props> {
 	readonly id: Id;
@@ -7,13 +7,13 @@ export class Entity<Props> {
 	private _updatedAt?: Date;
 	private readonly _createdAt?: Date;
 	protected constructor(props: Props, id?: string) {
-		this.id = id ? Id.create(id) : Id.random();
+		this.id = id ? Id.create(id) : Id.createRandom();
 		this.props = props;
 		this._isActive = Logical.create(true);
 		this._createdAt = new Date();
 	}
-	public isEqual(entity: Entity<Props>): Logical {
-		return Logical.create(this.id.equals(entity.id));
+	isEqual(entity: Entity<Props>): Logical {
+		return Logical.create(this.id.equals(entity.id).value);
 	}
 	get isActive(): Logical {
 		return this._isActive;
@@ -24,20 +24,20 @@ export class Entity<Props> {
 	get updatedAt(): Date | undefined {
 		return this._updatedAt;
 	}
-	private touch(): void {
+	private refreshLastUpdate(): void {
 		this._updatedAt = new Date();
 	}
-	public activate(): void {
+	activate(): void {
 		if (this._isActive.isFalse()) {
 			this._isActive = Logical.create(true);
-			this.touch();
+			this.refreshLastUpdate();
 		}
 	}
 
-	public deactivate(): void {
+	deactivate(): void {
 		if (this._isActive.isTrue()) {
 			this._isActive = Logical.create(false);
-			this.touch();
+			this.refreshLastUpdate();
 		}
 	}
 }

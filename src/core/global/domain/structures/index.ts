@@ -5,4 +5,3 @@ export { Logical } from "./logical";
 export { Text } from "./text";
 export { Collection } from "./collection";
 export { Timestamp } from "./timestamp";
-export {Decimal} from "./decimal";

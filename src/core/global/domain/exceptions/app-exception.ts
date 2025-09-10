@@ -6,10 +6,10 @@ export class AppException extends Error {
 		this.errorMessage = message;
 		this.title = title ?? "App Exception";
 	}
-	public getTitle(): string {
+	getTitle(): string {
 		return this.title;
 	}
-	public getErrorMessage(): string {
+	getErrorMessage(): string {
 		return this.errorMessage;
 	}
 }

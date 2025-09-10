@@ -1,3 +1,4 @@
+import { ValidationException } from "@/core/global/domain/exceptions/validation-exception";
 import { BigInteger } from "@/core/global/domain/structures/big-integer";
 
 export class Timestamp {
@@ -23,8 +24,16 @@ export class Timestamp {
 		return new Timestamp(date);
 	}
 	static createFromBigInt(value: bigint): Timestamp {
-		const date = new Date(Number(value));
-		return new Timestamp(date);
+		if (
+			value > BigInt(Number.MAX_SAFE_INTEGER) ||
+			value < BigInt(Number.MIN_SAFE_INTEGER)
+		) {
+			throw new ValidationException(
+				"BigInt",
+				"Valor esta fora do intervalo seguro para conversão em Number",
+			);
+		}
+		return Timestamp.createFromNumber(Number(value));
 	}
 	static createFromNow(): Timestamp {
 		return new Timestamp(new Date());

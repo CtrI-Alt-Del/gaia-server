@@ -54,4 +54,26 @@ export class Station extends Entity<StationProps> {
       parameters: this.parameters.map((param) => param.dto).items,
     }
   }
+  update(partialDto: Partial<StationDto>): Station {
+    if (partialDto.name !== undefined) {
+      this.props.name = Text.create(partialDto.name)
+    }
+    if (partialDto.UID !== undefined) {
+      this.props.UID = UsignedId.create(partialDto.UID)
+    }
+    if (partialDto.latitude !== undefined && partialDto.longitude !== undefined) {
+      this.props.location = Coordinate.create(partialDto.latitude, partialDto.longitude)
+    }
+    if (partialDto.lastReadAt !== undefined) {
+      this.props.lastReadAt = Timestamp.createFromDate(partialDto.lastReadAt)
+    }
+    if (partialDto.parameters !== undefined) {
+      this.props.parameters = Collection.createFrom<ParameterDto, Parameter>(
+        partialDto.parameters,
+        (paramDto) => Parameter.create(paramDto),
+      )
+    }
+    this.refreshLastUpdate()
+    return this
+  }
 }

@@ -2,7 +2,6 @@ import { Entity } from '@/core/global/domain/abstracts'
 import { Collection, PlusInteger, Text } from '@/core/global/domain/structures'
 import { Integer } from '@/core/global/domain/structures/integer'
 import { ParameterDto } from '@/core/telemetry/dtos/parameter.dto'
-import { Param } from '@nestjs/common'
 
 // @TODO: Define alert rule structure when ready
 type mockAlertRule = {

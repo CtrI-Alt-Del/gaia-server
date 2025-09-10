@@ -13,7 +13,7 @@ export class Entity<Props> {
 		this._createdAt = new Date();
 	}
 	isEqual(entity: Entity<Props>): Logical {
-		return Logical.create(this.id.equals(entity.id).value);
+		return this.id.equals(entity.id);
 	}
 	get isActive(): Logical {
 		return this._isActive;

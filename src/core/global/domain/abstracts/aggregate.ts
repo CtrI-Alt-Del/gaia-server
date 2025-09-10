@@ -17,7 +17,7 @@ export abstract class Aggregate<Props, AggregableEntity> extends Entity<Props> {
 	}
 
 	getEntity(): AggregableEntity {
-		if (this.hasEntity().value) {
+		if (this.hasEntity().isTrue()) {
 			throw new Error(this.entityName);
 		}
 		return this.entity;

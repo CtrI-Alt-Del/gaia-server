@@ -1,26 +1,25 @@
 import { Text } from "@/core/global/domain/structures"
 import Operation from "../structures/Operation"
+import { Entity } from "@/core/global/domain/abstracts"
 
-export default class AlertRule{
-    private name: Text
-    private threshold: BigInteger
-    private operation: Operation
+type AlertRuleProps = {
+    name: Text
+    threshold: BigInteger
+    operation: Operation
+}
 
-    constructor(name: Text, threshold: BigInteger, operation: Operation){
-        this.name = name
-        this.threshold = threshold
-        this.operation = operation
-    }
+export default class AlertRule extends Entity<AlertRuleProps>{
+
 
     public getName(): Text{
-        return this.name
+        return this.props.name
     }
 
     public getThreshold(): BigInteger{
-        return this.threshold
+        return this.props.threshold
     }
 
     public getOperation(): Operation{
-        return this.operation
+        return this.props.operation
     }
 }

@@ -1,0 +1,6 @@
+POST http://localhost:3333/telemetry/parameters
+Content-Type: application/json
+
+{
+  "name": "Temperature"
+}

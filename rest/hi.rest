@@ -1,3 +1,0 @@
-### Hi controller
-GET http://localhost:3333/hi
-Content-Type: application/json

@@ -10,6 +10,7 @@ export class Text {
     } else {
       throw new ValidationException('value', 'Tem que ser uma string')
     }
+    throw new ValidationException('value', 'Tem que ser uma string')
   }
   charactersCount(): PlusInteger {
     return PlusInteger.create(this.value.length)

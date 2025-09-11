@@ -9,12 +9,16 @@ import { createZodDto, ZodValidationPipe } from 'nestjs-zod'
 import { ApiTags } from '@nestjs/swagger'
 import { createParameterRequestSchema } from '@/validation/schemas/zod/telemetry'
 
-
 class RequestBody extends createZodDto(createParameterRequestSchema) {}
 
 const bodyValidationPipe = new ZodValidationPipe(createParameterRequestSchema)
 
 @ApiTags('Parameters')
+
+type RequestBody = {
+  name: string
+}
+
 @ParametersController()
 export class CreateParameterController {
   constructor(
@@ -23,6 +27,7 @@ export class CreateParameterController {
   ) {}
 
   @Post()
+
   async handle(@Body(bodyValidationPipe) body: RequestBody) {
     const useCase = new CreateParameterUseCase(this.repository)
     await useCase.execute(body)

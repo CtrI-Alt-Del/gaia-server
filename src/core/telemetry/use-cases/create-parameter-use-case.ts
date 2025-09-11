@@ -13,4 +13,3 @@ export class CreateParameterUseCase implements UseCase<ParameterDto, void> {
     const parameter = Parameter.create(data)
     await this.repository.add(parameter)
   }
-}

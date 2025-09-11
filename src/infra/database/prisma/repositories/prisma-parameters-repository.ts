@@ -1,3 +1,4 @@
+
 import { Injectable } from '@nestjs/common'
 
 import { Prisma } from '../client'
@@ -34,6 +35,5 @@ export class PrismaParametersRepository implements ParametersRepository {
     throw new Error('Method not implemented.')
   }
   deleteById(id: Id): Promise<void> {
-    throw new Error('Method not implemented.')
-  }
+}
 }

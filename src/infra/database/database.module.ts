@@ -8,6 +8,7 @@ import {
   PrismaUsersRepository,
 } from './prisma/repositories'
 import { PrismaParameterMapper } from '@/infra/database/prisma/mappers'
+import { EnvProviderModule } from '@/infra/provision/env/env-provider.module'
 
 @Module({
   providers: [

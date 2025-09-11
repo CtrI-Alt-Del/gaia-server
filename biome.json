@@ -32,6 +32,7 @@
         "useEnumInitializers": "warn",
         "useTemplate": "warn",
         "useSelfClosingElements": "warn",
+        "useImportType": "off",
         "useNumberNamespace": "off"
       },
       "security": {

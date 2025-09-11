@@ -1,15 +1,16 @@
 import { Module } from '@nestjs/common'
 
 import { Prisma } from './prisma/client'
-import { REPOSITORIES } from './constants/repositories'
 import {
   PrismaAlarmsRepository,
   PrismaParametersRepository,
   PrismaStationsRepository,
   PrismaUsersRepository,
 } from './prisma/repositories'
+import { EnvProviderModule } from '@/infra/provision/env/env-provider.module'
 
 @Module({
+  imports: [EnvProviderModule],
   providers: [
     Prisma,
     {

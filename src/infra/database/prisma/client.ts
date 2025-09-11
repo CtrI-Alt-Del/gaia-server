@@ -7,7 +7,7 @@ import { PrismaClient } from '@prisma/client'
 export class Prisma extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor(envProvider: EnvProvider) {
     super({
-      log: envProvider.get('MODE') === 'dev' ? ['warn', 'error'] : [],
+      log: envProvider.get('LOG_LEVEL') === 'debug' ? ['warn', 'error', 'info'] : [],
     })
   }
 

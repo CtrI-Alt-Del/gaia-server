@@ -24,7 +24,7 @@ export class Entity<Props> {
 	get updatedAt(): Date | undefined {
 		return this._updatedAt;
 	}
-	private refreshLastUpdate(): void {
+	protected refreshLastUpdate(): void {
 		this._updatedAt = new Date();
 	}
 	activate(): void {

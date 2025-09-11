@@ -1,6 +1,6 @@
 export type AlertRuleDto = {
     id: string
     name: string
-    threshold: number
+    threshold: bigint
     operation: string
 }

@@ -1,7 +1,7 @@
 import { BigInteger, Text } from "@/core/global/domain/structures"
-import Operation from "../structures/Operation"
 import { Entity } from "@/core/global/domain/abstracts"
 import { AlertRuleDto } from "../../dtos/alertrule.dto"
+import Operation from "../structures/Operation"
 
 type AlertRuleProps = {
     name: Text

@@ -7,6 +7,8 @@ export class Text {
   private constructor(value: string) {
     if (typeof value === 'string') {
       this.value = value
+    } else {
+      throw new ValidationException('value', 'Tem que ser uma string')
     }
     throw new ValidationException('value', 'Tem que ser uma string')
   }

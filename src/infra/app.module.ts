@@ -5,6 +5,7 @@ import { envSchema } from '@/infra/provision/env/env'
 import { RestModule } from '@/infra/rest/rest.module'
 import { EnvProviderModule } from './provision/env/env-provider.module'
 
+
 @Module({
   imports: [
     ConfigModule.forRoot({

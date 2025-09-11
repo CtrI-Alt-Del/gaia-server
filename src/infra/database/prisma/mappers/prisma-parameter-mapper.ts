@@ -31,3 +31,4 @@ export class PrismaParameterMapper {
       updatedAt: parameter.updatedAt,
     }
   }
+}

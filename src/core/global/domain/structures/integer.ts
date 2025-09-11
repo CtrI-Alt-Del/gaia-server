@@ -6,7 +6,8 @@ export class Integer {
 		this.value = value;
 	}
 	static create(value: number): Integer {
-		if (!Number.isInteger(value)) {
+    console.log("Creating Integer with value:", value);
+		if (Number.isNaN(value)) {
 			throw new Error("Value must be a integer");
 		}
 		return new Integer(value);

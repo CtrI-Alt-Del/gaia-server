@@ -1,5 +1,5 @@
 export type ParameterDto = {
-  id: string
+  id?: string
   name: string
   unitOfMeasure: string
   numberOfDecimalPlaces: number

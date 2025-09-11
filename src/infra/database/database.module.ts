@@ -1,17 +1,19 @@
 import { Module } from '@nestjs/common'
 
 import { Prisma } from './prisma/client'
-import { REPOSITORIES } from './constants/repositories'
 import {
   PrismaAlarmsRepository,
   PrismaParametersRepository,
   PrismaStationsRepository,
   PrismaUsersRepository,
 } from './prisma/repositories'
+import { PrismaParameterMapper } from '@/infra/database/prisma/mappers'
+import { EnvProviderModule } from '@/infra/provision/env/env-provider.module'
 
 @Module({
   providers: [
     Prisma,
+    PrismaParameterMapper,
     {
       provide: DatabaseModule.USERS_REPOSITORY,
       useClass: PrismaUsersRepository,

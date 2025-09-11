@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 
-import { envSchema } from '@/infra/env/env'
-import { EnvModule } from '@/infra/env/env.module'
+import { envSchema } from '@/infra/provision/env/env'
 import { RestModule } from '@/infra/rest/rest.module'
+import { EnvProviderModule } from './provision/env/env-provider.module'
+
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import { RestModule } from '@/infra/rest/rest.module'
       isGlobal: true,
     }),
     RestModule,
-    EnvModule,
+    EnvProviderModule,
   ],
 })
 export class AppModule {}

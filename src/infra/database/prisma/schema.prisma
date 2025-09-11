@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
+  id        String   @id @default(cuid())
   name      String
   email     String   @unique
   password  String
@@ -20,7 +20,7 @@ model User {
 }
 
 model Parameter {
-  id        String   @id @default(uuid())
+  id        String   @id @default(cuid())
   name      String
   offset    Float
   factor    Float
@@ -29,14 +29,15 @@ model Parameter {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  stations Station[]
-  alarms   Alarm[]   @relation("parameter")
+  stations         Station[]
+  alarms           Alarm[]            @relation("parameter")
+  stationParameter StationParameter[] @relation("parameter")
 
   @@map("parameters")
 }
 
 model Station {
-  id        String   @id @default(uuid())
+  id        String   @id @default(cuid())
   name      String
   code      String   @unique
   address   String
@@ -46,9 +47,20 @@ model Station {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  parameters Parameter[]
+  parameters       Parameter[]
+  stationParameter StationParameter[] @relation("station")
 
   @@map("stations")
+}
+
+model StationParameter {
+  id          String    @id @default(cuid())
+  stationId   String
+  parameterId String
+  station     Station   @relation("station", fields: [stationId], references: [id], onDelete: Cascade)
+  parameter   Parameter @relation("parameter", fields: [parameterId], references: [id], onDelete: Cascade)
+
+  @@map("station_parameters")
 }
 
 enum Operation {
@@ -60,7 +72,7 @@ enum Operation {
 }
 
 model Alarm {
-  id          String    @id @default(uuid())
+  id          String    @id @default(cuid())
   name        String
   value       Float
   operation   Operation

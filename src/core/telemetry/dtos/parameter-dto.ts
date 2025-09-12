@@ -5,4 +5,7 @@ export type ParameterDto = {
   numberOfDecimalPlaces: number
   factor: number
   offset: number
+  isActive?: boolean
+  createdAt?: Date
+  updatedAt?: Date
 }

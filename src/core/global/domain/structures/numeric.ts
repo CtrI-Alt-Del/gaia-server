@@ -8,7 +8,7 @@ export class Numeric {
   }
 
   static create(value: number): Numeric {
-    if (typeof value !== 'number') {
+    if (!Number.isFinite(value)) {
       throw new ValidationException('value', 'must be a number')
     }
     return new Numeric(value)

@@ -24,19 +24,19 @@ export class Logical {
     return new Logical(false)
   }
 
-  isTrue(): Logical {
-    return Logical.create(this.value === true)
-  }
-
-  isFalse(): Logical {
-    return Logical.create(this.value === false)
-  }
-
   becomeTrue(): Logical {
     return new Logical(true)
   }
 
   becomeFalse(): Logical {
     return new Logical(false)
+  }
+
+  get isTrue(): boolean {
+    return this.value === true
+  }
+
+  get isFalse(): boolean {
+    return this.value === false
   }
 }

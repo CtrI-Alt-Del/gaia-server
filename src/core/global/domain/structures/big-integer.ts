@@ -1,4 +1,4 @@
-import { ValidationException } from '@/core/global/domain/exceptions/validation-exception'
+import { ValidationException } from '@/core/global/domain/errors/validation-error'
 import { Logical } from '@/core/global/domain/structures/logical'
 
 export class BigInteger {
@@ -6,6 +6,10 @@ export class BigInteger {
 
   private constructor(value: bigint) {
     this.value = value
+  }
+
+  static create(value: bigint): BigInteger {
+    return new BigInteger(value)
   }
 
   static createFromNumber(value: number): BigInteger {
@@ -20,10 +24,6 @@ export class BigInteger {
       throw new ValidationException('value', 'must be a valid integer string')
     }
     return new BigInteger(BigInt(value))
-  }
-
-  static create(value: bigint): BigInteger {
-    return new BigInteger(value)
   }
 
   equals(other: BigInteger): Logical {

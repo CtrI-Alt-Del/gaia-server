@@ -3,6 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { EnvProvider } from './provision/env/env-provider'
 import { AppModule } from './app.module'
 import { RestExceptionsFilter } from './rest/filters/rest-exception.filter'
+import { apiReference } from 'node_modules/@scalar/nestjs-api-reference/dist'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -12,11 +13,19 @@ async function bootstrap() {
     .setVersion('1.0')
     .addTag('gaia')
     .build()
-  const document = SwaggerModule.createDocument(app, swaggerConfig)
-  SwaggerModule.setup('docs', app, document)
 
-  const configService = app.get(EnvProvider)
-  const port = configService.get('PORT')
+  const document = SwaggerModule.createDocument(app, swaggerConfig)
+  SwaggerModule.setup('swagger', app, document)
+
+  const envProvider = app.get(EnvProvider)
+  const port = envProvider.get('PORT')
+
+  app.use(
+    '/docs',
+    apiReference({
+      content: document,
+    }),
+  )
 
   app.useGlobalFilters(new RestExceptionsFilter())
   await app.listen(port)

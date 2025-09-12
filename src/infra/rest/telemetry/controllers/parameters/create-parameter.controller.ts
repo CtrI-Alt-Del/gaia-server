@@ -1,23 +1,14 @@
-import { Body, Inject, Post } from '@nestjs/common'
+import { Body, Inject, Post, UsePipes } from '@nestjs/common'
+import { createZodDto, ZodValidationPipe } from 'nestjs-zod'
 
+import type { ParametersRepository } from '@/core/global/interfaces'
 import { CreateParameterUseCase } from '@/core/telemetry/use-cases'
 
-import { ParametersController } from './parameters.controller'
-import type { ParametersRepository } from '@/core/global/interfaces'
 import { DatabaseModule } from '@/infra/database/database.module'
-import { createZodDto, ZodValidationPipe } from 'nestjs-zod'
-import { ApiTags } from '@nestjs/swagger'
-import { createParameterRequestSchema } from '@/validation/schemas/zod/telemetry'
+import { parameterSchema } from '@/infra/validation/schemas/zod/telemetry'
+import { ParametersController } from './parameters.controller'
 
-class RequestBody extends createZodDto(createParameterRequestSchema) {}
-
-const bodyValidationPipe = new ZodValidationPipe(createParameterRequestSchema)
-
-@ApiTags('Parameters')
-
-type RequestBody = {
-  name: string
-}
+class RequestBody extends createZodDto(parameterSchema) {}
 
 @ParametersController()
 export class CreateParameterController {
@@ -27,10 +18,9 @@ export class CreateParameterController {
   ) {}
 
   @Post()
-
-  async handle(@Body(bodyValidationPipe) body: RequestBody) {
+  @UsePipes(new ZodValidationPipe(parameterSchema))
+  async handle(@Body() body: RequestBody) {
     const useCase = new CreateParameterUseCase(this.repository)
-    await useCase.execute(body)
-    return body
+    return await useCase.execute(body)
   }
 }

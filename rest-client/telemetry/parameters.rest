@@ -1,5 +1,5 @@
 
-POST http://localhost:3333/telemetry/parameters HTTP/1.1
+POST http://localhost:3333/telemetry/parameters
 Content-Type: application/json
 
 {

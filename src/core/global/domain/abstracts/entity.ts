@@ -1,43 +1,57 @@
-import { Id, Logical } from "@/core/global/domain/structures";
+import { Id, Logical, Timestamp } from '@/core/global/domain/structures'
 
-export class Entity<Props> {
-	readonly id: Id;
-	protected readonly props: Props;
-	private _isActive: Logical;
-	private _updatedAt?: Date;
-	private readonly _createdAt?: Date;
-	protected constructor(props: Props, id?: string) {
-		this.id = id ? Id.create(id) : Id.createRandom();
-		this.props = props;
-		this._isActive = Logical.create(true);
-		this._createdAt = new Date();
-	}
-	isEqual(entity: Entity<Props>): Logical {
-		return this.id.equals(entity.id);
-	}
-	get isActive(): Logical {
-		return this._isActive;
-	}
-	get createdAt(): Date | undefined {
-		return this._createdAt;
-	}
-	get updatedAt(): Date | undefined {
-		return this._updatedAt;
-	}
-	protected refreshLastUpdate(): void {
-		this._updatedAt = new Date();
-	}
-	activate(): void {
-		if (this._isActive.isFalse()) {
-			this._isActive = Logical.create(true);
-			this.refreshLastUpdate();
-		}
-	}
+export type EnityProps = {
+  isActive?: Logical
+  createdAt?: Timestamp
+  updatedAt?: Timestamp
+}
 
-	deactivate(): void {
-		if (this._isActive.isTrue()) {
-			this._isActive = Logical.create(false);
-			this.refreshLastUpdate();
-		}
-	}
+export class Entity<Props extends EnityProps> {
+  readonly id: Id
+  protected readonly props: Props
+  private _isActive: Logical
+  private _updatedAt?: Timestamp
+  private readonly _createdAt: Timestamp
+
+  protected constructor(props: Props, id?: string) {
+    this.id = id ? Id.create(id) : Id.createRandom()
+    this.props = props
+    this._isActive = Logical.createAsTrue()
+    this._createdAt = props.createdAt ?? Timestamp.createFromNow()
+    this._updatedAt = props.updatedAt
+  }
+
+  isEqual(entity: Entity<Props>): Logical {
+    return this.id.equals(entity.id)
+  }
+
+  get isActive(): Logical {
+    return this._isActive
+  }
+
+  get createdAt(): Timestamp {
+    return this._createdAt
+  }
+
+  get updatedAt(): Timestamp | undefined {
+    return this._updatedAt
+  }
+
+  protected refreshLastUpdate(): void {
+    this._updatedAt = Timestamp.createFromNow()
+  }
+
+  activate(): void {
+    if (this._isActive.isFalse) {
+      this._isActive = Logical.create(true)
+      this.refreshLastUpdate()
+    }
+  }
+
+  deactivate(): void {
+    if (this._isActive.isTrue) {
+      this._isActive = Logical.create(false)
+      this.refreshLastUpdate()
+    }
+  }
 }

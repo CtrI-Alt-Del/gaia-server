@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 
 import type { AlarmsRepository } from '@/core/global/interfaces'
 

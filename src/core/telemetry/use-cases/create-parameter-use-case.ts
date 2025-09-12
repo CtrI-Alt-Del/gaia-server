@@ -1,15 +1,14 @@
 import type { UseCase } from '@/core/global/interfaces'
 import type { ParametersRepository } from '@/core/global/interfaces'
-import { ParameterDto } from '@/core/telemetry/dtos/parameter.dto'
+import { ParameterDto } from '@/core/telemetry/dtos/parameter-dto'
 import { Parameter } from '@/core/telemetry/entities/parameter'
 
-export class CreateParameterUseCase implements UseCase<ParameterDto, void> {
-  constructor(private readonly repository: ParametersRepository) {
-    this.repository = repository
-  }
+export class CreateParameterUseCase implements UseCase<ParameterDto, ParameterDto> {
+  constructor(private readonly repository: ParametersRepository) {}
 
-  async execute(data: ParameterDto): Promise<void> {
-    console.log('prismaParameter', data)
+  async execute(data: ParameterDto): Promise<ParameterDto> {
     const parameter = Parameter.create(data)
     await this.repository.add(parameter)
+    return parameter.dto
   }
+}

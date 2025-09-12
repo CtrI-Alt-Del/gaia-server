@@ -1,4 +1,3 @@
-
 import { Injectable } from '@nestjs/common'
 
 import { Prisma } from '../client'
@@ -10,30 +9,34 @@ import { ParametersListParams } from '@/core/global/types'
 
 @Injectable()
 export class PrismaParametersRepository implements ParametersRepository {
-  constructor(
-    private readonly prisma: Prisma,
-    private readonly mapper: PrismaParameterMapper,
-  ) {}
+  constructor(private readonly prisma: Prisma) {}
+
   async add(parameter: Parameter): Promise<void> {
-    const prismaParameter = this.mapper.toPrisma(parameter)
+    const prismaParameter = PrismaParameterMapper.toPrisma(parameter)
     await this.prisma.parameter.create({ data: prismaParameter })
   }
+
   async findById(id: Id): Promise<Parameter | null> {
     const prismaParameter = await this.prisma.parameter.findUnique({
       where: { id: id.value },
     })
+
     if (!prismaParameter) {
-      // @TODO: adiccioanr excecao especfica
-      throw new Error('Parameter not found')
+      return null
     }
-    return this.mapper.toEntity(prismaParameter)
+
+    return PrismaParameterMapper.toEntity(prismaParameter)
   }
+
   async findMany(params: ParametersListParams): Promise<Parameter[]> {
     throw new Error('Method not implemented.')
   }
-  update(parameter: Parameter): Promise<void> {
+
+  async update(parameter: Parameter): Promise<void> {
     throw new Error('Method not implemented.')
   }
-  deleteById(id: Id): Promise<void> {
-}
+
+  async deleteById(id: Id): Promise<void> {
+    await this.prisma.parameter.delete({ where: { id: id.value } })
+  }
 }

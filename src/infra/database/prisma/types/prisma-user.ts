@@ -1,3 +1,3 @@
-import type { User } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 
-export type PrismaUser = User
+export type PrismaUser = Prisma.UserUncheckedCreateInput

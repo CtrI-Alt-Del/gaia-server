@@ -1,7 +1,7 @@
 import { Entity } from '@/core/global/domain/abstracts'
-import { Collection, Text, Timestamp } from '@/core/global/domain/structures'
-import { ParameterDto } from '@/core/telemetry/dtos/parameter.dto'
-import { StationDto } from '@/core/telemetry/dtos/station.dto'
+import { Collection, Logical, Text, Timestamp } from '@/core/global/domain/structures'
+import { ParameterDto } from '@/core/telemetry/dtos/parameter-dto'
+import { StationDto } from '@/core/telemetry/dtos/station-dto'
 import { Parameter } from '@/core/telemetry/entities/parameter'
 import { Coordinate, UnsignedId } from '@/core/telemetry/structures'
 
@@ -11,6 +11,9 @@ type StationProps = {
   location: Coordinate
   lastReadAt: Timestamp
   parameters: Collection<Parameter>
+  isActive: Logical
+  createdAt: Timestamp
+  updatedAt?: Timestamp
 }
 export class Station extends Entity<StationProps> {
   static create(dto: StationDto): Station {
@@ -19,11 +22,14 @@ export class Station extends Entity<StationProps> {
         name: Text.create(dto.name),
         UID: UnsignedId.create(dto.UID),
         location: Coordinate.create(dto.latitude, dto.longitude),
-        lastReadAt: Timestamp.createFromDate(dto.lastReadAt),
+        lastReadAt: Timestamp.create(dto.lastReadAt),
         parameters: Collection.createFrom<ParameterDto, Parameter>(
           dto.parameters,
           (paramDto) => Parameter.create(paramDto),
         ),
+        isActive: Logical.create(dto?.isActive ?? true),
+        createdAt: Timestamp.create(dto.createdAt ?? new Date()),
+        updatedAt: dto.updatedAt ? Timestamp.create(dto.updatedAt) : undefined,
       },
       dto.id,
     )
@@ -52,6 +58,9 @@ export class Station extends Entity<StationProps> {
       longitude: this.location.longitude.value,
       lastReadAt: this.lastReadAt.toDate(),
       parameters: this.parameters.map((param) => param.dto).items,
+      isActive: this.isActive.value,
+      createdAt: this.createdAt.value,
+      updatedAt: this.updatedAt?.value,
     }
   }
   update(partialDto: Partial<StationDto>): Station {
@@ -65,7 +74,7 @@ export class Station extends Entity<StationProps> {
       this.props.location = Coordinate.create(partialDto.latitude, partialDto.longitude)
     }
     if (partialDto.lastReadAt !== undefined) {
-      this.props.lastReadAt = Timestamp.createFromDate(partialDto.lastReadAt)
+      this.props.lastReadAt = Timestamp.create(partialDto.lastReadAt)
     }
     if (partialDto.parameters !== undefined) {
       this.props.parameters = Collection.createFrom<ParameterDto, Parameter>(

@@ -14,7 +14,6 @@ export class UserProps {
 
 export class User extends Entity<UserProps> {
   static create(dto: UserDto): User {
-    console.log('dto', dto)
     return new User(
       {
         name: Text.create(dto.name),

@@ -5,14 +5,10 @@ import { User } from '../domain/entities/user'
 import { EmailAlreadyInUseError, OwnerCreationNotAllowed } from '../domain/errors'
 
 export class CreateUserUseCase implements UseCase<UserDto, UserDto> {
-  constructor(private readonly repository: UsersRepository) {
-    this.repository = repository
-  }
+  constructor(private readonly repository: UsersRepository) {}
 
   async execute(userDto: UserDto): Promise<UserDto> {
     const user = User.create(userDto)
-
-    console.log(user.role.isOwner.isTrue)
 
     if (user.role.isOwner.isTrue) {
       throw new OwnerCreationNotAllowed()

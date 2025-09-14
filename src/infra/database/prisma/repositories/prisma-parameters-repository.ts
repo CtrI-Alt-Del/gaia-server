@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common'
 
-import { Prisma } from '../client'
 import type { ParametersRepository } from '@/core/global/interfaces'
 import { Id } from '@/core/global/domain/structures'
 import { Parameter } from '@/core/telemetry/entities/parameter'
 import { PrismaParameterMapper } from '@/infra/database/prisma/mappers'
 import { ParametersListParams } from '@/core/global/types'
+import { PrismaRepository } from './prisma-repository'
 
 @Injectable()
-export class PrismaParametersRepository implements ParametersRepository {
-  constructor(private readonly prisma: Prisma) {}
-
+export class PrismaParametersRepository
+  extends PrismaRepository
+  implements ParametersRepository
+{
   async add(parameter: Parameter): Promise<void> {
     const prismaParameter = PrismaParameterMapper.toPrisma(parameter)
     await this.prisma.parameter.create({ data: prismaParameter })

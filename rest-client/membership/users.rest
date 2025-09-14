@@ -1,11 +1,19 @@
 @URL = {{BASE_URL}}/membership/users
 
+### List users
+GET {{URL}}
+?pageSize=2
+&isActive=true
+&nextCursor=qtbejiqzbsjm6dmpjfetskse
+
+### Create user
 POST {{URL}}
 Content-Type: application/json
 
 {
   "name": "John Doe",
   "email": "john.doe@example.com",
+  "isActive": true,
   "role": "member"
 }
 

@@ -4,6 +4,7 @@ import {
   AppError,
   ConflictError,
   NotAllowedError,
+  NotFoundError,
   NullException,
   ValidationException,
 } from '@/core/global/domain/errors'
@@ -39,6 +40,10 @@ export class RestExceptionsFilter implements ExceptionFilter {
 
       if (exception instanceof NotAllowedError) {
         status = HttpStatus.FORBIDDEN
+      }
+
+      if (exception instanceof NotFoundError) {
+        status = HttpStatus.NOT_FOUND
       }
 
       return response.status(status).json({

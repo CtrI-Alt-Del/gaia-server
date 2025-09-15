@@ -10,7 +10,7 @@ import {
 } from '@/core/global/domain/structures'
 import { UsersFaker } from '../../domain/entities/fakers'
 
-describe('CreateUserUseCase', () => {
+describe('Create User Use Case', () => {
   let repository: MockProxy<UsersRepository>
   let useCase: ListUsersUseCase
   const cursorPagination = CursorPagination.create({

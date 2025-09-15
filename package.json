@@ -15,6 +15,9 @@
     "db:migrate": "prisma migrate dev --schema=src/infra/database/prisma/schema.prisma",
     "db:studio": "prisma studio --schema=src/infra/database/prisma/schema.prisma",
     "db:seed": "ts-node -r tsconfig-paths/register src/infra/database/prisma/seed.ts",
+    "test": "vitest run",
+    "test:watch": "vitest --watch",
+    "test:cov": "vitest run --coverage",
     "prepare": "husky"
   },
   "dependencies": {
@@ -55,6 +58,10 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.20.0"
+    "typescript-eslint": "^8.20.0",
+    "unplugin-swc": "^1.5.7",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.2.4",
+    "vitest-mock-extended": "^3.1.0"
   }
 }

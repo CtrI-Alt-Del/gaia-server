@@ -12,11 +12,12 @@ export class UpdateUserUseCase implements UseCase<Request, Response> {
 
   async execute(userDto: UserDto): Promise<Response> {
     const user = await this.findUserById(Id.create(userDto.id))
-    user.update(userDto)
 
     if (user.email.value !== userDto.email) {
       await this.findUserByEmail(user.email)
     }
+
+    user.update(userDto)
 
     await this.repository.replace(user)
     return user.dto

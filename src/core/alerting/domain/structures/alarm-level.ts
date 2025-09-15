@@ -10,13 +10,13 @@ export default class AlarmLevel{
         this.type = type
     }
 
-    public static create(value: Type): AlarmLevel{
+    public static create(value: string): AlarmLevel{
         if (!value) {
             throw new ValidationException("Nível de alarme", "não pode ser nulo")
         }
 
         try {
-            return new AlarmLevel(value)   
+            return new AlarmLevel(value as Type)   
         } catch (error) {
             throw new ValidationException("Nível de alarme", "com valor inválido")
         }

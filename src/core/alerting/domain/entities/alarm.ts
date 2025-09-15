@@ -16,7 +16,7 @@ export class Alarm extends Entity<AlarmProps>{
         return new Alarm(
             {
                 message: Text.create(dto.message),
-                parameter: dto.parameter,
+                parameter: ParameterAggregate.create(dto.parameter),
                 isActive: Logical.create(dto.isActive),
                 createdAt: Timestamp.create(dto.createdAt)
             },
@@ -48,7 +48,7 @@ export class Alarm extends Entity<AlarmProps>{
         return {
             id: this.id.value,
             message: this.message.value,
-            parameter: this.parameter,
+            parameter: this.parameter.dto,
             isActive: this.isActive.value,
             createdAt: this.createdAt.value,
             updatedAt: this.updatedAt?.value

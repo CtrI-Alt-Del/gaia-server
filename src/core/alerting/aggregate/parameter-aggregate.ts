@@ -33,4 +33,14 @@ export class ParameterAggregate extends Aggregate<ParameterAggregateProps, Param
     get updatedAt(): Timestamp | undefined{
         return this.props.updatedAt
     }
+
+    get dto(): ParameterAggregateDto {
+        return {
+            id: this.id.value,
+            parameter: this.getEntity().dto,
+            isActive: this.props.isActive.value,
+            createdAt: this.props.createdAt.value,
+            updatedAt: this.props.updatedAt?.value
+        }
+    }
 }

@@ -4,11 +4,11 @@ import { User } from '../user'
 import { UserDto } from '../dtos'
 
 export class UsersFaker {
-  static fake(baseDto?: UserDto): User {
+  static fake(baseDto?: Partial<UserDto>): User {
     return User.create(UsersFaker.fakeDto(baseDto))
   }
 
-  static fakeDto(baseDto?: UserDto): UserDto {
+  static fakeDto(baseDto?: Partial<UserDto>): UserDto {
     return {
       name: faker.person.fullName(),
       email: faker.internet.email(),

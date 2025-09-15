@@ -19,7 +19,7 @@ export class User extends Entity<UserProps> {
         name: Text.create(dto.name),
         email: Text.create(dto.email),
         role: Role.create(dto.role),
-        isActive: Logical.create(dto.isActive ?? true),
+        isActive: dto.isActive ? Logical.create(dto.isActive) : Logical.createAsTrue(),
         createdAt: Timestamp.create(dto.createdAt ?? new Date()),
         updatedAt: dto.updatedAt ? Timestamp.create(dto.updatedAt) : undefined,
       },

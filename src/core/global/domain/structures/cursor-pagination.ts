@@ -4,7 +4,7 @@ import { Logical } from './logical'
 import { PlusInteger } from './plus-integer'
 
 export class CursorPagination<Item> {
-  constructor(
+  private constructor(
     readonly items: Item[],
     readonly pageSize: PlusInteger,
     readonly nextCursor: Id | null,

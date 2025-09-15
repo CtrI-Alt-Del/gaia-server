@@ -1,4 +1,5 @@
-import { ValidationException } from "@/core/global/domain/exceptions/validation-exception"
+
+import { ValidationException } from "@/core/global/domain/errors"
 import { Logical, Text } from "@/core/global/domain/structures"
 
 export enum Type {

@@ -1,10 +1,8 @@
-import { ValidationException } from "@/core/global/domain/exceptions/validation-exception"
-import { Logical, Text } from "@/core/global/domain/structures"
 
-export enum Type{
-    WARNING,
-    CRITICAL
-}
+import { ValidationException } from "@/core/global/domain/errors"
+import { Logical} from "@/core/global/domain/structures"
+
+export type Type = "WARNING" | "CRITICAL"
 
 export default class AlarmLevel{
     private type: Type
@@ -12,33 +10,32 @@ export default class AlarmLevel{
         this.type = type
     }
 
-    public static create(value: string): AlarmLevel{
-        if (value === "") {
+    public static create(value: Type): AlarmLevel{
+        if (!value) {
             throw new ValidationException("Nível de alarme", "não pode ser nulo")
         }
-        const text = Text.create(value.toLocaleUpperCase())
 
         try {
-            return new AlarmLevel(Type[text.value])   
+            return new AlarmLevel(value)   
         } catch (error) {
             throw new ValidationException("Nível de alarme", "com valor inválido")
         }
     }
 
     public static createAsWarning(): AlarmLevel{
-        return new AlarmLevel(Type.WARNING)
+        return new AlarmLevel("WARNING")
     }
 
     public static createAsCritical(): AlarmLevel{
-        return new AlarmLevel(Type.CRITICAL)
+        return new AlarmLevel("CRITICAL")
     }
 
     public isTypeWarning(): Logical{
-        return Logical.create(this.type === Type.WARNING)
+        return Logical.create(this.type === "WARNING")
     }
 
     public isTypeCritical(): Logical{
-        return Logical.create(this.type === Type.CRITICAL)
+        return Logical.create(this.type === "CRITICAL")
     }
 
     public toString(): string{

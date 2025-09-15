@@ -2,8 +2,8 @@ import { Entity } from "@/core/global/domain/abstracts"
 import { Logical, Text, Timestamp } from "@/core/global/domain/structures"
 import { AlarmDto } from "../../dtos/alarm.dto"
 import { ParameterAggregate } from "../../aggregate/parameter-aggregate"
-import AlertRule from "./alert-rule"
 import AlarmLevel from "../structures/alarm-level"
+import AlertRule from "../structures/alert-rule"
 
 type AlarmProps = {
     message: Text
@@ -55,7 +55,7 @@ export class Alarm extends Entity<AlarmProps>{
             id: this.id.value,
             message: this.props.message.value,
             parameter: this.props.parameter.dto,
-            rule: this.props.rule.dto,
+            rule: {threshold: this.props.rule.threshold.value, operation: this.props.rule.operation.toString()},
             level: this.props.level.toString(),
             isActive: this.props.isActive.value,
             createdAt: this.props.createdAt.value,

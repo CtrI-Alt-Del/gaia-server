@@ -1,11 +1,10 @@
-import { AlertRuleDto } from "./alertrule.dto"
 import { ParameterAggregateDto } from "./parameteraggregate.dto"
 
 export type AlarmDto = {
     id: string
     message: string
     parameter: ParameterAggregateDto
-    rule: AlertRuleDto
+    rule: {threshold: bigint, operation: string}
     level: string
     isActive: boolean
     createdAt: Date

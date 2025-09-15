@@ -1,7 +1,9 @@
-import { MeasurementDto } from "@/core/telemetry/dtos/measurement.dto"
+import { ParameterAggregate } from "../aggregate/parameter-aggregate"
 
 export type AlarmDto = {
     id: string
     name: string
-    measure: MeasurementDto
+    parameter: ParameterAggregate
+    isActive: boolean
+    createdAt: Date
 }

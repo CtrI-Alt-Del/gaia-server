@@ -28,5 +28,8 @@ Content-Type: application/json
 }
 
 ### Activate user
-PATCH {{URL}}/{{ID}}
+PATCH {{URL}}/activate/{{ID}}
+
+### Deactivate user
+DELETE {{URL}}/deactivate/{{ID}}
 

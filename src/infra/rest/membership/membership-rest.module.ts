@@ -5,11 +5,13 @@ import { CreateUserController } from './users/create-user.controller'
 import { ListUsersController } from './users/list-users.controller'
 import { UpdateUserController } from './users/update-user.controller'
 import { ActivateUserController } from './users/activate-user.controller'
+import { DeactivateUserController } from './users/deactivate-user.controller'
 
 @Module({
   imports: [DatabaseModule],
   controllers: [
     ActivateUserController,
+    DeactivateUserController,
     CreateUserController,
     ListUsersController,
     UpdateUserController,

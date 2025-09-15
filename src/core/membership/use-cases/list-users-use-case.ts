@@ -23,6 +23,7 @@ export class ListUsersUseCase {
       pageSize: PlusInteger.create(params.pageSize),
       isActive: Logical.create(params.isActive),
     })
+
     return pagination.map((user) => user.dto).dto
   }
 }

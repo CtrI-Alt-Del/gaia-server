@@ -5,19 +5,17 @@ Content-Type: application/json
 {
   "factor": 0.1,
   "name": "Temperature",
-  "numberOfDecimalPlaces": 10,
   "offset": 0,
   "unitOfMeasure": "Celsius"
 }
 
 #### @ update
-PUT http://localhost:3333/telemetry/parameters/f4c5ik7yreyd5je8j0tfis75
+PUT http://localhost:3333/telemetry/parameters/gknjgalzinu2wmmzr8u1k3s7
 Content-Type: application/json
 
 {
   "factor": 0.1,
   "name": "Banana macia radical",
-  "numberOfDecimalPlaces": 10,
   "offset": 0,
   "unitOfMeasure": "Celsius"
 }

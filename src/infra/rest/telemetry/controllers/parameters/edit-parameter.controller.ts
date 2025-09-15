@@ -19,8 +19,8 @@ export class EditParameterController {
     private readonly repository: ParametersRepository,
   ) {}
 
-  @Put('/:id')
-  async handle(@Body(bodyValidationPipe) body: EditParameterRequestBody, @Param('id') id: string) {
+  @Put('/:paramterId')
+  async handle(@Body(bodyValidationPipe) body: EditParameterRequestBody, @Param('paramterId') id: string) {
     const useCase = new EditParameterUseCase(this.repository)
     return await useCase.execute({ data: body, id })
   }

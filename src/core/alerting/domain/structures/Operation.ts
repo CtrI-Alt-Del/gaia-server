@@ -30,23 +30,23 @@ export default class Operation{
         }
     }
 
-    public static createAsBigger(): Operation{
+    static createAsBigger(): Operation{
         return new Operation(Type.BIGGER)
     }
 
-    public static createAsLess(): Operation{
+    static createAsLess(): Operation{
         return new Operation(Type.LESS)
     }
 
-    public static createAsBiggerEqual(): Operation{
+    static createAsBiggerEqual(): Operation{
         return new Operation(Type.BIGGER_EQUAL)
     }
 
-    public static createAsLessEqual(): Operation{
+    static createAsLessEqual(): Operation{
         return new Operation(Type.LESS_EQUAL)
     }
 
-    public static createAsEqual(): Operation{
+    static createAsEqual(): Operation{
         return new Operation(Type.EQUAL)
     }
 

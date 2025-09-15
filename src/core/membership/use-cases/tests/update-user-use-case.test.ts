@@ -5,7 +5,7 @@ import { UpdateUserUseCase } from '../update-user-use-case'
 import { UsersFaker } from '../../domain/entities/fakers'
 import { EmailAlreadyInUseError, UserNotFoundError } from '../../domain/errors'
 
-describe('Create User Use Case', () => {
+describe('Update User Use Case', () => {
   let repository: MockProxy<UsersRepository>
   let useCase: UpdateUserUseCase
 

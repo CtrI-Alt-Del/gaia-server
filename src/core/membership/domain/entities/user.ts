@@ -36,6 +36,16 @@ export class User extends Entity<UserProps> {
     this.refreshLastUpdate()
   }
 
+  activate(): void {
+    this.props.isActive = Logical.createAsTrue()
+    this.refreshLastUpdate()
+  }
+
+  deactivate(): void {
+    this.props.isActive = Logical.createAsFalse()
+    this.refreshLastUpdate()
+  }
+
   get role(): Role {
     return this.props.role
   }

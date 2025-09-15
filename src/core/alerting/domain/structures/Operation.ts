@@ -11,9 +11,9 @@ export enum Type {
 }
 
 export default class Operation{
-    private type: Type
+    private value: Type
     private constructor(type: Type){
-        this.type = type
+        this.value = type
     }
 
     public static create(value: string): Operation{
@@ -51,26 +51,26 @@ export default class Operation{
     }
 
     public isTypeBigger(): Logical{
-        return Logical.create(this.type === Type.BIGGER)
+        return Logical.create(this.value === Type.BIGGER)
     }
 
     public isTypeLess(): Logical{
-        return Logical.create(this.type === Type.LESS)
+        return Logical.create(this.value === Type.LESS)
     }
 
     public isTypeBiggerEqual(): Logical{
-        return Logical.create(this.type === Type.BIGGER_EQUAL)
+        return Logical.create(this.value === Type.BIGGER_EQUAL)
     }
 
     public isTypeLessEqual(): Logical{
-        return Logical.create(this.type === Type.LESS_EQUAL)
+        return Logical.create(this.value === Type.LESS_EQUAL)
     }
 
     public isTypeEqual(): Logical{
-        return Logical.create(this.type === Type.EQUAL)
+        return Logical.create(this.value === Type.EQUAL)
     }
 
     public toString(): string{
-        return this.type.toString().toLocaleLowerCase()
+        return this.value.toString().toLocaleLowerCase()
     }
 }

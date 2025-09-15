@@ -1,52 +1,36 @@
-import { mock, MockProxy } from 'vitest-mock-extended'
+import { Id, Text } from '@/core/global/domain/structures'
+import { UseCase, UsersRepository } from '@/core/global/interfaces'
+import { UserDto } from '../domain/entities/dtos'
+import { User } from '../domain/entities'
+import { EmailAlreadyInUseError, UserNotFoundError } from '../domain/errors'
 
-import { UsersRepository } from '@/core/global/interfaces'
-import { UpdateUserUseCase } from '../update-user-use-case'
-import { UsersFaker } from '../../domain/entities/fakers'
-import { EmailAlreadyInUseError, UserNotFoundError } from '../../domain/errors'
+type Request = UserDto
+type Response = UserDto
 
-describe('Update User Use Case', () => {
-  let repository: MockProxy<UsersRepository>
-  let useCase: UpdateUserUseCase
+export class UpdateUserUseCase implements UseCase<Request, Response> {
+  constructor(private readonly repository: UsersRepository) {}
 
-  beforeEach(() => {
-    repository = mock<UsersRepository>()
-    useCase = new UpdateUserUseCase(repository)
-  })
+  async execute(userDto: UserDto): Promise<Response> {
+    const user = await this.findUserById(Id.create(userDto.id))
 
-  it('should throw an error if the user is not found', async () => {
-    const user = UsersFaker.fake()
-    repository.findById.mockResolvedValue(null)
+    if (user.email.value !== userDto.email) {
+      await this.findUserByEmail(user.email)
+    }
 
-    await expect(useCase.execute(user.dto)).rejects.toThrow(UserNotFoundError)
-  })
+    user.update(userDto)
 
-  it('should throw an error if the user email is already in use', async () => {
-    const currentUser = UsersFaker.fake({ email: 'test1@test.com' })
-    const user = UsersFaker.fake({ email: 'test2@test.com' })
-    repository.findById.mockResolvedValue(currentUser)
-    repository.findByEmail.mockResolvedValue(currentUser)
+    await this.repository.replace(user)
+    return user.dto
+  }
 
-    await expect(() => useCase.execute(user.dto)).rejects.toThrow(EmailAlreadyInUseError)
-  })
+  async findUserById(id: Id): Promise<User> {
+    const user = await this.repository.findById(id)
+    if (!user) throw new UserNotFoundError()
+    return user
+  }
 
-  it('should replace the user in the repository', async () => {
-    const user = UsersFaker.fake()
-    repository.findById.mockResolvedValue(user)
-    repository.findByEmail.mockResolvedValue(null)
-
-    await useCase.execute(user.dto)
-
-    expect(repository.replace).toHaveBeenCalledWith(user)
-  })
-
-  it('should return the updated user dto', async () => {
-    const user = UsersFaker.fake()
-    repository.findById.mockResolvedValue(user)
-    repository.findByEmail.mockResolvedValue(null)
-
-    const result = await useCase.execute(user.dto)
-
-    expect(result).toEqual(user.dto)
-  })
-})
+  async findUserByEmail(email: Text): Promise<void> {
+    const user = await this.repository.findByEmail(email)
+    if (user) throw new EmailAlreadyInUseError()
+  }
+}

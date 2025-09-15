@@ -26,3 +26,10 @@ Content-Type: application/json
   "name": "John Doe",
   "email": "john.doe@example.com"
 }
+
+### Activate user
+PATCH {{URL}}/activate/{{ID}}
+
+### Deactivate user
+DELETE {{URL}}/deactivate/{{ID}}
+

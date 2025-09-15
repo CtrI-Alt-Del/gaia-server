@@ -8,7 +8,6 @@ export class Id {
   private constructor(value: string) {
     this.value = value
   }
-
   static create(value?: string): Id {
     return new Id(value ?? createId())
   }

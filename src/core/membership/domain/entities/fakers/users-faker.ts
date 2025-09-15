@@ -13,7 +13,7 @@ export class UsersFaker {
       name: faker.person.fullName(),
       email: faker.internet.email(),
       role: 'member',
-      isActive: faker.datatype.boolean(),
+      isActive: true,
       ...baseDto,
     }
   }

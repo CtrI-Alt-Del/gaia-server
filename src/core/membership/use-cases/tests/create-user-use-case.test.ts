@@ -5,7 +5,7 @@ import { CreateUserUseCase } from '../create-user-use-case'
 import { UsersFaker } from '../../domain/entities/fakers'
 import { EmailAlreadyInUseError, OwnerCreationNotAllowed } from '../../domain/errors'
 
-describe('CreateUserUseCase', () => {
+describe('Create User Use Case', () => {
   let repository: MockProxy<UsersRepository>
   let useCase: CreateUserUseCase
   beforeEach(() => {
@@ -27,7 +27,7 @@ describe('CreateUserUseCase', () => {
   })
 
   it('should add the user to the repository', async () => {
-    const user = UsersFaker.fake()
+    const user = UsersFaker.fake({ isActive: true })
     repository.findByEmail.mockResolvedValue(null)
 
     await useCase.execute(user.dto)

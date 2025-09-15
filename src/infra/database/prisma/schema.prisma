@@ -30,7 +30,6 @@ model Parameter {
   offset                Float
   factor                Float
   unitOfMeasure         String   @map("unit_of_measure")
-  numberOfDecimalPlaces Int      @map("number_of_decimal_places")
   isActive              Boolean  @default(true) @map("is_active")
   createdAt             DateTime @default(now()) @map("created_at")
   updatedAt             DateTime @updatedAt @map("updated_at")

@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
-import { CreateParameterController } from './controllers'
+import { CreateParameterController, EditParameterController } from './controllers'
 import { DatabaseModule } from '@/infra/database/database.module'
 
 @Module({
   imports: [DatabaseModule],
-  controllers: [CreateParameterController],
+  controllers: [CreateParameterController,EditParameterController],
 })
 export class TelemetryRestModule {}

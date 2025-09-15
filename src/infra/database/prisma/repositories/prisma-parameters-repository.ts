@@ -33,8 +33,12 @@ export class PrismaParametersRepository
     throw new Error('Method not implemented.')
   }
 
-  async update(parameter: Parameter): Promise<void> {
-    throw new Error('Method not implemented.')
+  async replace(parameter: Parameter): Promise<void> {
+    const prismaParameter = PrismaParameterMapper.toPrisma(parameter)
+    await this.prisma.parameter.update({
+      where: { id: prismaParameter.id },
+      data: prismaParameter,
+    })
   }
 
   async deleteById(id: Id): Promise<void> {

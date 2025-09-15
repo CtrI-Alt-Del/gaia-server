@@ -11,12 +11,12 @@ Content-Type: application/json
 }
 
 #### @ update
-PUT http://localhost:3333/telemetry/parameters
+PUT http://localhost:3333/telemetry/parameters/f4c5ik7yreyd5je8j0tfis75
 Content-Type: application/json
 
 {
   "factor": 0.1,
-  "name": "Temperature",
+  "name": "Banana macia radical",
   "numberOfDecimalPlaces": 10,
   "offset": 0,
   "unitOfMeasure": "Celsius"

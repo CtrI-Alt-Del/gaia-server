@@ -12,7 +12,7 @@ export class EditParameterUseCase implements UseCase<UseCaseInput, ParameterDto>
   async execute({ id, data }: UseCaseInput): Promise<ParameterDto> {
     const existingParameter = await this.findById(Id.create(id))
     const updatedParameter = existingParameter.update(data)
-    await this.repository.update(updatedParameter)
+    await this.repository.replace(updatedParameter)
     return updatedParameter.dto
   }
   async findById(id: Id): Promise<Parameter> {

@@ -8,7 +8,7 @@ import { DatabaseModule } from '@/infra/database/database.module'
 import { updateParameterSchema } from '@/infra/validation/schemas/zod/telemetry'
 import { ParametersController } from './parameters.controller'
 
-class RequestBody extends createZodDto(updateParameterSchema) {}
+class EditParameterRequestBody extends createZodDto(updateParameterSchema) {}
 
 const bodyValidationPipe = new ZodValidationPipe(updateParameterSchema)
 
@@ -20,7 +20,7 @@ export class EditParameterController {
   ) {}
 
   @Put('/:id')
-  async handle(@Body() body: RequestBody, @Param('id') id: string) {
+  async handle(@Body(bodyValidationPipe) body: EditParameterRequestBody, @Param('id') id: string) {
     const useCase = new EditParameterUseCase(this.repository)
     return await useCase.execute({ data: body, id })
   }

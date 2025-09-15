@@ -1,21 +1,21 @@
-import { Inject, Param, Patch } from '@nestjs/common'
+import { Delete, Inject, Param } from '@nestjs/common'
 
 import { UsersRepository } from '@/core/global/interfaces'
-import { ActivateUserUseCase } from '@/core/membership/use-cases'
+import { DeactivateUserUseCase } from '@/core/membership/use-cases'
 
 import { DatabaseModule } from '@/infra/database/database.module'
 import { UsersController } from './users.controller'
 
-@UsersController('activate')
-export class ActivateUserController {
+@UsersController(':userId')
+export class DeactivateUserController {
   constructor(
     @Inject(DatabaseModule.USERS_REPOSITORY)
     private readonly repository: UsersRepository,
   ) {}
 
-  @Patch()
+  @Delete()
   async handle(@Param('userId') userId: string) {
-    const useCase = new ActivateUserUseCase(this.repository)
+    const useCase = new DeactivateUserUseCase(this.repository)
     return await useCase.execute({ id: userId })
   }
 }

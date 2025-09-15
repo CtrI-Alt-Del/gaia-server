@@ -3,7 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { EnvProvider } from './provision/env/env-provider'
 import { AppModule } from './app.module'
 import { RestExceptionsFilter } from './rest/filters/rest-exception.filter'
-import { apiReference } from 'node_modules/@scalar/nestjs-api-reference/dist'
+import { apiReference } from '@scalar/nestjs-api-reference'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)

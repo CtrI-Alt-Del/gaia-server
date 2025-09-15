@@ -47,6 +47,8 @@ export class RestExceptionsFilter implements ExceptionFilter {
       })
     }
 
+    console.error('Internal Exception: ', exception)
+
     return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       title: 'Unknown Error',
       message: 'Erro interno desconhecido',

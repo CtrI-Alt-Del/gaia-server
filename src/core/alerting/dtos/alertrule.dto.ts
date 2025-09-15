@@ -3,4 +3,7 @@ export type AlertRuleDto = {
     name: string
     threshold: bigint
     operation: string
+    isActive: boolean
+    createdAt: Date
+    updatedAt?: Date
 }

@@ -1,12 +1,15 @@
-import { BigInteger, Text } from "@/core/global/domain/structures"
+import { BigInteger, Logical, Text, Timestamp } from "@/core/global/domain/structures"
 import { Entity } from "@/core/global/domain/abstracts"
 import { AlertRuleDto } from "../../dtos/alertrule.dto"
-import Operation from "../structures/Operation"
+import Operation from "../structures/operation"
 
 type AlertRuleProps = {
     name: Text
     threshold: BigInteger
     operation: Operation
+    isActive: Logical
+    createdAt: Timestamp
+    updatedAt?: Timestamp 
 }
 
 export default class AlertRule extends Entity<AlertRuleProps>{
@@ -15,7 +18,9 @@ export default class AlertRule extends Entity<AlertRuleProps>{
             {
                 name: Text.create(dto.name),
                 threshold: BigInteger.create(dto.threshold),
-                operation: Operation.create(dto.operation)
+                operation: Operation.create(dto.operation),
+                isActive: Logical.create(dto.isActive),
+                createdAt: Timestamp.create(dto.createdAt)
             },
             dto.id
         )
@@ -38,7 +43,10 @@ export default class AlertRule extends Entity<AlertRuleProps>{
             id: this.id.value,
             name: this.name.value,
             threshold: this.threshold.value,
-            operation: this.operation.toString()
+            operation: this.operation.toString(),
+            isActive: this.props.isActive.value,
+            createdAt: this.props.createdAt.value,
+            updatedAt: this.props.updatedAt?.value
         }
     }
 }

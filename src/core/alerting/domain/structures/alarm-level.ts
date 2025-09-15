@@ -1,6 +1,6 @@
 
 import { ValidationException } from "@/core/global/domain/errors"
-import { Logical} from "@/core/global/domain/structures"
+import { Logical, Text} from "@/core/global/domain/structures"
 
 export type Type = "WARNING" | "CRITICAL"
 
@@ -15,8 +15,10 @@ export default class AlarmLevel{
             throw new ValidationException("Nível de alarme", "não pode ser nulo")
         }
 
+        const text = Text.create(value.toLocaleUpperCase());
+
         try {
-            return new AlarmLevel(value as Type)   
+            return new AlarmLevel(text.value as Type)   
         } catch (error) {
             throw new ValidationException("Nível de alarme", "com valor inválido")
         }

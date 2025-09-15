@@ -1,5 +1,9 @@
-import { Controller } from '@nestjs/common'
+import { applyDecorators, Controller } from '@nestjs/common'
+import { ApiTags } from '@nestjs/swagger'
 
 export function ParametersController(endpoint?: string): ClassDecorator {
-  return Controller(`/telemetry/parameters${endpoint ? `/${endpoint}` : ''}`)
+  return applyDecorators(
+    ApiTags('Parameters'),
+    Controller(`/telemetry/parameters${endpoint ? `/${endpoint}` : ''}`),
+  )
 }

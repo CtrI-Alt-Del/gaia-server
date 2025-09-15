@@ -7,13 +7,11 @@ import {
   PrismaStationsRepository,
   PrismaUsersRepository,
 } from './prisma/repositories'
-import { PrismaParameterMapper } from '@/infra/database/prisma/mappers'
 import { EnvProviderModule } from '@/infra/provision/env/env-provider.module'
 
 @Module({
   providers: [
     Prisma,
-    PrismaParameterMapper,
     {
       provide: DatabaseModule.USERS_REPOSITORY,
       useClass: PrismaUsersRepository,
@@ -31,6 +29,7 @@ import { EnvProviderModule } from '@/infra/provision/env/env-provider.module'
       useClass: PrismaStationsRepository,
     },
   ],
+  imports: [EnvProviderModule],
   exports: [
     Prisma,
     DatabaseModule.USERS_REPOSITORY,

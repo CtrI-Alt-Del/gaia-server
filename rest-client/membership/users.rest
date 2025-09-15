@@ -1,0 +1,11 @@
+@URL = {{BASE_URL}}/membership/users
+
+POST {{URL}}
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "role": "member"
+}
+

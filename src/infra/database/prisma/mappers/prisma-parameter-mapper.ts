@@ -1,24 +1,24 @@
+import type Prisma from '@prisma/client'
 
-import { Injectable } from '@nestjs/common'
-import type { PrismaParameter } from '../types'
 import { Parameter } from '@/core/telemetry/entities/parameter'
+import type { PrismaParameter } from '../types'
 
-@Injectable()
 export class PrismaParameterMapper {
-  toEntity(prismaParameter: PrismaParameter): Parameter {
-    const entity = Parameter.create({
+  static toEntity(prismaParameter: Prisma.Parameter): Parameter {
+    return Parameter.create({
       id: prismaParameter.id,
       name: prismaParameter.name,
       unitOfMeasure: prismaParameter.unitOfMeasure,
       numberOfDecimalPlaces: prismaParameter.numberOfDecimalPlaces,
       factor: prismaParameter.factor,
       offset: prismaParameter.offset,
+      isActive: prismaParameter.isActive,
+      createdAt: prismaParameter.createdAt,
+      updatedAt: prismaParameter.updatedAt,
     })
-
-    return entity
   }
 
-  toPrisma(parameter: Parameter): PrismaParameter {
+  static toPrisma(parameter: Parameter): PrismaParameter {
     return {
       id: parameter.id.value,
       name: parameter.name.value,
@@ -27,8 +27,8 @@ export class PrismaParameterMapper {
       factor: parameter.factor.value,
       offset: parameter.offset.value,
       isActive: parameter.isActive.value,
-      createdAt: parameter.createdAt,
-      updatedAt: parameter.updatedAt,
+      createdAt: parameter.createdAt.value,
+      updatedAt: parameter.updatedAt?.value,
     }
   }
 }

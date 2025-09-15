@@ -7,7 +7,7 @@
         "useExhaustiveDependencies": "warn",
         "noInnerDeclarations": "warn",
         "noConstructorReturn": "warn",
-        "useHookAtTopLevel": "warn",
+        "useHookAtTopLevel": "off",
         "useUniqueElementIds": "off"
       },
       "suspicious": {

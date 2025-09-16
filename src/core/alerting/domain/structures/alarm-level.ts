@@ -2,12 +2,12 @@
 import { ValidationException } from "@/core/global/domain/errors"
 import { Logical, Text} from "@/core/global/domain/structures"
 
-export type Type = "WARNING" | "CRITICAL"
+export type type = "WARNING" | "CRITICAL"
 
 export default class AlarmLevel{
-    private type: Type
-    private constructor(type: Type){
-        this.type = type
+    private value: type
+    private constructor(value: type){
+        this.value = value
     }
 
     public static create(value: string): AlarmLevel{
@@ -18,7 +18,7 @@ export default class AlarmLevel{
         const text = Text.create(value.toLocaleUpperCase());
 
         try {
-            return new AlarmLevel(text.value as Type)   
+            return new AlarmLevel(text.value as type)   
         } catch (error) {
             throw new ValidationException("Nível de alarme", "com valor inválido")
         }
@@ -33,14 +33,14 @@ export default class AlarmLevel{
     }
 
     public isTypeWarning(): Logical{
-        return Logical.create(this.type === "WARNING")
+        return Logical.create(this.value === "WARNING")
     }
 
     public isTypeCritical(): Logical{
-        return Logical.create(this.type === "CRITICAL")
+        return Logical.create(this.value === "CRITICAL")
     }
 
     public toString(): string{
-        return this.type.toString().toLocaleLowerCase()
+        return this.value.toString().toLocaleLowerCase()
     }
 }

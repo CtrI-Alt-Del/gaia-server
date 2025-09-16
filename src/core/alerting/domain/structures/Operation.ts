@@ -1,11 +1,11 @@
 import { ValidationException } from "@/core/global/domain/errors";
 import { Logical, Text } from "@/core/global/domain/structures";
 
-export type Type = "BIGGER" | "LESS" | "BIGGER_EQUAL" | "LESS_EQUAL" | "EQUAL";
+export type type = "BIGGER" | "LESS" | "BIGGER_EQUAL" | "LESS_EQUAL" | "EQUAL";
 
 export default class Operation {
-  private value: Type;
-  private constructor(type: Type) {
+  private value: type;
+  private constructor(type: type) {
     this.value = type;
   }
 
@@ -17,7 +17,7 @@ export default class Operation {
     const text = Text.create(value.toLocaleUpperCase());
 
     try {
-      return new Operation(text.value as Type);
+      return new Operation(text.value as type);
     } catch (error) {
       throw new ValidationException("Tipo de operação", "com valor inválido");
     }

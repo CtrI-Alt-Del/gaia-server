@@ -45,6 +45,7 @@ export class PrismaUsersRepository extends PrismaRepository implements UsersRepo
   }
 
   async findMany({
+    name,
     nextCursor,
     previousCursor,
     pageSize,
@@ -57,7 +58,7 @@ export class PrismaUsersRepository extends PrismaRepository implements UsersRepo
     if (nextCursor) {
       users = await this.prisma.user.findMany({
         ...this.getNextCursorPaginationParams(nextCursor, pageSize),
-        where: { isActive: isActive?.isTrue },
+        where: { isActive: isActive?.isTrue, name: { contains: name?.value } },
       })
       const result = this.getNextCursorPaginationResult(users, pageSize)
       users = result.items
@@ -66,7 +67,7 @@ export class PrismaUsersRepository extends PrismaRepository implements UsersRepo
     } else if (previousCursor) {
       users = await this.prisma.user.findMany({
         ...this.getPreviousCursorPaginationParams(previousCursor, pageSize),
-        where: { isActive: isActive?.isTrue },
+        where: { isActive: isActive?.isTrue, name: { contains: name?.value } },
       })
       const result = this.getPreviousCursorPaginationResult(users, pageSize)
       users = result.items
@@ -75,7 +76,7 @@ export class PrismaUsersRepository extends PrismaRepository implements UsersRepo
     } else {
       users = await this.prisma.user.findMany({
         ...this.getInitialPaginationParams(pageSize),
-        where: { isActive: isActive?.isTrue },
+        where: { isActive: isActive?.isTrue, name: { contains: name?.value } },
       })
       const result = this.getInitialPaginationResult(users, pageSize)
       users = result.items

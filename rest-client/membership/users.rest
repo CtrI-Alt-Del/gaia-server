@@ -3,9 +3,8 @@
 
 ### List users
 GET {{URL}}
-?pageSize=2
-&isActive=true
-&nextCursor=qtbejiqzbsjm6dmpjfetskse
+?pageSize=10
+&nextCursor=z35xjfqsxrprkwo9eriqz9s6
 
 ### Create user
 POST {{URL}}

@@ -3,4 +3,3 @@ export { EditParameterUseCase } from './edit-parameter-use-case'
 export { DeactivateParameterUseCase } from './deactivate-parameter-use-case'
 export { ActivateParameterUseCase } from './activate-parameter-use-case'
 export { ListParametersUseCase } from './list-parameters-use-case'
-export {ListParametersUseCase} from "./list-parameters-use-case"

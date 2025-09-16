@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common'
 import {
+  ActivateParameterController,
   CreateParameterController,
   DeactivateParameterController,
   EditParameterController,
@@ -14,6 +15,7 @@ import { DatabaseModule } from '@/infra/database/database.module'
     DeactivateParameterController,
     EditParameterController,
     ListParameterController,
+    ActivateParameterController,
   ],
 })
 export class TelemetryRestModule {}

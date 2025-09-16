@@ -1,2 +1,2 @@
 export { userSchema } from './user-schema'
-export { usersListingSchema } from './users-listing-schema'
+export { cursorListingSchema as usersListingSchema } from './users-listing-schema'

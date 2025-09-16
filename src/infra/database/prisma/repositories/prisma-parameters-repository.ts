@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 
 import type { ParametersRepository } from '@/core/global/interfaces'
-import { Id } from '@/core/global/domain/structures'
+import { CursorPagination, Id } from '@/core/global/domain/structures'
 import { Parameter } from '@/core/telemetry/entities/parameter'
 import { PrismaParameterMapper } from '@/infra/database/prisma/mappers'
 import { ParametersListParams } from '@/core/global/types'
@@ -29,8 +29,57 @@ export class PrismaParametersRepository
     return PrismaParameterMapper.toEntity(prismaParameter)
   }
 
-  async findMany(params: ParametersListParams): Promise<Parameter[]> {
-    throw new Error('Method not implemented.')
+  async findMany({
+    nextCursor,
+    previousCursor,
+    pageSize,
+    isActive,
+  }: ParametersListParams): Promise<CursorPagination<Parameter>> {
+    let parameters: any[]
+    let hasPreviousPage = false
+    let hasNextPage = false
+
+    if (nextCursor) {
+      parameters = await this.prisma.parameter.findMany({
+        ...this.getNextCursorPaginationParams(nextCursor, pageSize),
+        where: { isActive: isActive?.isTrue },
+      })
+      const result = this.getNextCursorPaginationResult(parameters, pageSize)
+      parameters = result.items
+      hasNextPage = result.hasNextPage
+      hasPreviousPage = result.hasPreviousPage
+    } else if (previousCursor) {
+      parameters = await this.prisma.parameter.findMany({
+        ...this.getPreviousCursorPaginationParams(previousCursor, pageSize),
+        where: { isActive: isActive?.isTrue },
+      })
+      const result = this.getPreviousCursorPaginationResult(parameters, pageSize)
+      parameters = result.items
+      hasNextPage = result.hasNextPage
+      hasPreviousPage = result.hasPreviousPage
+    } else {
+      parameters = await this.prisma.parameter.findMany({
+        ...this.getInitialPaginationParams(pageSize),
+        where: { isActive: isActive?.isTrue },
+      })
+      const result = this.getInitialPaginationResult(parameters, pageSize)
+      parameters = result.items
+      hasNextPage = result.hasNextPage
+      hasPreviousPage = result.hasPreviousPage
+    }
+
+    const newNextCursor = this.getNewNextCursor(parameters, hasNextPage)
+    const newPrevCursor = this.getNewPreviousCursor(parameters)
+    
+
+    return CursorPagination.create({
+      items: parameters.map(PrismaParameterMapper.toEntity),
+      pageSize: pageSize.value,
+      nextCursor: newNextCursor,
+      previousCursor: newPrevCursor,
+      hasNextPage,
+      hasPreviousPage,
+    })
   }
 
   async replace(parameter: Parameter): Promise<void> {

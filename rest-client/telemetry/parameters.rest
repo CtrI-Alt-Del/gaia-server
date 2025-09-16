@@ -20,3 +20,8 @@ Content-Type: application/json
   "unitOfMeasure": "Celsius"
 }
 
+#### @ list
+GET http://localhost:3333/telemetry/parameters?pageSize=20
+Content-Type: application/json
+
+

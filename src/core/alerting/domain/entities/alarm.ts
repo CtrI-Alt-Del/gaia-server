@@ -55,7 +55,7 @@ export class Alarm extends Entity<AlarmProps>{
             id: this.id.value,
             message: this.props.message.value,
             parameter: this.props.parameter.dto,
-            rule: {threshold: this.props.rule.threshold.value, operation: this.props.rule.operation.toString()},
+            rule: this.props.rule.dto,
             level: this.props.level.toString(),
             isActive: this.props.isActive.value,
             createdAt: this.props.createdAt.value,

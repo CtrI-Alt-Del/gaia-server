@@ -1,5 +1,6 @@
 import { BigInteger} from "@/core/global/domain/structures"
 import Operation from "./Operation"
+import { AlarmRuleDto } from "../../dtos/alarm-rule.dto"
 
 type Type = {threshold: bigint, operation: string}
 
@@ -14,5 +15,12 @@ export default class AlertRule{
 
     static create(rule: Type){
         return new AlertRule(rule)
+    }
+
+    get dto(): AlarmRuleDto {
+        return {
+            threshold: this.threshold.value,
+            operation: this.operation.toString()
+        }
     }
 }

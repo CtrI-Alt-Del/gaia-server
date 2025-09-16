@@ -4,7 +4,6 @@ import type { UseCase } from '@/core/global/interfaces'
 import type { ParametersRepository } from '@/core/global/interfaces'
 import { ParameterDto } from '@/core/telemetry/domain/dtos/parameter-dto'
 
-
 type Request = {
   nextCursor?: string
   previousCursor?: string

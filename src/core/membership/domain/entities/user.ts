@@ -14,18 +14,36 @@ export class UserProps {
 
 export class User extends Entity<UserProps> {
   static create(dto: UserDto): User {
-    console.log('dto', dto)
     return new User(
       {
         name: Text.create(dto.name),
         email: Text.create(dto.email),
         role: Role.create(dto.role),
-        isActive: Logical.create(dto.isActive ?? true),
+        isActive:
+          dto.isActive !== undefined
+            ? Logical.create(dto.isActive)
+            : Logical.createAsTrue(),
         createdAt: Timestamp.create(dto.createdAt ?? new Date()),
         updatedAt: dto.updatedAt ? Timestamp.create(dto.updatedAt) : undefined,
       },
       dto.id,
     )
+  }
+
+  update(dto: UserDto): void {
+    this.props.name = Text.create(dto.name)
+    this.props.email = Text.create(dto.email)
+    this.refreshLastUpdate()
+  }
+
+  activate(): void {
+    this.props.isActive = Logical.createAsTrue()
+    this.refreshLastUpdate()
+  }
+
+  deactivate(): void {
+    this.props.isActive = Logical.createAsFalse()
+    this.refreshLastUpdate()
   }
 
   get role(): Role {

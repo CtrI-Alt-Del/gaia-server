@@ -1,10 +1,10 @@
-import { Injectable, Inject } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 
 import type { StationsRepository } from '@/core/global/interfaces'
 
-import { Prisma } from '../client'
+import { PrismaRepository } from './prisma-repository'
 
 @Injectable()
-export class PrismaStationsRepository implements StationsRepository {
-  constructor(private readonly prisma: Prisma) {}
-}
+export class PrismaStationsRepository
+  extends PrismaRepository
+  implements StationsRepository {}

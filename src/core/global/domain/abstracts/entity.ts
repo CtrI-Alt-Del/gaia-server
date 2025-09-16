@@ -16,7 +16,7 @@ export class Entity<Props extends EnityProps> {
   protected constructor(props: Props, id?: string) {
     this.id = id ? Id.create(id) : Id.createRandom()
     this.props = props
-    this._isActive = Logical.createAsTrue()
+    this._isActive = props.isActive ?? Logical.createAsTrue()
     this._createdAt = props.createdAt ?? Timestamp.createFromNow()
     this._updatedAt = props.updatedAt
   }

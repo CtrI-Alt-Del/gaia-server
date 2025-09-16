@@ -1,6 +1,3 @@
-export type ParametersListParams = {
-  name?: string
-  page?: number
-  pageSize?: number
-  stationId?: string
-}
+import { CursorPaginationParams, ListingParams } from "@/core/global/domain/types";
+
+export type ParametersListParams = ListingParams & CursorPaginationParams

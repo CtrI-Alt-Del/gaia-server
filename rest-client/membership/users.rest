@@ -1,11 +1,35 @@
 @URL = {{BASE_URL}}/membership/users
+@ID = cdi2imbybgtotmz446atd7yv
 
+### List users
+GET {{URL}}
+?pageSize=2
+&isActive=true
+&nextCursor=qtbejiqzbsjm6dmpjfetskse
+
+### Create user
 POST {{URL}}
 Content-Type: application/json
 
 {
   "name": "John Doe",
   "email": "john.doe@example.com",
+  "isActive": true,
   "role": "member"
 }
+
+### Update user
+PUT {{URL}}/{{ID}}
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com"
+}
+
+### Activate user
+PATCH {{URL}}/activate/{{ID}}
+
+### Deactivate user
+DELETE {{URL}}/deactivate/{{ID}}
 

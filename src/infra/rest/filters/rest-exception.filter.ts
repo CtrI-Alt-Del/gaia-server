@@ -4,6 +4,7 @@ import {
   AppError,
   ConflictError,
   NotAllowedError,
+  NotFoundError,
   NullException,
   ValidationException,
 } from '@/core/global/domain/errors'
@@ -41,11 +42,17 @@ export class RestExceptionsFilter implements ExceptionFilter {
         status = HttpStatus.FORBIDDEN
       }
 
+      if (exception instanceof NotFoundError) {
+        status = HttpStatus.NOT_FOUND
+      }
+
       return response.status(status).json({
         title: exception.title,
         message: exception.message,
       })
     }
+
+    console.error('Internal Exception: ', exception)
 
     return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
       title: 'Unknown Error',

@@ -5,8 +5,31 @@ Content-Type: application/json
 {
   "factor": 0.1,
   "name": "Temperature",
-  "numberOfDecimalPlaces": 10,
   "offset": 0,
   "unitOfMeasure": "Celsius"
 }
+
+#### @ update
+PUT http://localhost:3333/telemetry/parameters/gknjgalzinu2wmmzr8u1k3s7
+Content-Type: application/json
+
+{
+  "factor": 0.1,
+  "name": "Banana macia radical",
+  "offset": 0,
+  "unitOfMeasure": "Celsius"
+}
+
+#### @ list
+GET http://localhost:3333/telemetry/parameters?pageSize=20
+Content-Type: application/json
+
+
+#### @ deactivate
+DELETE http://localhost:3333/telemetry/parameters/acfa915e-fddd-4575-941e-dc57c61965b9
+Content-Type: application/json
+
+#### @ activate
+PATCH http://localhost:3333/telemetry/parameters/gknjgalzinu2wmmzr8u1k3s7
+Content-Type: application/json
 

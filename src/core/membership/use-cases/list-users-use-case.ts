@@ -1,10 +1,11 @@
 import { UsersRepository } from '@/core/global/interfaces'
 import { CursorPaginationDto } from '@/core/global/domain/structures/dtos'
-import { Id, Logical } from '@/core/global/domain/structures'
+import { Id, Logical, Text } from '@/core/global/domain/structures'
 import { PlusInteger } from '@/core/global/domain/structures'
 import { UserDto } from '../domain/entities/dtos'
 
 type Request = {
+  name?: string
   nextCursor?: string
   previousCursor?: string
   pageSize: number
@@ -22,6 +23,7 @@ export class ListUsersUseCase {
         : undefined,
       pageSize: PlusInteger.create(params.pageSize),
       isActive: Logical.create(params.isActive),
+      name: params.name ? Text.create(params.name) : undefined,
     })
 
     return pagination.map((user) => user.dto).dto

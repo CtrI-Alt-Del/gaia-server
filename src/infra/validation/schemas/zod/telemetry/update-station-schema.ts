@@ -9,4 +9,5 @@ export const updateStationSchema = z.object({
   latitude: latitudeSchema.optional(),
   address: stringSchema.optional(),
   longitude: longitudeSchema.optional(),
+  parameters: z.array(stringSchema).optional()
 })

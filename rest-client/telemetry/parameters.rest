@@ -32,3 +32,4 @@ Content-Type: application/json
 #### @ activate
 PATCH http://localhost:3333/telemetry/parameters/gknjgalzinu2wmmzr8u1k3s7
 Content-Type: application/json
+

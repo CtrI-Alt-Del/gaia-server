@@ -1,9 +1,9 @@
 import { Entity } from '@/core/global/domain/abstracts'
 import { Collection, Logical, Text, Timestamp } from '@/core/global/domain/structures'
-import { ParameterDto } from '@/core/telemetry/dtos/parameter-dto'
-import { StationDto } from '@/core/telemetry/dtos/station-dto'
-import { Parameter } from '@/core/telemetry/entities/parameter'
-import { Coordinate, UnsignedId } from '@/core/telemetry/structures'
+import { ParameterDto } from '@/core/telemetry/domain/dtos/parameter-dto'
+import { StationDto } from '@/core/telemetry/domain/dtos/station-dto'
+import { Parameter } from '@/core/telemetry/domain/entities/parameter'
+import { Coordinate, UnsignedId } from '@/core/telemetry/domain/structures'
 
 type StationProps = {
   name: Text

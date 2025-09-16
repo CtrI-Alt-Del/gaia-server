@@ -6,6 +6,7 @@ import { Parameter } from '@/core/telemetry/entities/parameter'
 import { PrismaParameterMapper } from '@/infra/database/prisma/mappers'
 import { ParametersListParams } from '@/core/global/types'
 import { PrismaRepository } from './prisma-repository'
+import { Parameter } from '@/core/telemetry/domain/entities/parameter'
 
 @Injectable()
 export class PrismaParametersRepository

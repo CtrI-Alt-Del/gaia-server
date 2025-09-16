@@ -25,3 +25,6 @@ GET http://localhost:3333/telemetry/parameters?pageSize=20
 Content-Type: application/json
 
 
+#### @ deactivate
+DELETE http://localhost:3333/telemetry/parameters/acfa915e-fddd-4575-941e-dc57c61965b9
+Content-Type: application/json

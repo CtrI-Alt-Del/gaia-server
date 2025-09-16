@@ -1,8 +1,8 @@
 import { Id } from '@/core/global/domain/structures'
 import type { UseCase } from '@/core/global/interfaces'
 import type { ParametersRepository } from '@/core/global/interfaces'
-import { ParameterDto } from '@/core/telemetry/dtos/parameter-dto'
-import { Parameter } from '@/core/telemetry/entities/parameter'
+import { ParameterDto } from '@/core/telemetry/domain/dtos/parameter-dto';
+import { Parameter } from '@/core/telemetry/domain/entities/parameter';
 
 type UseCaseInput = { data: Partial<ParameterDto>; id: string }
 

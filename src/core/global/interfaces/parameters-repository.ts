@@ -1,6 +1,6 @@
 import { CursorPagination, Id } from '@/core/global/domain/structures'
 import { ParametersListParams } from '@/core/global/types'
-import { Parameter } from '@/core/telemetry/entities/parameter'
+import { Parameter } from '@/core/telemetry/domain/entities/parameter'
 
 export interface ParametersRepository {
   add(parameter: Parameter): Promise<void>

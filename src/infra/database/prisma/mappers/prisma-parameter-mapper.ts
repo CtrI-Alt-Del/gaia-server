@@ -1,7 +1,7 @@
 import type Prisma from '@prisma/client'
 
-import { Parameter } from '@/core/telemetry/entities/parameter'
 import type { PrismaParameter } from '../types'
+import { Parameter } from '@/core/telemetry/domain/entities/parameter'
 
 export class PrismaParameterMapper {
   static toEntity(prismaParameter: Prisma.Parameter): Parameter {

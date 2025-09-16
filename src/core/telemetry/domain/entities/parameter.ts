@@ -1,7 +1,7 @@
 import { Entity } from '@/core/global/domain/abstracts'
-import { Logical, PlusInteger, Text, Timestamp } from '@/core/global/domain/structures'
+import { Logical, Text, Timestamp } from '@/core/global/domain/structures'
 import { Integer } from '@/core/global/domain/structures/integer'
-import { ParameterDto } from '@/core/telemetry/dtos/parameter-dto'
+import { ParameterDto } from '@/core/telemetry/domain/dtos/parameter-dto'
 
 type ParameterProps = {
   name: Text
@@ -35,7 +35,6 @@ export class Parameter extends Entity<ParameterProps> {
   get unitOfMeasure(): Text {
     return this.props.unitOfMeasure
   }
-
 
   get factor(): Integer {
     return this.props.factor

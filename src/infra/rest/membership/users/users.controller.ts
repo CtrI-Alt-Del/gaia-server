@@ -4,6 +4,6 @@ import { ApiTags } from '@nestjs/swagger'
 export function UsersController(endpoint?: string): ClassDecorator {
   return applyDecorators(
     ApiTags('Users'),
-    Controller(`/membership/users/${endpoint ? `/${endpoint}` : ''}`),
+    Controller(`/membership/users${endpoint ? `/${endpoint}` : ''}`),
   )
 }

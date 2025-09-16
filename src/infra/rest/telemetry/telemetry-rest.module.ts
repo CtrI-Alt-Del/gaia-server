@@ -7,6 +7,7 @@ import {
   ListParameterController,
   CreateStationController,
   ListStationsController,
+  EditStationController,
 } from './controllers'
 import { DatabaseModule } from '@/infra/database/database.module'
 
@@ -20,6 +21,7 @@ import { DatabaseModule } from '@/infra/database/database.module'
     ActivateParameterController,
     CreateStationController,
     ListStationsController,
+    EditStationController,
   ],
 })
 export class TelemetryRestModule {}

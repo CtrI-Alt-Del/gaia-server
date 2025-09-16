@@ -1,5 +1,6 @@
 export { CreateParameterUseCase } from './create-parameter-use-case'
 export { EditParameterUseCase } from './edit-parameter-use-case'
+export { EditStationUseCase } from './edit-station-use-case'
 export { DeactivateParameterUseCase } from './deactivate-parameter-use-case'
 export { ActivateParameterUseCase } from './activate-parameter-use-case'
 export { ListStationsUseCase } from './list-stations-use-case'

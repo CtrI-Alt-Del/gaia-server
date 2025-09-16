@@ -43,9 +43,6 @@ export class PrismaStationsRepository
         where: { id: station.id.value },
         data: {
           ...stationData,
-          ...(stationParameter && {
-            stationParameter: { create: stationParameter.create },
-          }),
         },
       }),
     ])

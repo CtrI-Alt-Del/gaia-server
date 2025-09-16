@@ -76,8 +76,11 @@ export class Station extends Entity<StationProps> {
     if (partialDto.UID !== undefined) {
       this.props.UID = UnsignedId.create(partialDto.UID)
     }
-    if (partialDto.latitude !== undefined && partialDto.longitude !== undefined) {
-      this.props.location = Coordinate.create(partialDto.latitude, partialDto.longitude)
+    if (partialDto.latitude !== undefined ) {
+      this.props.location = Coordinate.create(partialDto.latitude, this.location.longitude.value)
+    }
+    if (partialDto.longitude !== undefined ) {
+      this.props.location = Coordinate.create(this.location.longitude.value, partialDto.longitude)
     }
     if (partialDto.lastReadAt !== undefined) {
       this.props.lastReadAt = Timestamp.create(partialDto.lastReadAt)

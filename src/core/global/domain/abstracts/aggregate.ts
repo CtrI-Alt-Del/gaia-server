@@ -5,13 +5,13 @@ export abstract class Aggregate<
   Props extends EnityProps,
   AggregableEntity,
 > extends Entity<Props> {
-  private readonly entity: AggregableEntity
   private readonly entityName: string
+  private readonly entity?: AggregableEntity
 
   protected constructor(
     props: Props,
-    entity: AggregableEntity,
     entityName: string,
+    entity?: AggregableEntity,
     id?: string,
   ) {
     super(props, id)
@@ -20,14 +20,14 @@ export abstract class Aggregate<
   }
 
   getEntity(): AggregableEntity {
-    if (this.hasEntity().isTrue) {
+    if (this.hasEntity().isFalse) {
       throw new Error(this.entityName)
     }
-    return this.entity
+    return this.entity as AggregableEntity
   }
 
   hasEntity(): Logical {
-    const isEntityNotNullOrUndefined = this.entity !== null || this.entity !== undefined
+    const isEntityNotNullOrUndefined = this.entity != undefined
     return Logical.create(isEntityNotNullOrUndefined)
   }
 }

@@ -1,9 +1,13 @@
-import { ParameterDto } from "@/core/telemetry/dtos/parameter-dto"
-
 export type ParameterAggregateDto = {
-    id: string
-    parameter: ParameterDto
-    isActive: boolean
-    createdAt: Date
-    updatedAt?: Date
-}
+  id: string;
+  entity?: {
+    name: string;
+    unitOfMeasure: string;
+    numberOfDecimalPlaces: number;
+    factor: number;
+    offset: number;
+  };
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt?: Date;
+};

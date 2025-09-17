@@ -50,6 +50,7 @@ export class PrismaStationsRepository
       }),
     ])
   }
+
   async deleteById(id: Id): Promise<void> {
     await this.prisma.station.delete({
       where: { id: id.value },

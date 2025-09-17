@@ -1,10 +1,10 @@
 import { AlarmRuleDto } from "./alarm-rule.dto"
-import { ParameterAggregateDto } from "./parameteraggregate.dto"
+import { MeasurementAggregateDto } from "./measurement-aggregate.dto"
 
 export type AlarmDto = {
     id: string
     message: string
-    parameter: ParameterAggregateDto
+    measurement: MeasurementAggregateDto
     rule: AlarmRuleDto
     level: string
     isActive: boolean

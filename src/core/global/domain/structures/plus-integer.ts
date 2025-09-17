@@ -11,12 +11,15 @@ export class PlusInteger {
     }
     return new PlusInteger(value)
   }
+
   equals(other: PlusInteger): Logical {
     return Logical.create(this.value === other.value)
   }
+
   plus(other: PlusInteger): PlusInteger {
     return new PlusInteger(this.value + other.value)
   }
+  
   minus(other: PlusInteger): PlusInteger {
     const result = this.value - other.value
     if (result < 0) {

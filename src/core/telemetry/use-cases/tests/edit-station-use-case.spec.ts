@@ -2,34 +2,37 @@ import { mock, MockProxy } from 'vitest-mock-extended'
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 
 import { Id } from '@/core/global/domain/structures'
-import type { StationsRepository } from '@/core/global/interfaces'
+import type { ParametersRepository, StationsRepository } from '@/core/global/interfaces'
 import { StationNotFoundError } from '@/core/telemetry/domain/errors/station-not-found-error'
 import { EditStationUseCase } from '@/core/telemetry/use-cases/edit-station-use-case'
 import { StationsFaker } from '@/core/telemetry/domain/entities/fakers/station-faker'
 
 describe('EditStationUseCase', () => {
-  let repository: MockProxy<StationsRepository>
+  let stationsRepository: MockProxy<StationsRepository>
+  let parametersRepository: MockProxy<ParametersRepository>
   let useCase: EditStationUseCase
 
   beforeEach(() => {
-    repository = mock<StationsRepository>()
-    useCase = new EditStationUseCase(repository)
+    stationsRepository = mock<StationsRepository>()
+    parametersRepository = mock<ParametersRepository>()
+    useCase = new EditStationUseCase(parametersRepository, stationsRepository)
   })
 
   it('should update a station and save it to the repository', async () => {
-    const existingStation = StationsFaker.fake()
-    const updatedStation = StationsFaker.fake() 
-    
+    const existingStation = StationsFaker.fake({parameters:[]})
+    const updatedStation = StationsFaker.fake({parameters:[]})
     const updateData = {
       name: 'New Station Name',
       UID: 'NEW-UID-001',
       latitude: -10.0,
       longitude: -20.0,
       address: '456 New Address St',
+      parameters: [],
     }
 
-    repository.findById.mockResolvedValue(existingStation)
-    repository.replace.mockResolvedValue()
+    stationsRepository.findById.mockResolvedValue(existingStation)
+    stationsRepository.replace.mockResolvedValue()
+
 
     vi.spyOn(existingStation, 'update').mockReturnValue(updatedStation)
 
@@ -38,11 +41,11 @@ describe('EditStationUseCase', () => {
       data: updateData,
     })
 
-    expect(repository.findById).toHaveBeenCalledWith(
+    expect(stationsRepository.findById).toHaveBeenCalledWith(
       Id.create(existingStation.id.value),
     )
     expect(existingStation.update).toHaveBeenCalledWith(updateData)
-    expect(repository.replace).toHaveBeenCalledWith(updatedStation)
+    expect(stationsRepository.replace).toHaveBeenCalledWith(updatedStation)
     expect(result).toEqual(updatedStation.dto)
   })
 
@@ -50,10 +53,10 @@ describe('EditStationUseCase', () => {
     const stationId = 'non-existent-id'
     const updateData = { name: 'Some new name' }
 
-    repository.findById.mockResolvedValue(null)
+    stationsRepository.findById.mockResolvedValue(null)
 
-    await expect(
-      useCase.execute({ stationId, data: updateData }),
-    ).rejects.toThrow(StationNotFoundError)
+    await expect(useCase.execute({ stationId, data: updateData })).rejects.toThrow(
+      StationNotFoundError,
+    )
   })
 })

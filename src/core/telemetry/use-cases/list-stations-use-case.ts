@@ -12,6 +12,7 @@ type Request = {
   name?: string
 }
 
+
 type Response = CursorPaginationDto<{
   id?: string
   name: string
@@ -39,9 +40,8 @@ export class ListStationsUseCase implements UseCase<Request, Response> {
       name: params.name ? Text.create(params.name) : undefined,
     })
 
-    const domainItems: StationWithCount[] = paginationDomainObject.items
-
-    const responseItems = domainItems.map((station) => {
+    const domainItems = paginationDomainObject.items
+     const responseItems = domainItems.map((station) => {
       return {
         id: station.id,
         name: station.name,

@@ -48,6 +48,9 @@ export class EditStationUseCase implements UseCase<UseCaseInput, StationDto> {
     return station
   }
   async findParametersByIds(ids: string[]): Promise<ParameterDto[]> {
+    if (ids.length === 0) {
+      return []
+    }
     const parameters = await this.parametersRepository.findManyByIds(ids.map(Id.create))
     if (parameters.length !== ids.length) {
       throw new ParameterNotFoundError()

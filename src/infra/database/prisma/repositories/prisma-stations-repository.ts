@@ -9,7 +9,6 @@ import { PrismaStationMapper } from '@/infra/database/prisma/mappers'
 import { StationsListingParams } from '@/core/global/types/stations-list-params'
 
 import { StationWithCount } from '@/core/global/types'
-import { Station } from '@/core/telemetry/domain/entities/station'
 @Injectable()
 export class PrismaStationsRepository
   extends PrismaRepository
@@ -52,6 +51,7 @@ export class PrismaStationsRepository
       }),
     ])
   }
+
   async findMany({
     nextCursor,
     previousCursor,

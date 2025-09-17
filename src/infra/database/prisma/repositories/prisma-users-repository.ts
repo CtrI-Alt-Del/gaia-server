@@ -49,10 +49,13 @@ export class PrismaUsersRepository extends PrismaRepository implements UsersRepo
     previousCursor,
     pageSize,
     status,
+    name,
   }: UsersListingParams): Promise<CursorPagination<User>> {
     let users: any[]
     let hasPreviousPage = false
     let hasNextPage = false
+
+    console.log(name?.value.toLowerCase())
 
     const whereClause = status?.isAll.isTrue
       ? undefined
@@ -64,7 +67,11 @@ export class PrismaUsersRepository extends PrismaRepository implements UsersRepo
         skip: 1,
         cursor: { id: nextCursor.value },
         orderBy: { id: 'asc' },
-        where: { ...whereClause, id: { gte: nextCursor.value } },
+        where: {
+          ...whereClause,
+          id: { gte: nextCursor.value },
+          name: { contains: name?.value, mode: 'insensitive' },
+        },
       })
       const result = this.getNextCursorPaginationResult(users, pageSize)
       users = result.items
@@ -76,7 +83,11 @@ export class PrismaUsersRepository extends PrismaRepository implements UsersRepo
         skip: 1,
         cursor: { id: previousCursor.value },
         orderBy: { id: 'desc' },
-        where: { ...whereClause, id: { lte: previousCursor.value } },
+        where: {
+          ...whereClause,
+          id: { lte: previousCursor.value },
+          name: { contains: name?.value, mode: 'insensitive' },
+        },
       })
       const result = this.getPreviousCursorPaginationResult(users, pageSize)
       users = result.items
@@ -86,7 +97,7 @@ export class PrismaUsersRepository extends PrismaRepository implements UsersRepo
       users = await this.prisma.user.findMany({
         take: pageSize.value + 1,
         orderBy: { id: 'asc' },
-        where: whereClause,
+        where: { ...whereClause, name: { contains: name?.value, mode: 'insensitive' } },
       })
       const result = this.getInitialPaginationResult(users, pageSize)
       users = result.items

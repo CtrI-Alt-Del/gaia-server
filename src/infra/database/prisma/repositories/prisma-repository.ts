@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { Prisma as PrismaClient } from '../client'
-import { Id, PlusInteger } from '@/core/global/domain/structures'
+import { PlusInteger } from '@/core/global/domain/structures'
 
 export interface PaginationParams {
   take: number
@@ -23,7 +23,7 @@ export abstract class PrismaRepository {
   }
 
   protected getPreviousCursorPaginationResult(items: any[], pageSize: PlusInteger) {
-    const reversedItems = [...items].reverse() // Cria uma cópia para não modificar o original
+    const reversedItems = [...items].reverse()
     const hasPreviousPage = reversedItems.length > pageSize.value
     const slicedItems = reversedItems.slice(0, pageSize.value)
     const hasNextPage = true

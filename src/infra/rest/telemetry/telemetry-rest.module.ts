@@ -5,6 +5,8 @@ import {
   DeactivateParameterController,
   EditParameterController,
   ListParameterController,
+  CreateStationController,
+  ListStationsController,
 } from './controllers'
 import { DatabaseModule } from '@/infra/database/database.module'
 
@@ -16,6 +18,8 @@ import { DatabaseModule } from '@/infra/database/database.module'
     EditParameterController,
     ListParameterController,
     ActivateParameterController,
+    CreateStationController,
+    ListStationsController,
   ],
 })
 export class TelemetryRestModule {}

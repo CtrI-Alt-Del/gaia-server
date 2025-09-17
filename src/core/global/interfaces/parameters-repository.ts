@@ -6,6 +6,7 @@ export interface ParametersRepository {
   add(parameter: Parameter): Promise<void>
   findById(id: Id): Promise<Parameter | null>
   findMany(params: ParametersListParams): Promise<CursorPagination<Parameter>>
+  findManyByIds(ids:Id[]): Promise<Parameter[]>
   replace(parameter: Parameter): Promise<void>
   deleteById(id: Id): Promise<void>
 }

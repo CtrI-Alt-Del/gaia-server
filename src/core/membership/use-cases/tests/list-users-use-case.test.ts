@@ -29,14 +29,17 @@ describe('Create User Use Case', () => {
   })
 
   it('should find many users with pagination without cursors', async () => {
+    const user = UsersFaker.fake()
     await useCase.execute({
+      name: user.name.value,
       pageSize: 10,
       isActive: false,
     })
 
     expect(repository.findMany).toHaveBeenCalledWith({
-      pageSize: PlusInteger.create(10),
+      name: user.name,
       isActive: Logical.createAsFalse(),
+      pageSize: PlusInteger.create(10),
       nextCursor: undefined,
       previousCursor: undefined,
     })

@@ -2,19 +2,11 @@ import type Prisma from '@prisma/client'
 
 import type { PrismaParameter } from '../types'
 import { Parameter } from '@/core/telemetry/domain/entities/parameter'
+import { ParameterDto } from '@/core/telemetry/domain/dtos/parameter-dto'
 
 export class PrismaParameterMapper {
   static toEntity(prismaParameter: Prisma.Parameter): Parameter {
-    return Parameter.create({
-      id: prismaParameter.id,
-      name: prismaParameter.name,
-      unitOfMeasure: prismaParameter.unitOfMeasure,
-      factor: prismaParameter.factor,
-      offset: prismaParameter.offset,
-      isActive: prismaParameter.isActive,
-      createdAt: prismaParameter.createdAt,
-      updatedAt: prismaParameter.updatedAt,
-    })
+    return Parameter.create(PrismaParameterMapper.toDto(prismaParameter))
   }
 
   static toPrisma(parameter: Parameter): PrismaParameter {
@@ -27,6 +19,18 @@ export class PrismaParameterMapper {
       isActive: parameter.isActive.value,
       createdAt: parameter.createdAt.value,
       updatedAt: parameter.updatedAt?.value,
+    }
+  }
+  static toDto(parameter: Prisma.Parameter): ParameterDto {
+    return {
+      id: parameter.id,
+      name: parameter.name,
+      unitOfMeasure: parameter.unitOfMeasure,
+      factor: parameter.factor,
+      offset: parameter.offset,
+      isActive: parameter.isActive,
+      createdAt: parameter.createdAt,
+      updatedAt: parameter.updatedAt,
     }
   }
 }

@@ -1,7 +1,8 @@
 import { Id, Logical, PlusInteger, Text } from '@/core/global/domain/structures'
 import { CursorPaginationDto } from '@/core/global/domain/structures/dtos'
 import type { StationsRepository, UseCase } from '@/core/global/interfaces'
-import { StationDto } from '@/core/telemetry/domain/dtos/station-dto'
+
+import { StationWithCount } from '@/core/global/types'
 
 type Request = {
   nextCursor?: string
@@ -10,7 +11,9 @@ type Request = {
   isActive: boolean
   name?: string
 }
-type Response = {
+
+
+type Response = CursorPaginationDto<{
   id?: string
   name: string
   UID: string
@@ -22,12 +25,11 @@ type Response = {
   lastMeasurement: Date | null
 }
 
-export class ListStationsUseCase
-  implements UseCase<Request, CursorPaginationDto<Response>>
-{
+
+export class ListStationsUseCase implements UseCase<Request, Response> {
   constructor(private readonly repository: StationsRepository) {}
 
-  async execute(params: Request): Promise<CursorPaginationDto<Response>> {
+  async execute(params: Request): Promise<Response> {
     const paginationDomainObject = await this.repository.findMany({
       nextCursor: params.nextCursor ? Id.create(params.nextCursor) : undefined,
       previousCursor: params.previousCursor
@@ -39,19 +41,17 @@ export class ListStationsUseCase
     })
 
     const domainItems = paginationDomainObject.items
-
-    const responseItems = domainItems.map((station) => {
-      const dto = station.dto as StationDto
+     const responseItems = domainItems.map((station) => {
       return {
-        id: dto.id,
-        name: dto.name,
-        UID: dto.UID,
-        latitude: dto.latitude,
-        longitude: dto.longitude,
-        quantityOfParameters: dto.parameters.length,
-        status: dto.isActive,
-        lastMeasurement: dto.lastReadAt ?? null,
-        address: dto.address,
+        id: station.id,
+        name: station.name,
+        UID: station.code, 
+        latitude: station.latitude,
+        longitude: station.longitude,
+        quantityOfParameters: station._count.stationParameter,
+        status: station.isActive,
+        lastMeasurement: station.updatedAt ?? null, 
+        address: station.address,
       }
     })
 

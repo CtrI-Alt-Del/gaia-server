@@ -24,6 +24,7 @@ import { DatabaseModule } from '@/infra/database/database.module'
     ListStationsController,
     EditStationController,
     DeactivateStationController,
+
   ],
 })
 export class TelemetryRestModule {}

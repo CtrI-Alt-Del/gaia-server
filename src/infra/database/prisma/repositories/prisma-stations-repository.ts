@@ -7,7 +7,7 @@ import { CursorPagination, Id } from '@/core/global/domain/structures'
 import { Station } from '@/core/telemetry/domain/entities/station'
 import { PrismaStationMapper } from '@/infra/database/prisma/mappers'
 import { StationsListingParams } from '@/core/global/types/stations-list-params'
-
+import { StationWithCount } from '@/core/global/types'
 @Injectable()
 export class PrismaStationsRepository
   extends PrismaRepository
@@ -50,11 +50,6 @@ export class PrismaStationsRepository
       }),
     ])
   }
-  async deleteById(id: Id): Promise<void> {
-    await this.prisma.station.delete({
-      where: { id: id.value },
-    })
-  }
 
   async findMany({
     nextCursor,
@@ -62,7 +57,7 @@ export class PrismaStationsRepository
     pageSize,
     isActive,
     name,
-  }: StationsListingParams): Promise<CursorPagination<Station>> {
+  }: StationsListingParams): Promise<CursorPagination<StationWithCount>> {
     let stations: any[]
     let hasPreviousPage = false
     let hasNextPage = false
@@ -72,10 +67,8 @@ export class PrismaStationsRepository
         ...this.getNextCursorPaginationParams(nextCursor, pageSize),
         where: { isActive: isActive?.isTrue },
         include: {
-          stationParameter: {
-            include: {
-              parameter: true,
-            },
+          _count: {
+            select: { stationParameter: true },
           },
         },
       })
@@ -88,10 +81,8 @@ export class PrismaStationsRepository
         ...this.getPreviousCursorPaginationParams(previousCursor, pageSize),
         where: { isActive: isActive?.isTrue },
         include: {
-          stationParameter: {
-            include: {
-              parameter: true,
-            },
+          _count: {
+            select: { stationParameter: true },
           },
         },
       })
@@ -104,10 +95,8 @@ export class PrismaStationsRepository
         ...this.getInitialPaginationParams(pageSize),
         where: { isActive: isActive?.isTrue },
         include: {
-          stationParameter: {
-            include: {
-              parameter: true,
-            },
+          _count: {
+            select: { stationParameter: true },
           },
         },
       })
@@ -121,7 +110,7 @@ export class PrismaStationsRepository
     const newPrevCursor = this.getNewPreviousCursor(stations)
 
     return CursorPagination.create({
-      items: stations.map(PrismaStationMapper.toEntity),
+      items: stations,
       pageSize: pageSize.value,
       nextCursor: newNextCursor,
       previousCursor: newPrevCursor,

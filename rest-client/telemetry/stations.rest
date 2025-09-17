@@ -5,3 +5,4 @@ Content-Type: application/json
 #### @ deactivate
 DELETE http://localhost:3333/telemetry/stations/zf4ti578yvs42ib14rpuwdzv
 Content-Type: application/json
+=======

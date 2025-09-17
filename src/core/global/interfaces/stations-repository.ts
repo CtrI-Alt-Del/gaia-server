@@ -8,5 +8,4 @@ export interface StationsRepository {
   findById(id: Id): Promise<Station | null>
   findMany(params:StationsListingParams): Promise<CursorPagination<StationWithCount>>
   replace(station: Station): Promise<void>
-  deleteById(id: Id): Promise<void>
 }

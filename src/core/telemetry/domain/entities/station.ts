@@ -42,7 +42,7 @@ export class Station extends Entity<StationProps> {
   get UID(): UnsignedId {
     return this.props.UID
   }
-  get location(): Coordinate {
+  get coordinate(): Coordinate {
     return this.props.location
   }
   get lastReadAt(): Timestamp | undefined {
@@ -60,8 +60,8 @@ export class Station extends Entity<StationProps> {
       name: this.name.value,
       UID: this.UID.value.value,
       address: this.adddress.value,
-      latitude: this.location.latitude.value,
-      longitude: this.location.longitude.value,
+      latitude: this.coordinate.latitude.value,
+      longitude: this.coordinate.longitude.value,
       lastReadAt: this.lastReadAt ? this.lastReadAt.value : undefined,
       parameters: this.parameters.map((param) => param.dto).items,
       isActive: this.isActive.value,

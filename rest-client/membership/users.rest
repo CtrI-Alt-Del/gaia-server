@@ -4,8 +4,8 @@
 ### List users
 GET {{URL}}
 ?pageSize=2
-&isActive=true
-&nextCursor=qtbejiqzbsjm6dmpjfetskse
+&status=all
+&name=Herman
 
 ### Create user
 POST {{URL}}

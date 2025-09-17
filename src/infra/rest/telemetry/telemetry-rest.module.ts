@@ -9,6 +9,7 @@ import {
   ListStationsController,
   EditStationController,
   DeactivateStationController,
+  ActivateStationController,
 } from './controllers'
 import { DatabaseModule } from '@/infra/database/database.module'
 
@@ -24,6 +25,7 @@ import { DatabaseModule } from '@/infra/database/database.module'
     ListStationsController,
     EditStationController,
     DeactivateStationController,
+    ActivateStationController,
   ],
 })
 export class TelemetryRestModule {}

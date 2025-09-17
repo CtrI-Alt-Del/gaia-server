@@ -1,4 +1,3 @@
-
 import { CursorPagination, Id } from '@/core/global/domain/structures'
 import { StationWithCount } from '@/core/global/types'
 import { StationsListingParams } from '@/core/global/types/stations-list-params'

@@ -33,7 +33,6 @@ describe('EditStationUseCase', () => {
     stationsRepository.findById.mockResolvedValue(existingStation)
     stationsRepository.replace.mockResolvedValue()
 
-
     vi.spyOn(existingStation, 'update').mockReturnValue(updatedStation)
 
     const result = await useCase.execute({

@@ -10,4 +10,5 @@ export const createStationSchema = z.object({
   address: stringSchema,
   longitude: longitudeSchema,
   parameterIds: z.array(stringSchema).min(1),
+
 })

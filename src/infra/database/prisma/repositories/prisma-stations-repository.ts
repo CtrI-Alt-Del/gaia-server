@@ -96,6 +96,7 @@ export class PrismaStationsRepository
         ...this.getInitialPaginationParams(pageSize),
         where: { isActive: isActive?.isTrue },
         include: {
+
           _count: {
             select: { stationParameter: true },
           },

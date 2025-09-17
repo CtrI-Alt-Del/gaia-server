@@ -2,7 +2,9 @@ import { Id, Logical, PlusInteger, Text } from '@/core/global/domain/structures'
 import { CursorPaginationDto } from '@/core/global/domain/structures/dtos'
 import type { StationsRepository, UseCase } from '@/core/global/interfaces'
 
+
 import { StationWithCount } from '@/core/global/types'
+
 
 type Request = {
   nextCursor?: string
@@ -13,7 +15,9 @@ type Request = {
 }
 
 
+
 type Response = CursorPaginationDto<{
+
   id?: string
   name: string
   UID: string
@@ -24,7 +28,6 @@ type Response = CursorPaginationDto<{
   status?: boolean
   lastMeasurement: Date | null
 }
-
 
 export class ListStationsUseCase implements UseCase<Request, Response> {
   constructor(private readonly repository: StationsRepository) {}

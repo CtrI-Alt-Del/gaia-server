@@ -34,7 +34,6 @@ model Parameter {
   createdAt             DateTime @default(now()) @map("created_at")
   updatedAt             DateTime @updatedAt @map("updated_at")
 
-  stations         Station[]
   alarms           Alarm[]            @relation("parameter")
   stationParameter StationParameter[] @relation("parameter")
 
@@ -52,7 +51,6 @@ model Station {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  parameters       Parameter[]
   stationParameter StationParameter[] @relation("station")
 
   @@map("stations")

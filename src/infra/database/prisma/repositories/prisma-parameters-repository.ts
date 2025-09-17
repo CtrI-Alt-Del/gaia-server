@@ -92,4 +92,11 @@ export class PrismaParametersRepository
   async deleteById(id: Id): Promise<void> {
     await this.prisma.parameter.delete({ where: { id: id.value } })
   }
+
+  async findManyByIds(ids: Id[]): Promise<Parameter[]> {
+    const prismaParameters = await this.prisma.parameter.findMany({
+      where: { id: { in: ids.map((id) => id.value) }, isActive: true },
+    })
+    return prismaParameters.map(PrismaParameterMapper.toEntity)
+  }
 }

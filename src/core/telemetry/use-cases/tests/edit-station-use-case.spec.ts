@@ -21,7 +21,6 @@ describe('EditStationUseCase', () => {
   it('should update a station and save it to the repository', async () => {
     const existingStation = StationsFaker.fake({parameters:[]})
     const updatedStation = StationsFaker.fake({parameters:[]})
-
     const updateData = {
       name: 'New Station Name',
       UID: 'NEW-UID-001',

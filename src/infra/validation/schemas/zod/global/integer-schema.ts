@@ -1,4 +1,4 @@
 import { z } from 'zod'
 
-export const integerSchema = z.coerce
+export const numberSchema = z.coerce
   .number({ message: 'número inválido' })

@@ -7,6 +7,7 @@ import {
   Id,
   PlusInteger,
   Status,
+  Text,
 } from '@/core/global/domain/structures'
 import { UsersFaker } from '../../domain/entities/fakers'
 
@@ -30,11 +31,13 @@ describe('Create User Use Case', () => {
 
   it('should find many users with pagination without cursors', async () => {
     await useCase.execute({
+      name: 'Herman',
       pageSize: 10,
       status: 'all',
     })
 
     expect(repository.findMany).toHaveBeenCalledWith({
+      name: Text.create('Herman'),
       pageSize: PlusInteger.create(10),
       status: Status.create('all'),
       nextCursor: undefined,
@@ -47,6 +50,7 @@ describe('Create User Use Case', () => {
     const previousCursor = Id.create()
 
     await useCase.execute({
+      name: 'Herman',
       pageSize: 20,
       status: 'active',
       nextCursor: nextCursor.value,
@@ -54,6 +58,7 @@ describe('Create User Use Case', () => {
     })
 
     expect(repository.findMany).toHaveBeenCalledWith({
+      name: Text.create('Herman'),
       pageSize: PlusInteger.create(20),
       status: Status.create('active'),
       nextCursor: nextCursor,
@@ -66,6 +71,7 @@ describe('Create User Use Case', () => {
     const previousCursor = Id.create()
 
     const result = await useCase.execute({
+      name: 'Herman',
       pageSize: 20,
       status: 'active',
       nextCursor: nextCursor.value,

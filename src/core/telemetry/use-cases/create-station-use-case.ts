@@ -11,7 +11,7 @@ type Request = {
   UID: string
   latitude: number
   longitude: number
-  parameters: string[]
+  parameterIds: string[]
   address: string
 }
 
@@ -28,7 +28,7 @@ export class CreateStationUseCase implements UseCase<Request, StationDto> {
       address: data.address,
       latitude: data.latitude,
       longitude: data.longitude,
-      parameters: await this.findParametersByIds(data.parameters),
+      parameters: await this.findParametersByIds(data.parameterIds),
     })
     await this.stationsRepository.add(station)
     return station.dto

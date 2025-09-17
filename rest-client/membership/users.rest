@@ -5,7 +5,7 @@
 GET {{URL}}
 ?pageSize=2
 &status=all
-&name=Herman
+&name=herman
 
 ### Create user
 POST {{URL}}

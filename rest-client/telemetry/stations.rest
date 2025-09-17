@@ -1,0 +1,3 @@
+#### @ list
+GET http://localhost:3333/telemetry/stations?pageSize=20
+Content-Type: application/json

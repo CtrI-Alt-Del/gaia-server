@@ -44,9 +44,11 @@ export class PrismaStationMapper {
       latitude: prismaStation.latitude,
       longitude: prismaStation.longitude,
       isActive: prismaStation.isActive,
-      parameters: prismaStation.stationParameter.map((join) =>
-        PrismaParameterMapper.toDto(join.parameter),
-      ),
+      parameters: prismaStation.stationParameter
+        ? prismaStation.stationParameter.map((join) =>
+            PrismaParameterMapper.toDto(join.parameter),
+          )
+        : [],
       createdAt: prismaStation.createdAt,
       updatedAt: prismaStation.updatedAt,
     }

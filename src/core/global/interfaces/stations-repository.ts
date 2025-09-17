@@ -5,5 +5,4 @@ export interface StationsRepository {
   add(station: Station): Promise<void>
   findById(id: Id): Promise<Station | null>
   replace(station: Station): Promise<void>
-  deleteById(id: Id): Promise<void>
 }

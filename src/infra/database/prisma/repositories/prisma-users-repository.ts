@@ -48,43 +48,54 @@ export class PrismaUsersRepository extends PrismaRepository implements UsersRepo
     nextCursor,
     previousCursor,
     pageSize,
-    isActive,
+    status,
   }: UsersListingParams): Promise<CursorPagination<User>> {
     let users: any[]
     let hasPreviousPage = false
     let hasNextPage = false
 
+    const whereClause = status?.isAll.isTrue
+      ? undefined
+      : { isActive: status?.isActive.isTrue }
+
     if (nextCursor) {
       users = await this.prisma.user.findMany({
-        ...this.getNextCursorPaginationParams(nextCursor, pageSize),
-        where: { isActive: isActive?.isTrue },
+        take: pageSize.value + 1,
+        skip: 1,
+        cursor: { id: nextCursor.value },
+        orderBy: { id: 'asc' },
+        where: { ...whereClause, id: { gte: nextCursor.value } },
       })
       const result = this.getNextCursorPaginationResult(users, pageSize)
       users = result.items
       hasNextPage = result.hasNextPage
-      hasPreviousPage = result.hasPreviousPage
+      hasPreviousPage = true
     } else if (previousCursor) {
       users = await this.prisma.user.findMany({
-        ...this.getPreviousCursorPaginationParams(previousCursor, pageSize),
-        where: { isActive: isActive?.isTrue },
+        take: pageSize.value + 1,
+        skip: 1,
+        cursor: { id: previousCursor.value },
+        orderBy: { id: 'desc' },
+        where: { ...whereClause, id: { lte: previousCursor.value } },
       })
       const result = this.getPreviousCursorPaginationResult(users, pageSize)
       users = result.items
-      hasNextPage = result.hasNextPage
+      hasNextPage = true
       hasPreviousPage = result.hasPreviousPage
     } else {
       users = await this.prisma.user.findMany({
-        ...this.getInitialPaginationParams(pageSize),
-        where: { isActive: isActive?.isTrue },
+        take: pageSize.value + 1,
+        orderBy: { id: 'asc' },
+        where: whereClause,
       })
       const result = this.getInitialPaginationResult(users, pageSize)
       users = result.items
       hasNextPage = result.hasNextPage
-      hasPreviousPage = result.hasPreviousPage
+      hasPreviousPage = false
     }
 
     const newNextCursor = this.getNewNextCursor(users, hasNextPage)
-    const newPrevCursor = this.getNewPreviousCursor(users)
+    const newPrevCursor = this.getNewPreviousCursor(users, hasPreviousPage)
 
     return CursorPagination.create({
       items: users.map(PrismaUserMapper.toEntity),

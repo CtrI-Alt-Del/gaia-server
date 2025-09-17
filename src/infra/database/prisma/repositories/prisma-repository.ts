@@ -7,47 +7,12 @@ export interface PaginationParams {
   skip?: number
   cursor?: { id: string }
   orderBy: Record<string, 'asc' | 'desc'>
+  where?: { id: { lt: string } }
 }
 
 @Injectable()
 export abstract class PrismaRepository {
   constructor(protected readonly prisma: PrismaClient) {}
-
-  protected getNextCursorPaginationParams(
-    nextCursor: Id,
-    pageSize: PlusInteger,
-    orderBy: Record<string, 'asc' | 'desc'> = { id: 'asc' },
-  ): PaginationParams {
-    return {
-      take: pageSize.value + 1,
-      skip: 1,
-      cursor: { id: nextCursor.value },
-      orderBy,
-    }
-  }
-
-  protected getPreviousCursorPaginationParams(
-    previousCursor: Id,
-    pageSize: PlusInteger,
-    orderBy: Record<string, 'asc' | 'desc'> = { id: 'desc' },
-  ): PaginationParams {
-    return {
-      take: -(pageSize.value + 1),
-      skip: 1,
-      cursor: { id: previousCursor.value },
-      orderBy,
-    }
-  }
-
-  protected getInitialPaginationParams(
-    pageSize: PlusInteger,
-    orderBy: Record<string, 'asc' | 'desc'> = { id: 'asc' },
-  ): PaginationParams {
-    return {
-      take: pageSize.value + 1,
-      orderBy,
-    }
-  }
 
   protected getNextCursorPaginationResult(items: any[], pageSize: PlusInteger) {
     const hasNextPage = items.length > pageSize.value
@@ -58,8 +23,8 @@ export abstract class PrismaRepository {
   }
 
   protected getPreviousCursorPaginationResult(items: any[], pageSize: PlusInteger) {
-    const reversedItems = items.reverse()
-    const hasPreviousPage = items.length > pageSize.value
+    const reversedItems = [...items].reverse() // Cria uma cópia para não modificar o original
+    const hasPreviousPage = reversedItems.length > pageSize.value
     const slicedItems = reversedItems.slice(0, pageSize.value)
     const hasNextPage = true
 
@@ -78,7 +43,7 @@ export abstract class PrismaRepository {
     return hasNextPage ? items[items.length - 1]?.id : undefined
   }
 
-  protected getNewPreviousCursor(items: any[]) {
-    return items.length > 0 ? items[0]?.id : undefined
+  protected getNewPreviousCursor(items: any[], hasPreviousPage: boolean) {
+    return hasPreviousPage && items.length > 0 ? items[items.length - 1]?.id : undefined
   }
 }

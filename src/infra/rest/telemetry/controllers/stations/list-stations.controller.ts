@@ -4,10 +4,23 @@ import { createZodDto, ZodValidationPipe } from 'nestjs-zod'
 import { StationsRepository } from '@/core/global/interfaces'
 
 import { DatabaseModule } from '@/infra/database/database.module'
-import { cursorListingSchema } from '@/infra/validation/schemas/zod/membership/users-listing-schema'
+
 import { ListStationsUseCase } from '@/core/telemetry/use-cases'
 import { StationsController } from '@/infra/rest/telemetry/controllers/stations/stations.controller'
+import {
+  booleanSchema,
+  plusIntegerSchema,
+  stringSchema,
+} from '@/infra/validation/schemas/zod/global'
+import z from 'zod'
 
+const cursorListingSchema = z.object({
+  name: stringSchema.optional(),
+  isActive: booleanSchema.optional().default(true),
+  nextCursor: stringSchema.optional(),
+  previousCursor: stringSchema.optional(),
+  pageSize: plusIntegerSchema.optional().default(20),
+})
 class ListStationsControllerRequestQuery extends createZodDto(cursorListingSchema) {}
 
 @StationsController()

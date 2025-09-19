@@ -15,6 +15,23 @@ async function seed() {
     await prisma.$connect()
     console.log('✅ Conectado ao banco de dados')
 
+    // Limpar todos os dados existentes
+    console.log('🧹 Limpando dados existentes...')
+
+    await prisma.stationParameter.deleteMany()
+    console.log('✅ StationParameters removidos')
+
+    await prisma.station.deleteMany()
+    console.log('✅ Stations removidas')
+
+    await prisma.parameter.deleteMany()
+    console.log('✅ Parameters removidos')
+
+    await prisma.user.deleteMany()
+    console.log('✅ Users removidos')
+
+    console.log('✅ Limpeza concluída!')
+
     const users = UsersFaker.fakeMany(100)
     const prismaUsers = users.map(PrismaUserMapper.toPrisma)
 
@@ -35,7 +52,7 @@ async function seed() {
 
     console.log(`✅ ${parameters.length} parâmetros adicionados com sucesso!`)
 
-    const stations = StationsFaker.fakeMany(100)
+    const stations = StationsFaker.fakeMany(1000)
 
     for (const station of stations) {
       const stationData = {

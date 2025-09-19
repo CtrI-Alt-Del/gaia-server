@@ -1,12 +1,11 @@
 import { Entity } from '@/core/global/domain/abstracts'
-import { Logical, PlusInteger, Text, Timestamp } from '@/core/global/domain/structures'
+import { Logical, Text, Timestamp } from '@/core/global/domain/structures'
 import { Integer } from '@/core/global/domain/structures/integer'
-import { ParameterDto } from '@/core/telemetry/dtos/parameter-dto'
+import { ParameterDto } from '@/core/telemetry/domain/dtos/parameter-dto'
 
 type ParameterProps = {
   name: Text
   unitOfMeasure: Text
-  numberOfDecimalPlaces: PlusInteger
   factor: Integer
   offset: Integer
   isActive: Logical
@@ -19,7 +18,6 @@ export class Parameter extends Entity<ParameterProps> {
       {
         name: Text.create(dto.name),
         unitOfMeasure: Text.create(dto.unitOfMeasure),
-        numberOfDecimalPlaces: PlusInteger.create(dto.numberOfDecimalPlaces),
         factor: Integer.create(dto.factor),
         offset: Integer.create(dto.offset),
         isActive: Logical.create(dto.isActive ?? true),
@@ -38,10 +36,6 @@ export class Parameter extends Entity<ParameterProps> {
     return this.props.unitOfMeasure
   }
 
-  get numberOfDecimalPlaces(): PlusInteger {
-    return this.props.numberOfDecimalPlaces
-  }
-
   get factor(): Integer {
     return this.props.factor
   }
@@ -56,11 +50,6 @@ export class Parameter extends Entity<ParameterProps> {
     }
     if (partialDto.unitOfMeasure !== undefined) {
       this.props.unitOfMeasure = Text.create(partialDto.unitOfMeasure)
-    }
-    if (partialDto.numberOfDecimalPlaces !== undefined) {
-      this.props.numberOfDecimalPlaces = PlusInteger.create(
-        partialDto.numberOfDecimalPlaces,
-      )
     }
     if (partialDto.factor !== undefined) {
       this.props.factor = Integer.create(partialDto.factor)
@@ -77,7 +66,6 @@ export class Parameter extends Entity<ParameterProps> {
       id: this.id.value,
       name: this.name.value,
       unitOfMeasure: this.unitOfMeasure.value,
-      numberOfDecimalPlaces: this.numberOfDecimalPlaces.value,
       factor: this.factor.value,
       offset: this.offset.value,
       isActive: this.isActive.value,

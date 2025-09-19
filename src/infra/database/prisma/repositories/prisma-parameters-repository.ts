@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common'
 
 import type { ParametersRepository } from '@/core/global/interfaces'
-import { Id } from '@/core/global/domain/structures'
-import { Parameter } from '@/core/telemetry/entities/parameter'
+import { CursorPagination, Id } from '@/core/global/domain/structures'
 import { PrismaParameterMapper } from '@/infra/database/prisma/mappers'
 import { ParametersListParams } from '@/core/global/types'
 import { PrismaRepository } from './prisma-repository'
+import { Parameter } from '@/core/telemetry/domain/entities/parameter'
 
 @Injectable()
 export class PrismaParametersRepository
@@ -29,15 +29,43 @@ export class PrismaParametersRepository
     return PrismaParameterMapper.toEntity(prismaParameter)
   }
 
-  async findMany(params: ParametersListParams): Promise<Parameter[]> {
-    throw new Error('Method not implemented.')
+  async findMany({
+    nextCursor,
+    previousCursor,
+    pageSize,
+    status,
+  }: ParametersListParams): Promise<CursorPagination<Parameter>> {
+    const whereClause = status?.isAll.isTrue
+      ? undefined
+      : { isActive: status?.isActive.isTrue }
+
+    const query = this.createPaginationQuery(this.prisma.parameter, whereClause)
+
+    const result = await this.paginateWithCursor<any>(query, {
+      nextCursor,
+      previousCursor,
+      pageSize,
+    })
+
+    return result.map(PrismaParameterMapper.toEntity)
   }
 
-  async update(parameter: Parameter): Promise<void> {
-    throw new Error('Method not implemented.')
+  async replace(parameter: Parameter): Promise<void> {
+    const prismaParameter = PrismaParameterMapper.toPrisma(parameter)
+    await this.prisma.parameter.update({
+      where: { id: prismaParameter.id },
+      data: prismaParameter,
+    })
   }
 
   async deleteById(id: Id): Promise<void> {
     await this.prisma.parameter.delete({ where: { id: id.value } })
+  }
+
+  async findManyByIds(ids: Id[]): Promise<Parameter[]> {
+    const prismaParameters = await this.prisma.parameter.findMany({
+      where: { id: { in: ids.map((id) => id.value) }, isActive: true },
+    })
+    return prismaParameters.map(PrismaParameterMapper.toEntity)
   }
 }

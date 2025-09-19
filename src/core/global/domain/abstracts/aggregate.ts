@@ -1,33 +1,31 @@
 import { EnityProps, Entity } from '@/core/global/domain/abstracts/entity'
 import { Logical } from '@/core/global/domain/structures'
 
-export abstract class Aggregate<
-  Props extends EnityProps,
-  AggregableEntity,
-> extends Entity<Props> {
-  private readonly entity: AggregableEntity
+type Props<AggregableEntity> = {
+  entity?: AggregableEntity
+} & EnityProps
+
+export abstract class Aggregate<AggregableEntity> extends Entity<Props<AggregableEntity>> {
   private readonly entityName: string
 
   protected constructor(
-    props: Props,
-    entity: AggregableEntity,
     entityName: string,
-    id?: string,
+    id: string,
+    entity?: AggregableEntity
   ) {
-    super(props, id)
-    this.entity = entity
+    super({entity}, id)
     this.entityName = entityName
   }
 
   getEntity(): AggregableEntity {
-    if (this.hasEntity().isTrue) {
+    if (this.hasEntity().isFalse) {
       throw new Error(this.entityName)
     }
-    return this.entity
+    return this.props.entity as AggregableEntity
   }
 
   hasEntity(): Logical {
-    const isEntityNotNullOrUndefined = this.entity !== null || this.entity !== undefined
+    const isEntityNotNullOrUndefined = this.props.entity != undefined
     return Logical.create(isEntityNotNullOrUndefined)
   }
 }

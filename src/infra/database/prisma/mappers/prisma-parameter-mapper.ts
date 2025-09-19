@@ -1,21 +1,12 @@
 import type Prisma from '@prisma/client'
 
-import { Parameter } from '@/core/telemetry/entities/parameter'
 import type { PrismaParameter } from '../types'
+import { Parameter } from '@/core/telemetry/domain/entities/parameter'
+import { ParameterDto } from '@/core/telemetry/domain/dtos/parameter-dto'
 
 export class PrismaParameterMapper {
   static toEntity(prismaParameter: Prisma.Parameter): Parameter {
-    return Parameter.create({
-      id: prismaParameter.id,
-      name: prismaParameter.name,
-      unitOfMeasure: prismaParameter.unitOfMeasure,
-      numberOfDecimalPlaces: prismaParameter.numberOfDecimalPlaces,
-      factor: prismaParameter.factor,
-      offset: prismaParameter.offset,
-      isActive: prismaParameter.isActive,
-      createdAt: prismaParameter.createdAt,
-      updatedAt: prismaParameter.updatedAt,
-    })
+    return Parameter.create(PrismaParameterMapper.toDto(prismaParameter))
   }
 
   static toPrisma(parameter: Parameter): PrismaParameter {
@@ -23,12 +14,23 @@ export class PrismaParameterMapper {
       id: parameter.id.value,
       name: parameter.name.value,
       unitOfMeasure: parameter.unitOfMeasure.value,
-      numberOfDecimalPlaces: parameter.numberOfDecimalPlaces.value,
       factor: parameter.factor.value,
       offset: parameter.offset.value,
       isActive: parameter.isActive.value,
       createdAt: parameter.createdAt.value,
       updatedAt: parameter.updatedAt?.value,
+    }
+  }
+  static toDto(parameter: Prisma.Parameter): ParameterDto {
+    return {
+      id: parameter.id,
+      name: parameter.name,
+      unitOfMeasure: parameter.unitOfMeasure,
+      factor: parameter.factor,
+      offset: parameter.offset,
+      isActive: parameter.isActive,
+      createdAt: parameter.createdAt,
+      updatedAt: parameter.updatedAt,
     }
   }
 }

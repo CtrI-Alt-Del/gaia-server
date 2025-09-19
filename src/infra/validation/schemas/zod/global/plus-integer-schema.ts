@@ -1,3 +1,3 @@
-import { integerSchema } from './integer-schema'
+import { numberSchema } from './integer-schema'
 
-export const plusIntegerSchema = integerSchema.min(1)
+export const plusIntegerSchema = numberSchema.min(1)

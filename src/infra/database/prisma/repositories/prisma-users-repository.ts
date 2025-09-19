@@ -73,7 +73,6 @@ export class PrismaUsersRepository extends PrismaRepository implements UsersRepo
 
   async replace(user: User): Promise<void> {
     const prismaUser = PrismaUserMapper.toPrisma(user)
-    console.log('prismaUser', prismaUser)
     await this.prisma.user.update({ where: { id: user.id.value }, data: prismaUser })
   }
 }

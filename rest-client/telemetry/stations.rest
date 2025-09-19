@@ -1,11 +1,41 @@
-#### @ list
-GET http://localhost:3333/telemetry/stations?pageSize=20
+@URL = {{BASE_URL}}/telemetry/stations
+@ID = zf4ti578yvs42ib14rpuwdzv
+
+#### list stations
+GET {{URL}}
+?pageSize=2
+&previousCursor=cmfral7gy00eqnkv27c224prb
+
+#### create station
+POST {{URL}}
 Content-Type: application/json
 
-#### @ deactivate
-DELETE http://localhost:3333/telemetry/stations/zf4ti578yvs42ib14rpuwdzv
+{
+  "name": "Estação Central",
+  "UID": "EST001",
+  "latitude": -23.5505,
+  "longitude": -46.6333,
+  "address": "Av. Paulista, 1000 - São Paulo, SP",
+  "parameterIds": ["param1", "param2", "param3"]
+}
+
+#### update station
+PUT {{URL}}/{{ID}}
 Content-Type: application/json
 
-#### @ activate
-PATCH http://localhost:3333/telemetry/stations/zf4ti578yvs42ib14rpuwdzv
+{
+  "name": "Estação Central Atualizada",
+  "UID": "EST001_UPDATED",
+  "latitude": -23.5505,
+  "longitude": -46.6333,
+  "address": "Av. Paulista, 1000 - São Paulo, SP",
+  "parameters": ["param1", "param2", "param4"]
+}
+
+#### deactivate station
+DELETE {{URL}}/{{ID}}
+Content-Type: application/json
+
+#### activate station
+PATCH {{URL}}/{{ID}}
 Content-Type: application/json

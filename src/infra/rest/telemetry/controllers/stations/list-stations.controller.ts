@@ -1,11 +1,11 @@
 import { Get, Inject, Query, UsePipes } from '@nestjs/common'
 import { createZodDto, ZodValidationPipe } from 'nestjs-zod'
+import { z } from 'zod'
 
 import { StationsRepository } from '@/core/global/interfaces'
+import { ListStationsUseCase } from '@/core/telemetry/use-cases'
 
 import { DatabaseModule } from '@/infra/database/database.module'
-
-import { ListStationsUseCase } from '@/core/telemetry/use-cases'
 import { StationsController } from '@/infra/rest/telemetry/controllers/stations/stations.controller'
 import {
   booleanSchema,
@@ -13,7 +13,6 @@ import {
   statusSchema,
   stringSchema,
 } from '@/infra/validation/schemas/zod/global'
-import { z } from 'zod'
 
 const cursorListingSchema = z.object({
   name: stringSchema.optional(),

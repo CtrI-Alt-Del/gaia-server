@@ -3,8 +3,7 @@
 
 #### list stations
 GET {{URL}}
-?pageSize=2
-&previousCursor=cmfral7gy00eqnkv27c224prb
+?pageSize=20
 
 #### create station
 POST {{URL}}

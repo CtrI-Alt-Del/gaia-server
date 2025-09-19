@@ -27,11 +27,12 @@ type Response = CursorPaginationDto<{
   quantityOfParameters: number
   status?: boolean
   lastMeasurement: Date | null
-}
+}>
+
 
 export class ListStationsUseCase implements UseCase<Request, Response> {
-  constructor(private readonly repository: StationsRepository) {}
 
+  constructor(private readonly repository: StationsRepository) {}
   async execute(params: Request): Promise<Response> {
     const paginationDomainObject = await this.repository.findMany({
       nextCursor: params.nextCursor ? Id.create(params.nextCursor) : undefined,

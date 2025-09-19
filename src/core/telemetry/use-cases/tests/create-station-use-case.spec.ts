@@ -32,7 +32,7 @@ describe('CreateStationUseCase', () => {
       address: '123 Test St',
       latitude: -23.1791,
       longitude: -45.8872,
-      parameters: mockParameterIds,
+      parameterIds: mockParameterIds,
     }
 
     parametersRepository.findManyByIds.mockResolvedValue(mockParameters)
@@ -45,7 +45,11 @@ describe('CreateStationUseCase', () => {
       mockParameterIds.map(Id.create),
     )
     expect(Station.create).toHaveBeenCalledWith({
-      ...createStationRequest,
+      name: createStationRequest.name,
+      UID: createStationRequest.UID,
+      address: createStationRequest.address,
+      latitude: createStationRequest.latitude,
+      longitude: createStationRequest.longitude,
       parameters: mockParameters.map((p) => p.dto),
     })
     expect(stationsRepository.add).toHaveBeenCalledWith(mockStation)
@@ -62,7 +66,7 @@ describe('CreateStationUseCase', () => {
       address: '123 Test St',
       latitude: -23.1791,
       longitude: -45.8872,
-      parameters: requestedIds,
+      parameterIds: requestedIds,
     }
 
     parametersRepository.findManyByIds.mockResolvedValue(mockParameters)

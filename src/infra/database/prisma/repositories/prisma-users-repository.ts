@@ -51,75 +51,29 @@ export class PrismaUsersRepository extends PrismaRepository implements UsersRepo
     status,
     name,
   }: UsersListingParams): Promise<CursorPagination<User>> {
-    let users: any[]
-    let hasPreviousPage = false
-    let hasNextPage = false
-
-    console.log(name?.value.toLowerCase())
-
     const whereClause = status?.isAll.isTrue
       ? undefined
       : { isActive: status?.isActive.isTrue }
 
-    if (nextCursor) {
-      users = await this.prisma.user.findMany({
-        take: pageSize.value + 1,
-        skip: 1,
-        cursor: { id: nextCursor.value },
-        orderBy: { id: 'asc' },
-        where: {
-          ...whereClause,
-          id: { gte: nextCursor.value },
-          name: { contains: name?.value, mode: 'insensitive' },
-        },
-      })
-      const result = this.getNextCursorPaginationResult(users, pageSize)
-      users = result.items
-      hasNextPage = result.hasNextPage
-      hasPreviousPage = true
-    } else if (previousCursor) {
-      users = await this.prisma.user.findMany({
-        take: pageSize.value + 1,
-        skip: 1,
-        cursor: { id: previousCursor.value },
-        orderBy: { id: 'desc' },
-        where: {
-          ...whereClause,
-          id: { lte: previousCursor.value },
-          name: { contains: name?.value, mode: 'insensitive' },
-        },
-      })
-      const result = this.getPreviousCursorPaginationResult(users, pageSize)
-      users = result.items
-      hasNextPage = true
-      hasPreviousPage = result.hasPreviousPage
-    } else {
-      users = await this.prisma.user.findMany({
-        take: pageSize.value + 1,
-        orderBy: { id: 'asc' },
-        where: { ...whereClause, name: { contains: name?.value, mode: 'insensitive' } },
-      })
-      const result = this.getInitialPaginationResult(users, pageSize)
-      users = result.items
-      hasNextPage = result.hasNextPage
-      hasPreviousPage = false
+    const where = {
+      ...whereClause,
+      name: { contains: name?.value, mode: 'insensitive' },
     }
 
-    const newNextCursor = this.getNewNextCursor(users, hasNextPage)
-    const newPrevCursor = this.getNewPreviousCursor(users, hasPreviousPage)
+    const query = this.createPaginationQuery(this.prisma.user, where)
 
-    return CursorPagination.create({
-      items: users.map(PrismaUserMapper.toEntity),
-      pageSize: pageSize.value,
-      nextCursor: newNextCursor,
-      previousCursor: newPrevCursor,
-      hasNextPage,
-      hasPreviousPage,
+    const result = await this.paginateWithCursor<any>(query, {
+      nextCursor,
+      previousCursor,
+      pageSize,
     })
+
+    return result.map(PrismaUserMapper.toEntity)
   }
 
   async replace(user: User): Promise<void> {
     const prismaUser = PrismaUserMapper.toPrisma(user)
+    console.log('prismaUser', prismaUser)
     await this.prisma.user.update({ where: { id: user.id.value }, data: prismaUser })
   }
 }

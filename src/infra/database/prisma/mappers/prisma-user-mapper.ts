@@ -17,6 +17,7 @@ export class PrismaUserMapper {
   }
 
   static toPrisma(user: User): PrismaUser {
+    console.log('user', user.isActive.value)
     return {
       id: user.id.value,
       name: user.name.value,

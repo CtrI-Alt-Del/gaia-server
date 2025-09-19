@@ -5,14 +5,28 @@ import { Id, Logical, PlusInteger, Text } from '@/core/global/domain/structures'
 import type { StationsRepository } from '@/core/global/interfaces'
 import { CursorPagination } from '@/core/global/domain/structures/cursor-pagination'
 import { ListStationsUseCase } from '@/core/telemetry/use-cases/list-stations-use-case'
-import { StationsFaker } from '@/core/telemetry/domain/entities/fakers/station-faker'
 
 describe('ListStationsUseCase', () => {
   let repository: MockProxy<StationsRepository>
   let useCase: ListStationsUseCase
 
   const mockStationsPagination = CursorPagination.create({
-    items: [StationsFaker.fake(), StationsFaker.fake()],
+    items: [
+      {
+        id: '123',
+        name: 'Station 1',
+        code: 'ST-001',
+        latitude: -23.1791,
+        longitude: -45.8872,
+        address: '123 Main St',
+        _count: {
+          stationParameter: 5,
+        },
+        createdAt: new Date(),
+        isActive: true,
+        updatedAt: new Date(),
+      },
+    ],
     pageSize: 10,
     nextCursor: Id.create('next-id').value,
     previousCursor: Id.create('prev-id').value,
@@ -67,15 +81,15 @@ describe('ListStationsUseCase', () => {
 
     const expectedResponse = {
       items: mockStationsPagination.items.map((station) => ({
-        id: station.dto.id,
-        name: station.dto.name,
-        UID: station.dto.UID,
-        latitude: station.dto.latitude,
-        longitude: station.dto.longitude,
-        address: station.dto.address,
-        quantityOfParameters: station.dto.parameters.length,
-        status: station.dto.isActive,
-        lastMeasurement: station.dto.lastReadAt ?? null,
+        id: station.id,
+        name: station.name,
+        UID: station.code,
+        latitude: station.latitude,
+        longitude: station.longitude,
+        address: station.address,
+        quantityOfParameters: station._count.stationParameter,
+        status: station.isActive,
+        lastMeasurement: station.updatedAt ?? null,
       })),
       pageSize: mockStationsPagination.pageSize.value,
       nextCursor: mockStationsPagination.nextCursor?.value,

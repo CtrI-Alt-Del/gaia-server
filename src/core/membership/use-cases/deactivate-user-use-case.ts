@@ -21,6 +21,8 @@ export class DeactivateUserUseCase implements UseCase<Request, Response> {
 
     user.deactivate()
 
+    console.log('user', user)
+
     await this.repository.replace(user)
     return user.dto
   }

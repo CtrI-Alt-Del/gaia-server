@@ -4,23 +4,23 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { Id } from '@/core/global/domain/structures'
 import type { ParametersRepository, StationsRepository } from '@/core/global/interfaces'
 import { StationNotFoundError } from '@/core/telemetry/domain/errors/station-not-found-error'
-import { EditStationUseCase } from '@/core/telemetry/use-cases/edit-station-use-case'
+import { UpdateStationUseCase } from '@/core/telemetry/use-cases/update-station-use-case'
 import { StationsFaker } from '@/core/telemetry/domain/entities/fakers/station-faker'
 
-describe('EditStationUseCase', () => {
+describe('UpdateStationUseCase', () => {
   let stationsRepository: MockProxy<StationsRepository>
   let parametersRepository: MockProxy<ParametersRepository>
-  let useCase: EditStationUseCase
+  let useCase: UpdateStationUseCase
 
   beforeEach(() => {
     stationsRepository = mock<StationsRepository>()
     parametersRepository = mock<ParametersRepository>()
-    useCase = new EditStationUseCase(parametersRepository, stationsRepository)
+    useCase = new UpdateStationUseCase(parametersRepository, stationsRepository)
   })
 
   it('should update a station and save it to the repository', async () => {
-    const existingStation = StationsFaker.fake({parameters:[]})
-    const updatedStation = StationsFaker.fake({parameters:[]})
+    const existingStation = StationsFaker.fake({ parameters: [] })
+    const updatedStation = StationsFaker.fake({ parameters: [] })
     const updateData = {
       name: 'New Station Name',
       UID: 'NEW-UID-001',

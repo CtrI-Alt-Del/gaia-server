@@ -1,10 +1,10 @@
 @URL = {{BASE_URL}}/membership/users
-@ID = cdi2imbybgtotmz446atd7yv
+@ID = cmfq6ogg40007vtv26kzye6ew
 
 ### List users
 GET {{URL}}
-?pageSize=10
-&nextCursor=z35xjfqsxrprkwo9eriqz9s6
+?pageSize=5
+&previousCursor=cmfq3sod2002cwev23uwrgr20
 
 ### Create user
 POST {{URL}}
@@ -27,8 +27,8 @@ Content-Type: application/json
 }
 
 ### Activate user
-PATCH {{URL}}/activate/{{ID}}
+PATCH {{URL}}/{{ID}}/activate
 
 ### Deactivate user
-DELETE {{URL}}/deactivate/{{ID}}
+DELETE {{URL}}/{{ID}}/deactivate
 

@@ -18,7 +18,7 @@ type Request = {
 }
 type UseCaseInput = { data: Partial<Request>; stationId: string }
 
-export class EditStationUseCase implements UseCase<UseCaseInput, StationDto> {
+export class UpdateStationUseCase implements UseCase<UseCaseInput, StationDto> {
   constructor(
     private readonly parametersRepository: ParametersRepository,
     private readonly stationsRepository: StationsRepository,

@@ -6,7 +6,7 @@ import { DeactivateUserUseCase } from '@/core/membership/use-cases'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { UsersController } from './users.controller'
 
-@UsersController(':userId')
+@UsersController('/:userId/deactivate')
 export class DeactivateUserController {
   constructor(
     @Inject(DatabaseModule.USERS_REPOSITORY)

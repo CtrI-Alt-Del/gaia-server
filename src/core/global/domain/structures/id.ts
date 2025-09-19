@@ -1,4 +1,4 @@
-import { createId } from '@paralleldrive/cuid2'
+import cuid from 'cuid'
 
 import { Logical } from '@/core/global/domain/structures/logical'
 
@@ -9,11 +9,11 @@ export class Id {
     this.value = value
   }
   static create(value?: string): Id {
-    return new Id(value ?? createId())
+    return new Id(value ?? cuid())
   }
 
   static createRandom(): Id {
-    return new Id(createId())
+    return new Id(cuid())
   }
 
   equals(id: Id): Logical {

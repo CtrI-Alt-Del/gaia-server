@@ -1,35 +1,41 @@
 
-POST http://localhost:3333/telemetry/parameters
+@URL = {{BASE_URL}}/telemetry/parameters
+@ID = gknjgalzinu2wmmzr8u1k3s7
+
+#### create parameter
+POST {{URL}}
 Content-Type: application/json
 
 {
-  "factor": 0.1,
   "name": "Temperature",
+  "unitOfMeasure": "Celsius",
+  "factor": 0.1,
   "offset": 0,
-  "unitOfMeasure": "Celsius"
+  "isActive": true
 }
 
-#### @ update
-PUT http://localhost:3333/telemetry/parameters/gknjgalzinu2wmmzr8u1k3s7
+#### list parameters
+GET {{URL}}
+?pageSize=20
+&status=all
+&name=Temperature
+
+#### update parameter
+PUT {{URL}}/{{ID}}
 Content-Type: application/json
 
 {
-  "factor": 0.1,
-  "name": "Banana macia radical",
-  "offset": 0,
-  "unitOfMeasure": "Celsius"
+  "name": "Temperature Updated",
+  "unitOfMeasure": "Fahrenheit",
+  "factor": 0.2,
+  "offset": 32
 }
 
-#### @ list
-GET http://localhost:3333/telemetry/parameters?pageSize=20
+#### deactivate parameter
+DELETE {{URL}}/{{ID}}
 Content-Type: application/json
 
-
-#### @ deactivate
-DELETE http://localhost:3333/telemetry/parameters/acfa915e-fddd-4575-941e-dc57c61965b9
-Content-Type: application/json
-
-#### @ activate
-PATCH http://localhost:3333/telemetry/parameters/gknjgalzinu2wmmzr8u1k3s7
+#### activate parameter
+PATCH {{URL}}/{{ID}}
 Content-Type: application/json
 

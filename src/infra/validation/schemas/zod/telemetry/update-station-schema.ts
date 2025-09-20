@@ -3,12 +3,11 @@ import { latitudeSchema } from '@/infra/validation/schemas/zod/telemetry/latitud
 import { longitudeSchema } from '@/infra/validation/schemas/zod/telemetry/longitude-schema'
 import z from 'zod'
 
-export const createStationSchema = z.object({
-  name: stringSchema,
-  UID: stringSchema,
-  latitude: latitudeSchema,
-  address: stringSchema,
-  longitude: longitudeSchema,
-  parameterIds: z.array(stringSchema).min(1),
-
+export const updateStationSchema = z.object({
+  name: stringSchema.optional(),
+  UID: stringSchema.optional(),
+  latitude: latitudeSchema.optional(),
+  address: stringSchema.optional(),
+  longitude: longitudeSchema.optional(),
+  parameters: z.array(stringSchema).optional()
 })

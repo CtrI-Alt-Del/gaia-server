@@ -1,6 +1,7 @@
+import { faker } from '@faker-js/faker'
+
 import { ParameterDto } from '@/core/telemetry/domain/dtos/parameter-dto'
 import { Parameter } from '@/core/telemetry/domain/entities/parameter'
-import { faker } from '@faker-js/faker'
 
 export class ParameterFaker {
   static fake(baseDto?: Partial<ParameterDto>): Parameter {

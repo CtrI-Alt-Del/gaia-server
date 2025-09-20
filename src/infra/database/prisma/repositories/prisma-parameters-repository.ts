@@ -33,52 +33,21 @@ export class PrismaParametersRepository
     nextCursor,
     previousCursor,
     pageSize,
-    isActive,
+    status,
   }: ParametersListParams): Promise<CursorPagination<Parameter>> {
-    let parameters: any[]
-    let hasPreviousPage = false
-    let hasNextPage = false
+    const whereClause = status?.isAll.isTrue
+      ? undefined
+      : { isActive: status?.isActive.isTrue }
 
-    if (nextCursor) {
-      parameters = await this.prisma.parameter.findMany({
-        ...this.getNextCursorPaginationParams(nextCursor, pageSize),
-        where: { isActive: isActive?.isTrue },
-      })
-      const result = this.getNextCursorPaginationResult(parameters, pageSize)
-      parameters = result.items
-      hasNextPage = result.hasNextPage
-      hasPreviousPage = result.hasPreviousPage
-    } else if (previousCursor) {
-      parameters = await this.prisma.parameter.findMany({
-        ...this.getPreviousCursorPaginationParams(previousCursor, pageSize),
-        where: { isActive: isActive?.isTrue },
-      })
-      const result = this.getPreviousCursorPaginationResult(parameters, pageSize)
-      parameters = result.items
-      hasNextPage = result.hasNextPage
-      hasPreviousPage = result.hasPreviousPage
-    } else {
-      parameters = await this.prisma.parameter.findMany({
-        ...this.getInitialPaginationParams(pageSize),
-        where: { isActive: isActive?.isTrue },
-      })
-      const result = this.getInitialPaginationResult(parameters, pageSize)
-      parameters = result.items
-      hasNextPage = result.hasNextPage
-      hasPreviousPage = result.hasPreviousPage
-    }
+    const query = this.createPaginationQuery(this.prisma.parameter, whereClause)
 
-    const newNextCursor = this.getNewNextCursor(parameters, hasNextPage)
-    const newPrevCursor = this.getNewPreviousCursor(parameters)
-
-    return CursorPagination.create({
-      items: parameters.map(PrismaParameterMapper.toEntity),
-      pageSize: pageSize.value,
-      nextCursor: newNextCursor,
-      previousCursor: newPrevCursor,
-      hasNextPage,
-      hasPreviousPage,
+    const result = await this.paginateWithCursor<any>(query, {
+      nextCursor,
+      previousCursor,
+      pageSize,
     })
+
+    return result.map(PrismaParameterMapper.toEntity)
   }
 
   async replace(parameter: Parameter): Promise<void> {

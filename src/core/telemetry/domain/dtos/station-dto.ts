@@ -1,11 +1,11 @@
-import { ParameterDto } from "@/core/telemetry/domain/dtos/parameter-dto"
+import { ParameterDto } from '@/core/telemetry/domain/dtos/parameter-dto'
 
 export type StationDto = {
   id?: string
   name: string
-  UID: string
+  uid: string
   latitude: number
-  address:string
+  address: string
   longitude: number
   parameters: ParameterDto[]
   lastReadAt?: Date

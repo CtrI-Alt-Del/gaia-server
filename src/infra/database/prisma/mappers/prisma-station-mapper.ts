@@ -25,7 +25,7 @@ export class PrismaStationMapper {
     const parameterItems = station.parameters.items
     return {
       id: station.id.value,
-      code: station.UID.value.value,
+      uid: station.uid.value.value,
       name: station.name.value,
       latitude: station.coordinate.latitude.value,
       longitude: station.coordinate.longitude.value,
@@ -45,7 +45,7 @@ export class PrismaStationMapper {
   static toDto(prismaStation: PrismaStationWithRelations): StationDto {
     return {
       id: prismaStation.id,
-      UID: prismaStation.code,
+      uid: prismaStation.uid,
       name: prismaStation.name,
       address: prismaStation.address,
       latitude: prismaStation.latitude,
@@ -64,7 +64,7 @@ export class PrismaStationMapper {
   static toStationWithCount(prismaStation: PrismaStationWithCount): StationWithCount {
     return {
       id: prismaStation.id,
-      code: prismaStation.code,
+      uid: prismaStation.uid,
       name: prismaStation.name,
       latitude: prismaStation.latitude,
       longitude: prismaStation.longitude,

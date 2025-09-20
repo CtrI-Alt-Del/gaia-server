@@ -1,6 +1,6 @@
 export type StationWithCount = {
   id: string
-  code: string
+  uid: string
   name: string
   latitude: number
   longitude: number
@@ -12,4 +12,3 @@ export type StationWithCount = {
     stationParameter: number
   }
 }
-

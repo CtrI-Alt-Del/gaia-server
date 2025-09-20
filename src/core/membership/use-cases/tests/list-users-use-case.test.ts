@@ -1,6 +1,6 @@
 import { mock, MockProxy } from 'vitest-mock-extended'
 
-import { UsersRepository } from '@/core/global/interfaces'
+import { UsersRepository } from '@/core/membership/interfaces'
 import { ListUsersUseCase } from '../list-users-use-case'
 import {
   CursorPagination,

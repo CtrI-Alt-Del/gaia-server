@@ -4,10 +4,12 @@ import { AlarmDto } from "../../dtos/alarm.dto"
 import { MeasurementAggregate } from "../../aggregate/measurement-aggregate"
 import AlarmLevel from "../structures/alarm-level"
 import AlertRule from "../structures/alert-rule"
+import { ParameterAggregate } from "../../aggregate/parameter-aggregate"
 
 type AlarmProps = {
     message: Text
     measurement: MeasurementAggregate
+    parameter: ParameterAggregate
     rule: AlertRule
     level: AlarmLevel
     isActive: Logical
@@ -21,6 +23,7 @@ export class Alarm extends Entity<AlarmProps>{
             {
                 message: Text.create(dto.message),
                 measurement: MeasurementAggregate.create(dto.measurement),
+                parameter: ParameterAggregate.create(dto.parameter),
                 rule: AlertRule.create(dto.rule),
                 level: AlarmLevel.create(dto.level),
                 isActive: Logical.create(dto.isActive),
@@ -55,6 +58,7 @@ export class Alarm extends Entity<AlarmProps>{
             id: this.id.value,
             message: this.props.message.value,
             measurement: this.props.measurement.dto,
+            parameter: this.props.parameter.dto,
             rule: this.props.rule.dto,
             level: this.props.level.toString(),
             isActive: this.props.isActive.value,

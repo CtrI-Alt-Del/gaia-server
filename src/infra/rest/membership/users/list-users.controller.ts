@@ -2,7 +2,7 @@ import { Get, Inject, Query, UsePipes } from '@nestjs/common'
 import { createZodDto, ZodValidationPipe } from 'nestjs-zod'
 import { z } from 'zod'
 
-import { UsersRepository } from '@/core/global/interfaces'
+import { UsersRepository } from '@/core/membership/interfaces'
 import { ListUsersUseCase } from '@/core/membership/use-cases'
 
 import { DatabaseModule } from '@/infra/database/database.module'

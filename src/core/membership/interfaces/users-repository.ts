@@ -1,5 +1,5 @@
+import { CursorPagination, Id, Text } from '@/core/global/domain/structures'
 import { User } from '@/core/membership/domain/entities'
-import { CursorPagination, Id, Text } from '../domain/structures'
 import { UsersListingParams } from '@/core/membership/domain/types'
 
 export interface UsersRepository {

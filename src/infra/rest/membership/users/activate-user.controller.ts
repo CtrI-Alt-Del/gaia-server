@@ -1,6 +1,6 @@
 import { Inject, Param, Patch } from '@nestjs/common'
 
-import { UsersRepository } from '@/core/global/interfaces'
+import { UsersRepository } from '@/core/membership/interfaces'
 import { ActivateUserUseCase } from '@/core/membership/use-cases'
 
 import { DatabaseModule } from '@/infra/database/database.module'

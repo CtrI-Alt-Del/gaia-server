@@ -9,12 +9,12 @@ GET {{URL}}
 ### Create user
 POST {{URL}}
 Content-Type: application/json
+Authorization: Bearer {{JWT}}
 
 {
   "name": "John Doe",
-  "email": "john.doe@example.com",
-  "isActive": true,
-  "role": "member"
+  "email": "joaopcarvalho.cds@gmail.com",
+  "accountPassword": "12345678"
 }
 
 ### Update user

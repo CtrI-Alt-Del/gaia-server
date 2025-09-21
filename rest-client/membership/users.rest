@@ -13,8 +13,7 @@ Authorization: Bearer {{JWT}}
 
 {
   "name": "John Doe",
-  "email": "joaopcarvalho.cds@gmail.com",
-  "accountPassword": "12345678"
+  "email": "gaia.ctrlaltdel@gmail.com"
 }
 
 ### Update user

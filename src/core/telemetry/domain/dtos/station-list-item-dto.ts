@@ -1,7 +1,7 @@
 export type StationListItemDto = {
   id: string
   name: string
-  UID: string
+  uid: string
   latitude: number
   longitude: number
   quantityOfParameters: number

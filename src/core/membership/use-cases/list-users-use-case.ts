@@ -1,4 +1,4 @@
-import { UsersRepository } from '@/core/global/interfaces'
+import { UsersRepository } from '@/core/membership/interfaces'
 import { CursorPaginationDto } from '@/core/global/domain/structures/dtos'
 import { Id, Status, Text } from '@/core/global/domain/structures'
 import { PlusInteger } from '@/core/global/domain/structures'

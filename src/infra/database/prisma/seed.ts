@@ -58,7 +58,7 @@ async function seed() {
       const stationData = {
         id: station.id.value,
         name: station.name.value,
-        code: station.UID.value.value,
+        uid: station.uid.value.value,
         address: station.adddress.value,
         latitude: station.coordinate.latitude.value,
         longitude: station.coordinate.longitude.value,

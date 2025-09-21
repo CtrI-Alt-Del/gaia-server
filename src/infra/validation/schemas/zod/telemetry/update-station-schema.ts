@@ -5,9 +5,9 @@ import z from 'zod'
 
 export const updateStationSchema = z.object({
   name: stringSchema.optional(),
-  UID: stringSchema.optional(),
+  uid: stringSchema.optional(),
   latitude: latitudeSchema.optional(),
   address: stringSchema.optional(),
   longitude: longitudeSchema.optional(),
-  parameters: z.array(stringSchema).optional()
+  parameters: z.array(stringSchema).optional(),
 })

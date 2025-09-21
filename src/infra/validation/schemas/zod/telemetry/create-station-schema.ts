@@ -5,10 +5,9 @@ import z from 'zod'
 
 export const createStationSchema = z.object({
   name: stringSchema,
-  UID: stringSchema,
+  uid: stringSchema,
   latitude: latitudeSchema,
   address: stringSchema,
   longitude: longitudeSchema,
   parameterIds: z.array(stringSchema).min(1),
-
 })

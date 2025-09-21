@@ -23,7 +23,7 @@ describe('UpdateStationUseCase', () => {
     const updatedStation = StationsFaker.fake({ parameters: [] })
     const updateData = {
       name: 'New Station Name',
-      UID: 'NEW-UID-001',
+      uid: 'NEW-uid-001',
       latitude: -10.0,
       longitude: -20.0,
       address: '456 New Address St',

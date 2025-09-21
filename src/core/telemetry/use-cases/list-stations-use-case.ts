@@ -31,7 +31,7 @@ export class ListStationsUseCase
       (station): StationListItemDto => ({
         id: station.id,
         name: station.name,
-        UID: station.code,
+        uid: station.uid,
         latitude: station.latitude,
         longitude: station.longitude,
         quantityOfParameters: station._count.stationParameter,

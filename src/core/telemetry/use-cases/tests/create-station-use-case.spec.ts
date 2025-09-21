@@ -28,7 +28,7 @@ describe('CreateStationUseCase', () => {
 
     const createStationRequest = {
       name: 'Test Station',
-      UID: 'STATION-001',
+      uid: 'STATION-001',
       address: '123 Test St',
       latitude: -23.1791,
       longitude: -45.8872,
@@ -53,12 +53,12 @@ describe('CreateStationUseCase', () => {
   })
 
   it('should throw an error if any parameter is not found', async () => {
-    const mockParameters = [ParameterFaker.fake()] 
+    const mockParameters = [ParameterFaker.fake()]
     const requestedIds = [mockParameters[0].id.value, 'non-existent-id']
 
     const createStationRequest = {
       name: 'Test Station',
-      UID: 'STATION-001',
+      uid: 'STATION-001',
       address: '123 Test St',
       latitude: -23.1791,
       longitude: -45.8872,

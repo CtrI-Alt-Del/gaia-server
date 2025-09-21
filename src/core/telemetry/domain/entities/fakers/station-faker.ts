@@ -18,7 +18,7 @@ export class StationsFaker {
 
     return {
       name: `${faker.location.city()} Weather Station`,
-      UID: faker.string.alphanumeric(8).toUpperCase(),
+      uid: faker.string.alphanumeric(8).toUpperCase(),
       address: faker.location.streetAddress(true),
       latitude: faker.location.latitude(),
       longitude: faker.location.longitude(),

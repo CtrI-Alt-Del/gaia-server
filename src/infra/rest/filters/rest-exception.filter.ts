@@ -9,6 +9,7 @@ import {
   ValidationException,
 } from '@/core/global/domain/errors'
 import { ZodValidationException } from 'nestjs-zod'
+import { UnauthorizedError } from '@/core/auth'
 
 @Catch()
 export class RestExceptionsFilter implements ExceptionFilter {
@@ -25,6 +26,10 @@ export class RestExceptionsFilter implements ExceptionFilter {
 
     if (exception instanceof AppError) {
       let status = HttpStatus.INTERNAL_SERVER_ERROR
+
+      if (exception instanceof UnauthorizedError) {
+        status = HttpStatus.UNAUTHORIZED
+      }
 
       if (exception instanceof ValidationException) {
         status = HttpStatus.BAD_REQUEST

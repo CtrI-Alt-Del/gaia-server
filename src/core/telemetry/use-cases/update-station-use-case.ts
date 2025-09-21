@@ -10,7 +10,7 @@ import { StationNotFoundError } from '@/core/telemetry/domain/errors/station-not
 
 type Request = {
   name: string
-  UID: string
+  uid: string
   latitude: number
   longitude: number
   parameters: string[]
@@ -31,7 +31,7 @@ export class UpdateStationUseCase implements UseCase<UseCaseInput, StationDto> {
       : existingStation.parameters.map((param) => param.dto).items
     const updatedStation = existingStation.update({
       name: data.name,
-      UID: data.UID,
+      uid: data.uid,
       latitude: data.latitude,
       longitude: data.longitude,
       parameters: updatedParameters,

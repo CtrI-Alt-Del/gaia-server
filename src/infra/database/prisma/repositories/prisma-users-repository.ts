@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 
-import type { UsersRepository } from '@/core/global/interfaces'
+import type { UsersRepository } from '@/core/membership/interfaces'
 import { UsersListingParams } from '@/core/membership/domain/types'
 import { User } from '@/core/membership/domain/entities'
 import { CursorPagination, Id, Text } from '@/core/global/domain/structures'

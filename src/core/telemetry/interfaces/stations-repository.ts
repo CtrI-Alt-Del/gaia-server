@@ -6,6 +6,6 @@ import { Station } from '@/core/telemetry/domain/entities/station'
 export interface StationsRepository {
   add(station: Station): Promise<void>
   findById(id: Id): Promise<Station | null>
-  findMany(params:StationsListingParams): Promise<CursorPagination<StationWithCount>>
+  findMany(params: StationsListingParams): Promise<CursorPagination<StationWithCount>>
   replace(station: Station): Promise<void>
 }

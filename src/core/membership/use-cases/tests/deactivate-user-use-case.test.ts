@@ -1,6 +1,6 @@
 import { mock, MockProxy } from 'vitest-mock-extended'
 
-import { UsersRepository } from '@/core/global/interfaces'
+import { UsersRepository } from '@/core/membership/interfaces'
 import { UsersFaker } from '../../domain/entities/fakers'
 import { UserAlreadyDeactivatedError, UserNotFoundError } from '../../domain/errors'
 import { DeactivateUserUseCase } from '../deactivate-user-use-case'

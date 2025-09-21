@@ -69,7 +69,7 @@ describe('ListStationsUseCase', () => {
       items: mockStationsPagination.items.map((station) => ({
         id: station.dto.id,
         name: station.dto.name,
-        UID: station.dto.UID,
+        uid: station.dto.uid,
         latitude: station.dto.latitude,
         longitude: station.dto.longitude,
         address: station.dto.address,

@@ -1,6 +1,6 @@
 import { Delete, Inject, Param } from '@nestjs/common'
 
-import { UsersRepository } from '@/core/global/interfaces'
+import { UsersRepository } from '@/core/membership/interfaces'
 import { DeactivateUserUseCase } from '@/core/membership/use-cases'
 
 import { DatabaseModule } from '@/infra/database/database.module'

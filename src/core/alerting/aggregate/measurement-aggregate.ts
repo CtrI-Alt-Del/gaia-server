@@ -15,12 +15,12 @@ export class MeasurementAggregate extends Aggregate<MeasurementAggregateEntity> 
       const entity = {
         value: Numeric.create(dto.entity.value),
         stationuuid: Text.create(dto.entity.stationuuid),
-        createdAt: Timestamp.create(dto.entity.createdAt),
+        createdAt: Timestamp.create(dto.entity.createdAt ?? new Date()),
       }
 
-      return new MeasurementAggregate(MeasurementAggregate.ENTITY_NAME, dto.id, entity)
+      return new MeasurementAggregate(MeasurementAggregate.ENTITY_NAME, dto.id as string, entity)
     } else {
-      return new MeasurementAggregate(MeasurementAggregate.ENTITY_NAME, dto.id)
+      return new MeasurementAggregate(MeasurementAggregate.ENTITY_NAME, dto.id as string)
     }
   }
 

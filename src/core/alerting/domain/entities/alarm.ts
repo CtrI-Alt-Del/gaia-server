@@ -24,7 +24,7 @@ export class Alarm extends Entity<AlarmProps>{
                 rule: AlertRule.create(dto.rule),
                 level: AlarmLevel.create(dto.level),
                 isActive: Logical.create(dto.isActive),
-                createdAt: Timestamp.create(dto.createdAt)
+                createdAt: Timestamp.create(dto.createdAt ?? new Date())
             },
             dto.id
         )

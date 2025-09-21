@@ -8,5 +8,5 @@ export const alarmSchema = z.object({
     measurement: measurementSchema,
     rule: alarmRuleSchema,
     level: stringSchema,
-    isActive: booleanSchema.optional()
+    isActive: booleanSchema
 })

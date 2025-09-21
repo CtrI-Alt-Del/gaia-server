@@ -1,8 +1,8 @@
 export type MeasurementAggregateDto = {
-  id: string;
+  id?: string;
   entity?: {
     value: number,
     stationuuid: string
-    createdAt: Date;
+    createdAt?: Date;
   };
 };

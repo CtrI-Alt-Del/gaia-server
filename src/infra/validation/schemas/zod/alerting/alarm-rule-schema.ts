@@ -1,7 +1,7 @@
 import z from "zod";
-import { numberSchema, stringSchema } from "../global";
+import { bigIntSchema, numberSchema, stringSchema } from "../global";
 
 export const alarmRuleSchema = z.object({
-    threshold: numberSchema,
+    threshold: bigIntSchema,
     operation: stringSchema
 })

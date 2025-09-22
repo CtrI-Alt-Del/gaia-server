@@ -77,7 +77,6 @@ enum Operation {
 model Alarm {
   id          String    @id @default(cuid())
   message     String
-  name        String
   value       Float
   operation   Operation
   level       String

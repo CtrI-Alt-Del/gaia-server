@@ -34,6 +34,14 @@ export class Alarm extends Entity<AlarmProps> {
     return this.props.message
   }
 
+  get rule(): AlertRule{
+    return this.props.rule
+  }
+
+  get level(): AlarmLevel{
+    return this.props.level
+  }
+
   get parameter(): MeasurementAggregate | undefined {
     return this.props.measurement
   }

@@ -6,6 +6,7 @@ type MeasurementAggregateEntity = {
   value: Numeric
   stationuuid: Text
   createdAt: Timestamp
+  parameterId: Text
 }
 
 export class MeasurementAggregate extends Aggregate<MeasurementAggregateEntity> {
@@ -15,7 +16,8 @@ export class MeasurementAggregate extends Aggregate<MeasurementAggregateEntity> 
       const entity = {
         value: Numeric.create(dto.entity.value),
         stationuuid: Text.create(dto.entity.stationuuid),
-        createdAt: Timestamp.create(dto.entity.createdAt ?? new Date()),
+        parameterId: Text.create(dto.entity.parameterId),
+        createdAt: Timestamp.create(dto.entity.createdAt),
       }
 
       return new MeasurementAggregate(
@@ -47,6 +49,7 @@ export class MeasurementAggregate extends Aggregate<MeasurementAggregateEntity> 
         ? {
             value: this.getEntity().value.value,
             stationuuid: this.getEntity().stationuuid.value,
+            parameterId: this.getEntity().parameterId.value,
             createdAt: this.getEntity().createdAt.value,
           }
         : undefined,

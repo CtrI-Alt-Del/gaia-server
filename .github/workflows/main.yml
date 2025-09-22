@@ -1,0 +1,123 @@
+# CI Pipeline
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+      - production
+
+jobs:
+  # Job 1: Validate branch rules
+  validate-branches:
+    name: 'Validate Branch Rules'
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: 'Check Main -> Production Merge'
+        if: github.base_ref == 'production' && github.head_ref != 'main'
+        run: |
+          echo "❌ ERROR: Pull requests to 'production' can only be made from the 'main' branch."
+          echo "This PR is from the '${{ github.head_ref }}' branch, which is not allowed."
+          exit 1
+      
+      - name: 'Block Production -> Main Merge'
+        if: github.base_ref == 'main' && github.head_ref == 'production'
+        run: |
+          echo "❌ ERROR: The 'production' branch cannot be merged back into 'main'."
+          echo "Hotfixes should be done in a separate branch and merged to both 'main' and 'production'."
+          exit 1
+      
+      - name: 'Approve valid merge'
+        if: (github.base_ref == 'production' && github.head_ref == 'main') || (github.base_ref == 'main' && github.head_ref != 'production')
+        run: echo "\o/ tudo correto, pode prosseguir!"
+
+  # Job 2: Build application
+  build:
+    name: 'Build Application'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+  # Job 3: Run unit tests (depends on build)
+  unit-tests:
+    name: 'Run Unit Tests'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm run test
+
+  # Job 4: Run integration tests (depends on unit-tests, only for main branch)
+  integration-tests:
+    name: 'Run Integration Tests'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: unit-tests
+    if: github.base_ref == 'main'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run integration tests
+        run: npm run test:integration

@@ -1,5 +1,5 @@
-import { Logical } from '../structures'
+import { Status } from '../structures'
 
 export type ListingParams = {
-  isActive?: Logical
+  status?: Status
 }

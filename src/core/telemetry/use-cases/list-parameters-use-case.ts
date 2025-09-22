@@ -1,4 +1,4 @@
-import { Id, Logical, PlusInteger } from '@/core/global/domain/structures'
+import { Id, PlusInteger, Status } from '@/core/global/domain/structures'
 import { CursorPaginationDto } from '@/core/global/domain/structures/dtos'
 import type { UseCase } from '@/core/global/interfaces'
 import type { ParametersRepository } from '@/core/global/interfaces'
@@ -8,7 +8,7 @@ type Request = {
   nextCursor?: string
   previousCursor?: string
   pageSize: number
-  isActive: boolean
+  status: string
 }
 
 export class ListParametersUseCase
@@ -23,7 +23,7 @@ export class ListParametersUseCase
         ? Id.create(params.previousCursor)
         : undefined,
       pageSize: PlusInteger.create(params.pageSize),
-      isActive: Logical.create(params.isActive),
+      status: Status.create(params.status),
     })
 
     return pagination.map((parameter) => parameter.dto).dto

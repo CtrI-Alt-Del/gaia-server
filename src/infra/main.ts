@@ -20,6 +20,8 @@ async function bootstrap() {
   const envProvider = app.get(EnvProvider)
   const port = envProvider.get('PORT')
 
+  app.enableCors()
+
   app.use(
     '/docs',
     apiReference({

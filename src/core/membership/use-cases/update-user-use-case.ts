@@ -1,5 +1,6 @@
 import { Id, Text } from '@/core/global/domain/structures'
-import { UseCase, UsersRepository } from '@/core/global/interfaces'
+import { UseCase } from '@/core/global/interfaces'
+import { UsersRepository } from '@/core/membership/interfaces'
 import { UserDto } from '../domain/entities/dtos'
 import { User } from '../domain/entities'
 import { EmailAlreadyInUseError, UserNotFoundError } from '../domain/errors'

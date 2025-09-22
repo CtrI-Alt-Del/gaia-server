@@ -1,5 +1,5 @@
 export { UseCase } from './use-case'
-export { StationsRepository } from './stations-repository'
-export { ParametersRepository } from './parameters-repository'
+export { StationsRepository } from '../../telemetry/interfaces/stations-repository'
+export { ParametersRepository } from '../../telemetry/interfaces/parameters-repository'
 export { AlarmsRepository } from './alarms-repository'
-export { UsersRepository } from './users-repository'
+export { EventBroker } from './event-broker'

@@ -5,10 +5,20 @@ import { ParametersRepository } from '@/core/global/interfaces'
 
 import { DatabaseModule } from '@/infra/database/database.module'
 import { ParametersController } from '@/infra/rest/telemetry/controllers/parameters/parameters.controller'
-import { cursorListingSchema } from '@/infra/validation/schemas/zod/membership/users-listing-schema'
 import { ListParametersUseCase } from '@/core/telemetry/use-cases'
+import { statusSchema, stringSchema } from '@/infra/validation/schemas/zod/global'
+import { plusIntegerSchema } from '@/infra/validation/schemas/zod/global'
+import { z } from 'zod'
 
-class ListParametersControllerRequestQuery extends createZodDto(cursorListingSchema) {}
+export const schema = z.object({
+  name: stringSchema.optional(),
+  status: statusSchema.optional().default('all'),
+  nextCursor: stringSchema.optional(),
+  previousCursor: stringSchema.optional(),
+  pageSize: plusIntegerSchema.optional().default(20),
+})
+
+class ListParametersControllerRequestQuery extends createZodDto(schema) {}
 
 @ParametersController()
 export class ListParameterController {

@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 
 import { StationDto } from '@/core/telemetry/domain/dtos/station-dto'
 import { Station } from '@/core/telemetry/domain/entities/station'
-import { ParameterFaker } from './parameter-faker' // Assuming it's in the same directory
+import { ParameterFaker } from './parameter-faker'
 
 export class StationsFaker {
   static fake(baseDto?: Partial<StationDto>): Station {
@@ -18,13 +18,13 @@ export class StationsFaker {
 
     return {
       name: `${faker.location.city()} Weather Station`,
-      UID: faker.string.alphanumeric(8).toUpperCase(),
+      uid: faker.string.alphanumeric(8).toUpperCase(),
       address: faker.location.streetAddress(true),
       latitude: faker.location.latitude(),
       longitude: faker.location.longitude(),
       lastReadAt: faker.date.recent(),
       isActive: true,
-      parameters, 
+      parameters,
       ...baseDto,
     }
   }

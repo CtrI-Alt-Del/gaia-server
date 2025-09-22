@@ -7,7 +7,7 @@ import AlertRule from '../structures/alert-rule'
 
 type AlarmProps = {
   message: Text
-  measurement: MeasurementAggregate
+  measurement?: MeasurementAggregate
   rule: AlertRule
   level: AlarmLevel
   isActive: Logical
@@ -20,7 +20,7 @@ export class Alarm extends Entity<AlarmProps> {
     return new Alarm(
       {
         message: Text.create(dto.message),
-        measurement: MeasurementAggregate.create(dto.measurement),
+        measurement: dto.measurement ? MeasurementAggregate.create(dto.measurement) : undefined,
         rule: AlertRule.create(dto.rule),
         level: AlarmLevel.create(dto.level),
         isActive: Logical.create(dto.isActive),
@@ -34,7 +34,7 @@ export class Alarm extends Entity<AlarmProps> {
     return this.props.message
   }
 
-  get parameter(): MeasurementAggregate {
+  get parameter(): MeasurementAggregate | undefined {
     return this.props.measurement
   }
 
@@ -54,7 +54,7 @@ export class Alarm extends Entity<AlarmProps> {
     return {
       id: this.id.value,
       message: this.props.message.value,
-      measurement: this.props.measurement.dto,
+      measurement: this.props.measurement ? this.props.measurement.dto : undefined,
       rule: this.props.rule.dto,
       level: this.props.level.toString(),
       isActive: this.props.isActive.value,

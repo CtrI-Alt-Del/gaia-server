@@ -4,7 +4,7 @@ import { MeasurementAggregateDto } from "./measurement-aggregate.dto"
 export type AlarmDto = {
     id?: string
     message: string
-    measurement: MeasurementAggregateDto
+    measurement?: MeasurementAggregateDto
     rule: AlarmRuleDto
     level: string
     isActive: boolean

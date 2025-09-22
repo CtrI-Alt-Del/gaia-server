@@ -11,6 +11,7 @@ type Request = {
   name?: string
 }
 
+
 export class ListStationsUseCase
   implements UseCase<Request, CursorPaginationDto<StationListItemDto>>
 {

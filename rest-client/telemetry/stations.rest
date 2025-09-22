@@ -1,5 +1,5 @@
-@URL = {{BASE_URL}}/telemetry/stations
-@ID = zf4ti578yvs42ib14rpuwdzv
+@URL = http://localhost:3333/telemetry/stations
+@ID = cmfuzcg3c004wkipv2h3z5200
 
 #### list stations
 GET {{URL}}
@@ -37,4 +37,8 @@ Content-Type: application/json
 
 #### activate station
 PATCH {{URL}}/{{ID}}
+Content-Type: application/json
+
+#### station details
+GET {{URL}}/{{ID}}
 Content-Type: application/json

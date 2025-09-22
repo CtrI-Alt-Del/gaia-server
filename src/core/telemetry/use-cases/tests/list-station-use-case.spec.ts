@@ -1,7 +1,7 @@
 import { mock, MockProxy } from 'vitest-mock-extended'
 import { describe, it, expect, beforeEach } from 'vitest'
 
-import { Id, Logical, PlusInteger, Text } from '@/core/global/domain/structures'
+import { Id, Logical, PlusInteger, Status, Text } from '@/core/global/domain/structures'
 import type { StationsRepository } from '@/core/global/interfaces'
 import { CursorPagination } from '@/core/global/domain/structures/cursor-pagination'
 import { ListStationsUseCase } from '@/core/telemetry/use-cases/list-stations-use-case'
@@ -15,7 +15,7 @@ describe('ListStationsUseCase', () => {
       {
         id: '123',
         name: 'Station 1',
-        code: 'ST-001',
+        uid: 'ST-001',
         latitude: -23.1791,
         longitude: -45.8872,
         address: '123 Main St',
@@ -41,12 +41,12 @@ describe('ListStationsUseCase', () => {
   it('should call the repository with pagination but without optional parameters', async () => {
     await useCase.execute({
       pageSize: 15,
-      isActive: false,
+      status: 'all',
     })
 
     expect(repository.findMany).toHaveBeenCalledWith({
       pageSize: PlusInteger.create(15),
-      isActive: Logical.create(false),
+      status: Status.create('all'),
       name: undefined,
       nextCursor: undefined,
       previousCursor: undefined,
@@ -56,7 +56,7 @@ describe('ListStationsUseCase', () => {
   it('should call the repository with pagination and all optional parameters', async () => {
     const request = {
       pageSize: 20,
-      isActive: true,
+      status: 'all',
       name: 'Main Station',
       nextCursor: 'next-cursor-id',
       previousCursor: 'prev-cursor-id',
@@ -66,7 +66,7 @@ describe('ListStationsUseCase', () => {
 
     expect(repository.findMany).toHaveBeenCalledWith({
       pageSize: PlusInteger.create(request.pageSize),
-      isActive: Logical.create(request.isActive),
+      status: Status.create(request.status),
       name: Text.create(request.name),
       nextCursor: Id.create(request.nextCursor),
       previousCursor: Id.create(request.previousCursor),
@@ -76,24 +76,26 @@ describe('ListStationsUseCase', () => {
   it('should map the repository result to a paginated DTO', async () => {
     const result = await useCase.execute({
       pageSize: 10,
-      isActive: true,
+      status: 'all',
     })
 
     const expectedResponse = {
       items: mockStationsPagination.items.map((station) => ({
-        id: station.dto.id,
-        name: station.dto.name,
-        uid: station.dto.uid,
-        latitude: station.dto.latitude,
-        longitude: station.dto.longitude,
-        address: station.dto.address,
-        quantityOfParameters: station.dto.parameters.length,
-        status: station.dto.isActive,
-        lastMeasurement: station.dto.lastReadAt ?? null,
+        id: station.id,
+        name: station.name,
+        uid: station.uid,
+        latitude: station.latitude,
+        longitude: station.longitude,
+        address: station.address,
+        quantityOfParameters: station._count.stationParameter,
+        status: station.isActive,
+        lastMeasurement: station.updatedAt ?? null,
       })),
       pageSize: mockStationsPagination.pageSize.value,
       nextCursor: mockStationsPagination.nextCursor?.value,
       previousCursor: mockStationsPagination.previousCursor?.value,
+      hasNextPage: false,
+      hasPreviousPage: false
     }
 
     expect(result).toEqual(expectedResponse)

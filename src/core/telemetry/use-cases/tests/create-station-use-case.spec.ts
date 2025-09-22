@@ -46,7 +46,7 @@ describe('CreateStationUseCase', () => {
     )
     expect(Station.create).toHaveBeenCalledWith({
       name: createStationRequest.name,
-      UID: createStationRequest.UID,
+      uid: createStationRequest.uid,
       address: createStationRequest.address,
       latitude: createStationRequest.latitude,
       longitude: createStationRequest.longitude,

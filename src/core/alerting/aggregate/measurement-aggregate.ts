@@ -17,7 +17,7 @@ export class MeasurementAggregate extends Aggregate<MeasurementAggregateEntity> 
         value: Numeric.create(dto.entity.value),
         stationuuid: Text.create(dto.entity.stationuuid),
         parameterId: Text.create(dto.entity.parameterId),
-        createdAt: Timestamp.create(dto.entity.createdAt),
+        createdAt: Timestamp.create(dto.entity.createdAt as Date),
       }
 
       return new MeasurementAggregate(

@@ -4,8 +4,8 @@ import { ParameterAggregateDto } from "./parameter-aggregate.dto"
 
 export type AlarmDto = {
     id?: string
-    message: string
     measurement?: MeasurementAggregateDto
+    message: string
     parameter: ParameterAggregateDto,
     rule: AlarmRuleDto
     level: string

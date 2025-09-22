@@ -45,8 +45,12 @@ export class Alarm extends Entity<AlarmProps> {
     return this.props.level
   }
 
-  get parameter(): MeasurementAggregate | undefined {
+  get measurement(): MeasurementAggregate | undefined {
     return this.props.measurement
+  }
+
+  get parameter(): ParameterAggregate {
+    return this.props.parameter
   }
 
   get isActive(): Logical {

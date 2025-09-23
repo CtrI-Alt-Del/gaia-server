@@ -1,14 +1,12 @@
 import { Entity } from "@/core/global/domain/abstracts"
 import { Logical, Text, Timestamp } from "@/core/global/domain/structures"
 import { AlarmDto } from "../../dtos/alarm.dto"
-import { MeasurementAggregate } from "../../aggregate/measurement-aggregate"
 import AlarmLevel from "../structures/alarm-level"
 import AlertRule from "../structures/alert-rule"
 import { ParameterAggregate } from "../../aggregate/parameter-aggregate"
 
 type AlarmProps = {
   message: Text
-  measurement?: MeasurementAggregate
   parameter: ParameterAggregate
   rule: AlertRule
   level: AlarmLevel
@@ -22,7 +20,6 @@ export class Alarm extends Entity<AlarmProps> {
     return new Alarm(
       {
         message: Text.create(dto.message),
-        measurement: dto.measurement ? MeasurementAggregate.create(dto.measurement) : undefined,
         parameter: ParameterAggregate.create(dto.parameter),
         rule: AlertRule.create(dto.rule),
         level: AlarmLevel.create(dto.level),
@@ -45,10 +42,6 @@ export class Alarm extends Entity<AlarmProps> {
     return this.props.level
   }
 
-  get measurement(): MeasurementAggregate | undefined {
-    return this.props.measurement
-  }
-
   get parameter(): ParameterAggregate {
     return this.props.parameter
   }
@@ -69,7 +62,6 @@ export class Alarm extends Entity<AlarmProps> {
     return {
       id: this.id.value,
       message: this.props.message.value,
-      measurement: this.props.measurement ? this.props.measurement.dto : undefined,
       parameter: this.props.parameter.dto,
       rule: this.props.rule.dto,
       level: this.props.level.toString(),

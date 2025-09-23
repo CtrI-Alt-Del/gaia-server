@@ -7,9 +7,9 @@ POST {{URL}}
 Content-Type: application/json
 
 {
-  "name": "Temperature",
+  "name": "Temperature 123",
   "unitOfMeasure": "Celsius",
-  "factor": 0.1,
+  "factor": 0.01,
   "offset": 0,
   "isActive": true
 }

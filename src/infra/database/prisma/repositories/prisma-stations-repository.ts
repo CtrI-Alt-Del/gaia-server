@@ -29,7 +29,6 @@ export class PrismaStationsRepository
         },
       },
     })
-    console.log('PrismaStationsRepository findById', { prismaStation })
     if (!prismaStation) {
       return null
     }

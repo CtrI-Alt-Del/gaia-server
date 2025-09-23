@@ -1,9 +1,9 @@
-@URL = http://localhost:3333/telemetry/stations
-@ID = cmfuzcg3c004wkipv2h3z5200
+@URL = {{BASE_URL}}/telemetry/stations
+@ID = zf4ti578yvs42ib14rpuwdzv
 
 #### list stations
 GET {{URL}}
-?pageSize=20
+?pageSize=500
 
 #### create station
 POST {{URL}}

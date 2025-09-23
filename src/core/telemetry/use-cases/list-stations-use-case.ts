@@ -35,7 +35,7 @@ export class ListStationsUseCase
         uid: station.uid,
         latitude: station.latitude,
         longitude: station.longitude,
-        quantityOfParameters: station._count.stationParameter,
+        quantityOfParameters: station.quantityOfParameters,
         status: station.isActive,
         lastMeasurement: station.updatedAt ?? null,
         address: station.address,

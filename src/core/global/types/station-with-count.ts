@@ -8,7 +8,5 @@ export type StationWithCount = {
   isActive: boolean
   createdAt: Date
   updatedAt: Date
-  _count: {
-    stationParameter: number
-  }
+  quantityOfParameters: number
 }

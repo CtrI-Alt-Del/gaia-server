@@ -15,13 +15,11 @@ export class ClerkStrategy extends PassportStrategy(Strategy, 'clerk') {
     private readonly envProvider: EnvProvider,
   ) {
     super()
-    console.log(this.envProvider.get('CLERK_SECRET_KEY'))
   }
 
   async validate(req: Request): Promise<User> {
     const token = req.headers.authorization?.split(' ').pop()
 
-    console.log(token)
 
     if (!token) {
       throw new UnauthorizedError('Nenhum token fornecido')

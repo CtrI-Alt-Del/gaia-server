@@ -3,7 +3,7 @@
 
 #### list stations
 GET {{URL}}
-?pageSize=20
+?pageSize=500
 
 #### create station
 POST {{URL}}
@@ -37,4 +37,8 @@ Content-Type: application/json
 
 #### activate station
 PATCH {{URL}}/{{ID}}
+Content-Type: application/json
+
+#### station details
+GET {{URL}}/{{ID}}
 Content-Type: application/json

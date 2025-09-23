@@ -23,7 +23,7 @@ export class PrismaAlarmMapper {
     return {
       id: alarm.id.value,
       message: alarm.message.value,
-      value: alarm.rule.threshold as unknown as number,
+      value: alarm.rule.threshold.value,
       operation: prismaEnumMapper(alarm.rule.operation),
       level: alarm.level.toString(),
       parameterId: alarm.parameter.id.value,
@@ -38,20 +38,16 @@ export class PrismaAlarmMapper {
       id: alarm.id,
       message: alarm.message,
       rule: {
-        threshold: alarm.value as unknown as bigint,
+        threshold: alarm.value,
         operation: alarm.operation
       },
       parameter: {
-        id: alarm.parameter?.id as string,
-        entity: {
-          name: alarm.parameter?.name as string,
-          unitOfMeasure: alarm.parameter?.unitOfMeasure as string
-        }
+        id: alarm.parameterId
       },
       level: alarm.level,
-      isActive: alarm.isActive,
-      createdAt: alarm.createdAt,
-      updatedAt: alarm.updatedAt
+      isActive: alarm.isActive as boolean,
+      createdAt: alarm.createdAt as Date,
+      updatedAt: alarm.updatedAt as Date
     } 
   }
 }

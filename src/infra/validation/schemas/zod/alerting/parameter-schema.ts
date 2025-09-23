@@ -1,7 +1,8 @@
 import z from "zod";
-import { numberSchema, stringSchema } from "../global";
+import { stringSchema } from "../global";
 
 export const parameterSchema = z.object({
+    id: stringSchema.optional(),
     entity: z.object({
         name: stringSchema,
         unitOfMeasure: stringSchema

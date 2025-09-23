@@ -1,4 +1,4 @@
 export type AlarmRuleDto = {
-    threshold: bigint;
+    threshold: number;
     operation: string
 };

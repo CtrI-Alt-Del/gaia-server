@@ -1,18 +1,7 @@
 import { AlarmDto } from '@/core/alerting/dtos/alarm.dto';
 import { Alarm } from '@/core/alerting/domain/entities/alarm';
 import { PrismaAlarm } from '../types';
-import Operation from '@/core/alerting/domain/structures/Operation';
 import { $Enums } from '@prisma/client';
-import { ValidationException } from '@/core/global/domain/errors';
-
-const prismaEnumMapper = (operation: Operation): $Enums.Operation => {
-  if (operation.isTypeEqual()) {return "EQUAL"}
-  if (operation.isTypeBigger()) {return "GREATER_THAN"}
-  if (operation.isTypeLess()) {return "LESS_THAN"}
-  if (operation.isTypeBiggerEqual()) {return "GREATER_THAN_OR_EQUAL"}
-  if (operation.isTypeLessEqual()) {return "LESS_THAN_OR_EQUAL"}
-  throw new ValidationException("operation", "com valor inválido")
-}
 
 export class PrismaAlarmMapper {
   static toEntity(prismaAlarm: PrismaAlarm) {
@@ -24,7 +13,7 @@ export class PrismaAlarmMapper {
       id: alarm.id.value,
       message: alarm.message.value,
       value: alarm.rule.threshold.value,
-      operation: prismaEnumMapper(alarm.rule.operation),
+      operation: alarm.rule.operation.toString() as $Enums.Operation,
       level: alarm.level.toString(),
       parameterId: alarm.parameter.id.value,
       isActive: alarm.isActive.value,

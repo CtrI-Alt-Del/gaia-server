@@ -56,68 +56,36 @@ export class PrismaStationsRepository
     nextCursor,
     previousCursor,
     pageSize,
-    isActive,
+    status,
     name,
   }: StationsListingParams): Promise<CursorPagination<StationWithCount>> {
-    let stations: any[]
-    let hasPreviousPage = false
-    let hasNextPage = false
+    const whereClause = status?.isAll.isTrue
+      ? undefined
+      : { isActive: status?.isActive.isTrue }
 
-    if (nextCursor) {
-      stations = await this.prisma.station.findMany({
-        ...this.getNextCursorPaginationParams(nextCursor, pageSize),
-        where: { isActive: isActive?.isTrue },
-        include: {
-          _count: {
-            select: { stationParameter: true },
-          },
-        },
-      })
-      const result = this.getNextCursorPaginationResult(stations, pageSize)
-      stations = result.items
-      hasNextPage = result.hasNextPage
-      hasPreviousPage = result.hasPreviousPage
-    } else if (previousCursor) {
-      stations = await this.prisma.station.findMany({
-        ...this.getPreviousCursorPaginationParams(previousCursor, pageSize),
-        where: { isActive: isActive?.isTrue },
-        include: {
-          _count: {
-            select: { stationParameter: true },
-          },
-        },
-      })
-      const result = this.getPreviousCursorPaginationResult(stations, pageSize)
-      stations = result.items
-      hasNextPage = result.hasNextPage
-      hasPreviousPage = result.hasPreviousPage
-    } else {
-      stations = await this.prisma.station.findMany({
-        ...this.getInitialPaginationParams(pageSize),
-        where: { isActive: isActive?.isTrue },
-        include: {
-
-          _count: {
-            select: { stationParameter: true },
-          },
-        },
-      })
-      const result = this.getInitialPaginationResult(stations, pageSize)
-      stations = result.items
-      hasNextPage = result.hasNextPage
-      hasPreviousPage = result.hasPreviousPage
+    const where = {
+      ...whereClause,
+      name: { contains: name?.value, mode: 'insensitive' },
     }
 
-    const newNextCursor = this.getNewNextCursor(stations, hasNextPage)
-    const newPrevCursor = this.getNewPreviousCursor(stations)
+    const query = this.createPaginationQuery(
+      this.prisma.station,
+      where,
+      { id: 'desc' },
+      undefined,
+      {
+        _count: {
+          select: { stationParameter: true },
+        },
+      },
+    )
 
-    return CursorPagination.create({
-      items: stations,
-      pageSize: pageSize.value,
-      nextCursor: newNextCursor,
-      previousCursor: newPrevCursor,
-      hasNextPage,
-      hasPreviousPage,
+    const result = await this.paginateWithCursor<any>(query, {
+      nextCursor,
+      previousCursor,
+      pageSize,
     })
+
+    return result.map(PrismaStationMapper.toStationWithCount)
   }
 }

@@ -1,12 +1,13 @@
 import { mock, MockProxy } from 'vitest-mock-extended'
 
-import { UsersRepository } from '@/core/global/interfaces'
+import { UsersRepository } from '@/core/membership/interfaces'
 import { ListUsersUseCase } from '../list-users-use-case'
 import {
   CursorPagination,
   Id,
-  Logical,
   PlusInteger,
+  Status,
+  Text,
 } from '@/core/global/domain/structures'
 import { UsersFaker } from '../../domain/entities/fakers'
 
@@ -29,17 +30,16 @@ describe('Create User Use Case', () => {
   })
 
   it('should find many users with pagination without cursors', async () => {
-    const user = UsersFaker.fake()
     await useCase.execute({
-      name: user.name.value,
+      name: 'Herman',
       pageSize: 10,
-      isActive: false,
+      status: 'all',
     })
 
     expect(repository.findMany).toHaveBeenCalledWith({
-      name: user.name,
-      isActive: Logical.createAsFalse(),
+      name: Text.create('Herman'),
       pageSize: PlusInteger.create(10),
+      status: Status.create('all'),
       nextCursor: undefined,
       previousCursor: undefined,
     })
@@ -50,15 +50,17 @@ describe('Create User Use Case', () => {
     const previousCursor = Id.create()
 
     await useCase.execute({
+      name: 'Herman',
       pageSize: 20,
-      isActive: true,
+      status: 'active',
       nextCursor: nextCursor.value,
       previousCursor: previousCursor.value,
     })
 
     expect(repository.findMany).toHaveBeenCalledWith({
+      name: Text.create('Herman'),
       pageSize: PlusInteger.create(20),
-      isActive: Logical.createAsTrue(),
+      status: Status.create('active'),
       nextCursor: nextCursor,
       previousCursor: previousCursor,
     })
@@ -69,8 +71,9 @@ describe('Create User Use Case', () => {
     const previousCursor = Id.create()
 
     const result = await useCase.execute({
+      name: 'Herman',
       pageSize: 20,
-      isActive: true,
+      status: 'active',
       nextCursor: nextCursor.value,
       previousCursor: previousCursor.value,
     })

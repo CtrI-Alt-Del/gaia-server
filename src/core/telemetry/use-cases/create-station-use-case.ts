@@ -8,7 +8,7 @@ import { ParameterNotFoundError } from '@/core/telemetry/domain/errors/parameter
 
 type Request = {
   name: string
-  UID: string
+  uid: string
   latitude: number
   longitude: number
   parameterIds: string[]
@@ -24,7 +24,7 @@ export class CreateStationUseCase implements UseCase<Request, StationDto> {
   async execute(data: Request): Promise<StationDto> {
     const station = Station.create({
       name: data.name,
-      UID: data.UID,
+      uid: data.uid,
       address: data.address,
       latitude: data.latitude,
       longitude: data.longitude,

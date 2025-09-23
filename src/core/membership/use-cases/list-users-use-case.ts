@@ -1,15 +1,15 @@
-import { UsersRepository } from '@/core/global/interfaces'
+import { UsersRepository } from '@/core/membership/interfaces'
 import { CursorPaginationDto } from '@/core/global/domain/structures/dtos'
-import { Id, Logical, Text } from '@/core/global/domain/structures'
+import { Id, Status, Text } from '@/core/global/domain/structures'
 import { PlusInteger } from '@/core/global/domain/structures'
 import { UserDto } from '../domain/entities/dtos'
 
 type Request = {
-  name?: string
   nextCursor?: string
   previousCursor?: string
   pageSize: number
-  isActive: boolean
+  status: string
+  name?: string
 }
 
 export class ListUsersUseCase {
@@ -22,7 +22,7 @@ export class ListUsersUseCase {
         ? Id.create(params.previousCursor)
         : undefined,
       pageSize: PlusInteger.create(params.pageSize),
-      isActive: Logical.create(params.isActive),
+      status: Status.create(params.status),
       name: params.name ? Text.create(params.name) : undefined,
     })
 

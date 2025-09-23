@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 
-import type { UsersRepository } from '@/core/global/interfaces'
+import type { UsersRepository } from '@/core/membership/interfaces'
 import { UsersListingParams } from '@/core/membership/domain/types'
 import { User } from '@/core/membership/domain/entities'
 import { CursorPagination, Id, Text } from '@/core/global/domain/structures'
@@ -45,56 +45,30 @@ export class PrismaUsersRepository extends PrismaRepository implements UsersRepo
   }
 
   async findMany({
-    name,
     nextCursor,
     previousCursor,
     pageSize,
-    isActive,
+    status,
+    name,
   }: UsersListingParams): Promise<CursorPagination<User>> {
-    let users: any[]
-    let hasPreviousPage = false
-    let hasNextPage = false
+    const whereClause = status?.isAll.isTrue
+      ? undefined
+      : { isActive: status?.isActive.isTrue }
 
-    if (nextCursor) {
-      users = await this.prisma.user.findMany({
-        ...this.getNextCursorPaginationParams(nextCursor, pageSize),
-        where: { isActive: isActive?.isTrue, name: { contains: name?.value } },
-      })
-      const result = this.getNextCursorPaginationResult(users, pageSize)
-      users = result.items
-      hasNextPage = result.hasNextPage
-      hasPreviousPage = result.hasPreviousPage
-    } else if (previousCursor) {
-      users = await this.prisma.user.findMany({
-        ...this.getPreviousCursorPaginationParams(previousCursor, pageSize),
-        where: { isActive: isActive?.isTrue, name: { contains: name?.value } },
-      })
-      const result = this.getPreviousCursorPaginationResult(users, pageSize)
-      users = result.items
-      hasNextPage = result.hasNextPage
-      hasPreviousPage = result.hasPreviousPage
-    } else {
-      users = await this.prisma.user.findMany({
-        ...this.getInitialPaginationParams(pageSize),
-        where: { isActive: isActive?.isTrue, name: { contains: name?.value } },
-      })
-      const result = this.getInitialPaginationResult(users, pageSize)
-      users = result.items
-      hasNextPage = result.hasNextPage
-      hasPreviousPage = result.hasPreviousPage
+    const where = {
+      ...whereClause,
+      name: { contains: name?.value, mode: 'insensitive' },
     }
 
-    const newNextCursor = this.getNewNextCursor(users, hasNextPage)
-    const newPrevCursor = this.getNewPreviousCursor(users)
+    const query = this.createPaginationQuery(this.prisma.user, where)
 
-    return CursorPagination.create({
-      items: users.map(PrismaUserMapper.toEntity),
-      pageSize: pageSize.value,
-      nextCursor: newNextCursor,
-      previousCursor: newPrevCursor,
-      hasNextPage,
-      hasPreviousPage,
+    const result = await this.paginateWithCursor<any>(query, {
+      nextCursor,
+      previousCursor,
+      pageSize,
     })
+
+    return result.map(PrismaUserMapper.toEntity)
   }
 
   async replace(user: User): Promise<void> {

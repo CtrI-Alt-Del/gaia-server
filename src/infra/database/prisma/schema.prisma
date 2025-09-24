@@ -76,9 +76,10 @@ enum Operation {
 
 model Alarm {
   id          String    @id @default(cuid())
-  name        String
+  message     String
   value       Float
   operation   Operation
+  level       String
   parameterId String    @map("parameter_id")
   isActive    Boolean   @default(true) @map("is_active")
   createdAt   DateTime  @default(now()) @map("created_at")

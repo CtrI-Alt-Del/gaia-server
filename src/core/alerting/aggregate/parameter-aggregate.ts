@@ -16,9 +16,9 @@ export class ParameterAggregate extends Aggregate<ParameterAggregateEntity> {
         unitOfMeasure: Text.create(dto.entity.unitOfMeasure),
       }
 
-      return new ParameterAggregate(ParameterAggregate.ENTITY_NAME, dto.id, entity)
+      return new ParameterAggregate(ParameterAggregate.ENTITY_NAME, dto.id as string, entity)
     } else {
-      return new ParameterAggregate(ParameterAggregate.ENTITY_NAME, dto.id)
+      return new ParameterAggregate(ParameterAggregate.ENTITY_NAME, dto.id as string)
     }
   }
 

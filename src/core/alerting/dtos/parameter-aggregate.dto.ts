@@ -1,5 +1,5 @@
 export type ParameterAggregateDto = {
-    id: string
+    id?: string
     entity?:{
         name: string
         unitOfMeasure: string

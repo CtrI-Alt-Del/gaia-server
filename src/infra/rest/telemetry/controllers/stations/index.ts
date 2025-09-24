@@ -1,4 +1,6 @@
 export { CreateStationController } from './create-station.controller'
+export { GetStationParametersController } from './get-station-parameters.controller'
+export { GetStationDetailsController } from './get-station-details.controller'
 export { ActivateStationController } from './activate-station.controller'
 export { DeactivateStationController } from './deactivate-station.controller'
 export { UpdateStationController } from './update-station.controller'

@@ -1,9 +1,9 @@
 @URL = {{BASE_URL}}/telemetry/stations
-@ID = zf4ti578yvs42ib14rpuwdzv
+@ID = cmfuzcg8l037nkipv7arc12cd
 
 #### list stations
 GET {{URL}}
-?pageSize=20
+?pageSize=500
 
 #### create station
 POST {{URL}}
@@ -37,4 +37,12 @@ Content-Type: application/json
 
 #### activate station
 PATCH {{URL}}/{{ID}}
+Content-Type: application/json
+
+#### station details
+GET {{URL}}/{{ID}}
+Content-Type: application/json
+
+#### station parameters
+GET {{URL}}/parameters/{{ID}}
 Content-Type: application/json

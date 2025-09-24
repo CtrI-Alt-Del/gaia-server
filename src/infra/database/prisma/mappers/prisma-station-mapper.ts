@@ -72,7 +72,7 @@ export class PrismaStationMapper {
       isActive: prismaStation.isActive,
       createdAt: prismaStation.createdAt,
       updatedAt: prismaStation.updatedAt,
-      _count: prismaStation._count,
+      quantityOfParameters: prismaStation._count.stationParameter,
     }
   }
 }

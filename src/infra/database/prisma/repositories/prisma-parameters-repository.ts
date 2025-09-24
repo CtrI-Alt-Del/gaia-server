@@ -68,4 +68,17 @@ export class PrismaParametersRepository
     })
     return prismaParameters.map(PrismaParameterMapper.toEntity)
   }
+
+  async findParametersByStationId(stationId: Id): Promise<Parameter[]> {
+    const prismaParameters = await this.prisma.parameter.findMany({
+      where: {
+        stationParameter:{
+          some:{
+            stationId: stationId.value 
+          }
+        }
+      },
+    })
+    return prismaParameters.map(PrismaParameterMapper.toEntity)
+  }
 }

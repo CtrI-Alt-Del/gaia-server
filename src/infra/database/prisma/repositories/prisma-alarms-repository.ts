@@ -9,8 +9,10 @@ import { PrismaAlarmMapper } from '../mappers'
 @Injectable()
 export class PrismaAlarmsRepository implements AlarmsRepository {
   constructor(private readonly prisma: Prisma) {}
+  
   async add(alarm: Alarm): Promise<void> {
     const prismaAlarm = PrismaAlarmMapper.toPrisma(alarm)
     await this.prisma.alarm.create({data: prismaAlarm})
   }
+  
 }

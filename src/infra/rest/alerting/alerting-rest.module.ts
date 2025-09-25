@@ -1,7 +1,7 @@
 import { DatabaseModule } from "@/infra/database/database.module";
 import { QueueModule } from "@/infra/queue/queue.module";
 import { Module } from "@nestjs/common";
-import { CreateAlarmController } from "./alarm/create-alarm.controller";
+import { CreateAlarmController } from "./controllers/alarm/create-alarm.controller";
 
 @Module({
   imports: [DatabaseModule, QueueModule],

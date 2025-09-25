@@ -26,4 +26,12 @@ export class PrismaAlarmsRepository implements AlarmsRepository {
 
     return PrismaAlarmMapper.toEntity(prismaAlarm)
   }
+
+  async replace(alarm: Alarm): Promise<void> {
+    const prismaAlarm = PrismaAlarmMapper.toPrisma(alarm)
+    await this.prisma.alarm.update({
+      where: {id: prismaAlarm.id},
+      data: prismaAlarm
+    })
+  }
 }

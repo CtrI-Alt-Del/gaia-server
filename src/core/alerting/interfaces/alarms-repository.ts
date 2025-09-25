@@ -4,4 +4,5 @@ import { Id } from "@/core/global/domain/structures";
 export interface AlarmsRepository {
     add(alarm: Alarm): Promise<void>
     findById(id: Id): Promise<Alarm | null>
+    replace(alarm: Alarm): Promise<void>
 }

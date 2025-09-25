@@ -27,7 +27,7 @@ export class PrismaAlarmsRepository extends PrismaRepository implements AlarmsRe
         ? undefined
         : { isActive: status?.isActive.isTrue }
   
-      const query = this.createPaginationQuery(this.prisma.parameter, whereClause)
+      const query = this.createPaginationQuery(this.prisma.alarm, whereClause)
   
       const result = await this.paginateWithCursor<any>(query, {
         nextCursor,

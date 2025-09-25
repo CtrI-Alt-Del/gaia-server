@@ -12,7 +12,7 @@ type Request = {
 
 export class ListAlarmUseCase implements UseCase<Request, CursorPaginationDto<AlarmDto>>{
     constructor(private readonly repository: AlarmsRepository) {}
-
+    
     async execute(params: Request): Promise<CursorPaginationDto<AlarmDto>> {
         const pagination = await this.repository.findMany({
             nextCursor: params.nextCursor ? Id.create(params.nextCursor) : undefined,

@@ -1,7 +1,6 @@
 import { Alarm } from "@/core/alerting/domain/entities/alarm";
-import { AlarmListingParams } from "../types/alarm-list-params";
-import { CursorPagination } from "../domain/structures";
-import { Id } from "@/core/global/domain/structures";
+import { CursorPagination, Id } from "@/core/global/domain/structures";
+import { AlarmListingParams } from "@/core/global/types/alarm-list-params";
 
 export interface AlarmsRepository {
     add(alarm: Alarm): Promise<void>

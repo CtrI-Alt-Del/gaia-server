@@ -58,6 +58,7 @@ export class PrismaUsersRepository extends PrismaRepository implements UsersRepo
     const where = {
       ...whereClause,
       name: { contains: name?.value, mode: 'insensitive' },
+      role: { not: 'OWNER' },
     }
 
     const query = this.createPaginationQuery(this.prisma.user, where)

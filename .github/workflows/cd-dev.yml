@@ -48,7 +48,8 @@ jobs:
           TAG: ${{ steps.generate_tag.outputs.sha }}
         run: |
           docker build -t $REGISTRY/$ECR_REPOSITORY:$TAG .
-          docker push $REGISTRY/$ECR_REPOSITORY:$TAG
+          docker tag $REGISTRY/$ECR_REPOSITORY:$TAG $REGISTRY/$ECR_REPOSITORY:latest
+          docker push --all-tags $REGISTRY/$ECR_REPOSITORY
           echo "image_uri=$REGISTRY/$ECR_REPOSITORY:$TAG" >> $GITHUB_OUTPUT
 
       - name: Update ECS task definition and service

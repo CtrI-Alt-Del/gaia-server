@@ -64,9 +64,6 @@ export class Alarm extends Entity<AlarmProps> {
       if (partialDto.rule !== undefined) {
         this.props.rule = AlertRule.create(partialDto.rule)
       }
-      if (partialDto.parameter !== undefined) {
-        this.props.parameter = ParameterAggregate.create(partialDto.parameter)
-      }
       this.refreshLastUpdate()
       return this
     }

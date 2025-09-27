@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 export const envSchema = z.object({
-  PANEL_APP_URL: z.url(),
+  GAIA_PANEL_URL: z.url(),
   POSTGRES_URL: z.url(),
   POSTGRES_DATABASE: z.string(),
   POSTGRES_USER: z.string(),

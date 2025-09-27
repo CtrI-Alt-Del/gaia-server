@@ -13,7 +13,7 @@ export class ClerkAuthProvider {
     try {
       await this.clerk.invitations.createInvitation({
         emailAddress: userEmail,
-        redirectUrl: `${this.envProvider.get('PANEL_APP_URL')}/auth/sign-up`,
+        redirectUrl: `${this.envProvider.get('GAIA_PANEL_URL')}/auth/sign-up`,
         publicMetadata: {
           userId,
         },

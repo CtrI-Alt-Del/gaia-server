@@ -25,7 +25,7 @@ jobs:
           node-version: 20
 
       - name: Generate Tag
-        id: generate-tag
+        id: generate_tag
         run: |
           SHA=$(echo $GITHUB_SHA | head -c 7)
           echo "sha=$SHA" >> $GITHUB_OUTPUT
@@ -35,3 +35,15 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::549291472718:role/gaia-server-role
           aws-region: us-east-1
+
+      - name: Login to AWS ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push Docker image to ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          TAG: ${{ steps.generate_tag.outputs.sha }}
+        run: |
+          docker build -t ${{ env.REGISTRY }}.dkr.ecr.us-east-1.amazonaws.com/gaia-server:${{ env.TAG }} .
+          docker push ${{ env.REGISTRY }}.dkr.ecr.us-east-1.amazonaws.com/gaia-server:${{ env.TAG }}

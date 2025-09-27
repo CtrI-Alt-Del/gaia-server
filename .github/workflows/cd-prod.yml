@@ -33,5 +33,5 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::549291472719:role/gaia-server-role
+          role-to-assume: arn:aws:iam::549291472718:role/gaia-server-role
           aws-region: us-east-1

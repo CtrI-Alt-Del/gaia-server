@@ -1,7 +1,8 @@
+import { PrismaClient } from '@prisma/client'
+
 import { UsersFaker } from '@/core/membership/domain/entities/fakers'
 import { StationsFaker } from '@/core/telemetry/domain/entities/fakers/station-faker'
 import { ParameterFaker } from '@/core/telemetry/domain/entities/fakers/parameter-faker'
-import { PrismaClient } from '@prisma/client'
 import { PrismaUserMapper, PrismaParameterMapper } from './mappers'
 
 async function seed() {
@@ -15,7 +16,6 @@ async function seed() {
     await prisma.$connect()
     console.log('✅ Conectado ao banco de dados')
 
-    // Limpar todos os dados existentes
     console.log('🧹 Limpando dados existentes...')
 
     await prisma.stationParameter.deleteMany()
@@ -32,7 +32,14 @@ async function seed() {
 
     console.log('✅ Limpeza concluída!')
 
-    const users = UsersFaker.fakeMany(100)
+    const ownerUser = UsersFaker.fake({
+      id: 'cmfyf7bbs0000civ25oavg5er',
+      name: 'Diogo Braquinho',
+      email: 'gaia.ctrlaltdel@gmail.com',
+      role: 'owner',
+    })
+    const membersUsers = UsersFaker.fakeMany(100, { role: 'member' })
+    const users = [ownerUser, ...membersUsers]
     const prismaUsers = users.map(PrismaUserMapper.toPrisma)
 
     await prisma.user.createMany({

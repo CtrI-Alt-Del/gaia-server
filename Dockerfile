@@ -1,5 +1,5 @@
 # Multi-stage build for production optimization
-FROM node:20-alpine AS base
+FROM node:22-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -14,7 +14,11 @@ RUN npm ci --only=production && npm cache clean --force
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+
+# Install ALL dependencies (including devDependencies) for building
+COPY package.json package-lock.json* ./
+RUN npm ci && npm cache clean --force
+
 COPY . .
 
 # Generate Prisma client
@@ -33,7 +37,7 @@ RUN adduser --system --uid 1001 nestjs
 
 # Copy the built application
 COPY --from=builder --chown=nestjs:nodejs /app/dist ./dist
-COPY --from=builder --chown=nestjs:nodejs /app/node_modules ./node_modules
+COPY --from=deps --chown=nestjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nestjs:nodejs /app/package.json ./package.json
 
 # Copy Prisma schema and generated client
@@ -48,6 +52,6 @@ ENV PORT=3333
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3000/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })" || exit 1
+  CMD node -e "require('http').get('http://localhost:3333/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })" || exit 1
 
-CMD ["node", "dist/src/infra/main.js"]
+CMD node dist/infra/main.js

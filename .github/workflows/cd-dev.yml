@@ -12,6 +12,14 @@ permissions:
   id-token: write
   contents: read
 
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: dev-gaia-server-ecr-repository
+  ECS_CLUSTER_NAME: dev-gaia-cluster # Nome do cluster criado pelo Terraform
+  ECS_SERVICE_NAME: dev-gaia-server-service # Nome do serviço criado pelo Terraform
+  ECS_TASK_FAMILY: dev-gaia-server-task # Família da task definition criada pelo Terraform
+  CONTAINER_NAME: dev-gaia # Nome do contêiner dentro da task definition
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -37,13 +45,43 @@ jobs:
           aws-region: us-east-1
 
       - name: Login to AWS ECR
-        id: login-ecr
+        id: login_ecr
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build and push Docker image to ECR
+        id: build_push_image
         env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REGISTRY: ${{ steps.login_ecr.outputs.registry }}
           TAG: ${{ steps.generate_tag.outputs.sha }}
         run: |
           docker build -t ${{ env.REGISTRY }}/dev-gaia-server-ecr-repository:${{ env.TAG }} .
           docker push ${{ env.REGISTRY }}/dev-gaia-server-ecr-repository:${{ env.TAG }}
+          echo "image_uri=$REGISTRY/$ECR_REPOSITORY:$TAG" >> $GITHUB_OUTPUT
+
+
+          - name: Download task definition and deploy to ECS
+          run: |
+            echo "Iniciando deploy para o cluster ${{ env.ECS_CLUSTER_NAME }}..."
+            
+            # 1. Baixa a definição da task ATIVA no momento
+            aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_FAMILY }} --query taskDefinition > task-def.json
+            
+            # 2. Cria uma nova revisão da task definition
+            #    - Pega a definição baixada
+            #    - Usa 'jq' para atualizar a URI da imagem
+            #    - Remove campos desnecessários para o registro de uma nova versão
+            #    - Registra a nova definição e captura o ARN da nova revisão
+            NEW_TASK_DEF_ARN=$(aws ecs register-task-definition \
+              --cli-input-json file://task-def.json \
+              --container-definitions "[{\"name\":\"${{ env.CONTAINER_NAME }}\",\"image\":\"${{ steps.build_push_image.outputs.image_uri }}\"}]" \
+              --query "taskDefinition.taskDefinitionArn" --output text)
+              
+            echo "Nova revisão da Task Definition registrada: $NEW_TASK_DEF_ARN"
+            
+            # 3. Atualiza o serviço para usar a nova revisão da task definition
+            aws ecs update-service \
+              --cluster ${{ env.ECS_CLUSTER_NAME }} \
+              --service ${{ env.ECS_SERVICE_NAME }} \
+              --task-definition $NEW_TASK_DEF_ARN
+              
+            echo "Deploy solicitado com sucesso!"

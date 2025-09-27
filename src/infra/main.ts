@@ -21,7 +21,9 @@ async function bootstrap() {
   const envProvider = app.get(EnvProvider)
   const port = envProvider.get('PORT')
 
-  envProvider.get('MODE') === 'staging' && (await seed())
+  if (envProvider.get('MODE') === 'staging') {
+    await seed()
+  }
 
   app.enableCors()
 

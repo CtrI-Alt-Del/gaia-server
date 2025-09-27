@@ -1,9 +1,9 @@
 import { mock, MockProxy } from "vitest-mock-extended"
 import { AlarmsRepository } from "../../interfaces"
 import { AlarmFaker } from "../../domain/entities/fakers/alarm-faker"
-import { AlarmNotFoundError } from "@/core/telemetry/domain/errors/alarm-not-found-error"
+import { AlarmNotFoundError } from "@/core/alerting/domain/errors/alarm-not-found-error"
 import { DeactivateAlarmUseCase } from "../deactivate-alarm-use-case"
-import { AlarmAlreadyDeactivatedError } from "@/core/telemetry/domain/errors/alarm-already-deactivated-error"
+import { AlarmAlreadyDeactivatedError } from "@/core/alerting/domain/errors/alarm-already-deactivated-error"
 
 describe('DeactivateAlarmUseCase', () => {
   let repository: MockProxy<AlarmsRepository>

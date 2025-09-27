@@ -1,8 +1,8 @@
 import { Id } from "@/core/global/domain/structures"
 import { AlarmsRepository, UseCase } from "@/core/global/interfaces"
-import { AlarmNotFoundError } from "@/core/telemetry/domain/errors/alarm-not-found-error"
+import { AlarmNotFoundError } from "@/core/alerting/domain/errors/alarm-not-found-error"
 import { Alarm } from "../domain/entities/alarm"
-import { AlarmAlreadyDeactivatedError } from "@/core/telemetry/domain/errors/alarm-already-deactivated-error"
+import { AlarmAlreadyDeactivatedError } from "@/core/alerting/domain/errors/alarm-already-deactivated-error"
 
 type Request = {
     id: string

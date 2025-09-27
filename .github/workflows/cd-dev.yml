@@ -51,38 +51,29 @@ jobs:
           docker push $REGISTRY/$ECR_REPOSITORY:$TAG
           echo "image_uri=$REGISTRY/$ECR_REPOSITORY:$TAG" >> $GITHUB_OUTPUT
 
+      # --- PASSO CORRIGIDO E MAIS ROBUSTO ---
       - name: Update ECS task definition and service
         run: |
           echo "Iniciando deploy para o cluster ${{ env.ECS_CLUSTER_NAME }}"
 
-          # 1. Baixa a definição da task ATIVA e armazena em uma variável
+          # 1. Baixa a definição da task ATIVA
           TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_FAMILY }} --query taskDefinition)
 
-          # 2. Usa 'jq' para criar uma nova definição de tarefa, limpa e atualizada
-          #    - Passa a nova URI da imagem como argumento para o jq
-          #    - Atualiza a imagem no container correto
-          #    - Seleciona APENAS os campos válidos para o comando 'register-task-definition'
+          # 2. Prepara o novo payload da task definition
+          #    - Atualiza a imagem do contêiner para a nova versão
+          #    - Usa 'del()' para remover todos os campos que não são aceitos pelo 'register-task-definition'
           NEW_TASK_DEF_PAYLOAD=$(echo $TASK_DEFINITION | \
             jq --arg IMAGE_URI "${{ steps.build_push_image.outputs.image_uri }}" \
             '
-              (.containerDefinitions[] | select(.name == "${{ env.CONTAINER_NAME }}")).image = $IMAGE_URI |
-              {
-                family: .family,
-                taskRoleArn: .taskRoleArn,
-                executionRoleArn: .executionRoleArn,
-                networkMode: .networkMode,
-                containerDefinitions: .containerDefinitions,
-                volumes: .volumes,
-                placementConstraints: .placementConstraints,
-                requiresCompatibilities: .requiresCompatibilities,
-                cpu: .cpu,
-                memory: .memory,
-                tags: .tags
-              }
+              ( .containerDefinitions[] | select(.name == "${{ env.CONTAINER_NAME }}") ).image = $IMAGE_URI | 
+              del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy, .deregisteredAt)
             '
           )
 
-          # 3. Registra a nova definição de tarefa e captura o ARN da nova revisão
+          # ETAPA DE DEPURAÇÃO (opcional): Descomente a linha abaixo para ver o JSON final antes de ser enviado
+          # echo "$NEW_TASK_DEF_PAYLOAD"
+
+          # 3. Registra a nova definição de tarefa
           NEW_TASK_DEF_ARN=$(aws ecs register-task-definition \
             --cli-input-json "$NEW_TASK_DEF_PAYLOAD" \
             --query "taskDefinition.taskDefinitionArn" --output text)
@@ -94,4 +85,5 @@ jobs:
             --cluster ${{ env.ECS_CLUSTER_NAME }} \
             --service ${{ env.ECS_SERVICE_NAME }} \
             --task-definition $NEW_TASK_DEF_ARN
+            
           echo "Deploy solicitado com sucesso!"

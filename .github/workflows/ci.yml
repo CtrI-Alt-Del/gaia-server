@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: Continuous Integration
 
 on:
   push:
@@ -9,34 +9,34 @@ on:
     branches:
       - main
       - production
-      
+
 jobs:
   # Validate if the branch is allowed to be merged or not
   validate-branches:
-    name: 'Validate Branch Rules'
+    name: "Validate Branch Rules"
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request'
     steps:
-      - name: 'Check Main -> Production Merge'
+      - name: "Check Main -> Production Merge"
         if: github.base_ref == 'production' && github.head_ref != 'main'
         run: |
           echo "❌ ERRO: Pull requests para 'production' só podem ser feitos a partir da branch 'main'."
           echo "Este PR está vindo da branch '${{ github.head_ref }}', o que não é permitido."
           exit 1
-      
-      - name: 'Block Production -> Main Merge'
+
+      - name: "Block Production -> Main Merge"
         if: github.base_ref == 'main' && github.head_ref == 'production'
         run: |
           echo "❌ ERRO: A branch 'production' não pode ser mesclada de volta na 'main'."
           echo "Hotfixes devem ser feitos em uma branch separada e mesclados tanto em 'main' quanto em 'production'."
           exit 1
-      
-      - name: 'Approve valid merge'
+
+      - name: "Approve valid merge"
         if: (github.base_ref == 'production' && github.head_ref == 'main') || (github.base_ref == 'main' && github.head_ref != 'production')
         run: echo "\o/ tudo correto, pode prosseguir!"
 
   build:
-    name: 'Build Application'
+    name: "Build Application"
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -66,7 +66,7 @@ jobs:
         run: npm run build
 
   unit-tests:
-    name: 'Run Unit Tests'
+    name: "Run Unit Tests"
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: build

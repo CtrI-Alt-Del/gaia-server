@@ -37,10 +37,10 @@ RUN adduser --system --uid 1001 nestjs
 
 # Copy the built application
 COPY --from=builder --chown=nestjs:nodejs /app/dist ./dist
-COPY --from=deps --chown=nestjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nestjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nestjs:nodejs /app/package.json ./package.json
 
-# Copy Prisma schema and generated client
+# Copy Prisma schema (optional, useful for migrations at runtime)
 COPY --from=builder --chown=nestjs:nodejs /app/src/infra/database/prisma ./src/infra/database/prisma
 
 USER nestjs

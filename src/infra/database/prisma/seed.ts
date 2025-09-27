@@ -5,7 +5,7 @@ import { StationsFaker } from '@/core/telemetry/domain/entities/fakers/station-f
 import { ParameterFaker } from '@/core/telemetry/domain/entities/fakers/parameter-faker'
 import { PrismaUserMapper, PrismaParameterMapper } from './mappers'
 
-async function seed() {
+export async function seed() {
   const prisma = new PrismaClient({
     log: process.env.LOG_LEVEL === 'debug' ? ['warn', 'error', 'info'] : [],
   })

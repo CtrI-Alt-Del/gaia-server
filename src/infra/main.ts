@@ -4,6 +4,7 @@ import { EnvProvider } from './provision/env/env-provider'
 import { AppModule } from './app.module'
 import { RestExceptionsFilter } from './rest/filters/rest-exception.filter'
 import { apiReference } from '@scalar/nestjs-api-reference'
+import { seed } from './database/prisma/seed'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -19,6 +20,8 @@ async function bootstrap() {
 
   const envProvider = app.get(EnvProvider)
   const port = envProvider.get('PORT')
+
+  envProvider.get('MODE') === 'staging' && (await seed())
 
   app.enableCors()
 

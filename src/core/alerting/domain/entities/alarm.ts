@@ -54,6 +54,20 @@ export class Alarm extends Entity<AlarmProps> {
     return this.props.updatedAt
   }
 
+  update(partialDto: Partial<AlarmDto>): Alarm {
+      if (partialDto.level !== undefined) {
+        this.props.level = AlarmLevel.create(partialDto.level)
+      }
+      if (partialDto.message !== undefined) {
+        this.props.message = Text.create(partialDto.message)
+      }
+      if (partialDto.rule !== undefined) {
+        this.props.rule = AlertRule.create(partialDto.rule)
+      }
+      this.refreshLastUpdate()
+      return this
+    }
+
   get dto(): AlarmDto {
     return {
       id: this.id.value,

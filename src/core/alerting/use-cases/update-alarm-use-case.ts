@@ -2,6 +2,7 @@ import { AlarmsRepository, UseCase } from "@/core/global/interfaces";
 import { AlarmDto } from "../dtos/alarm.dto";
 import { Id } from "@/core/global/domain/structures";
 import { Alarm } from "../domain/entities/alarm";
+import { AlarmNotFoundError } from "@/core/telemetry/domain/errors/alarm-not-found-error";
 
 type UseCaseInput = { data: Partial<AlarmDto>; id: string }
 
@@ -17,7 +18,7 @@ export class UpdateAlarmUseCase implements UseCase<UseCaseInput, AlarmDto> {
   async findById(id: Id): Promise<Alarm> {
     const alarm = await this.repository.findById(id)
     if (!alarm) {
-      throw new Error('Parameter not found')
+      throw new AlarmNotFoundError
     }
     return alarm
   }

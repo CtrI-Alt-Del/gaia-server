@@ -41,10 +41,10 @@ COPY --from=builder --chown=nestjs:nodejs /app/src/infra/database/prisma ./src/i
 
 USER nestjs
 
-EXPOSE 3000
+EXPOSE 3333
 
 ENV NODE_ENV=production
-ENV PORT=3000
+ENV PORT=3333
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \

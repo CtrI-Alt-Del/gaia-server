@@ -14,7 +14,7 @@ export class DeactivateAlarmUseCase implements UseCase<Request, void>{
     async execute(alarmDto: Request): Promise<void> {
         const alarm = await this.findById(Id.create(alarmDto.id))
         
-        if (alarm.isActive.isTrue) {
+        if (alarm.isActive.isFalse) {
             throw new AlarmAlreadyDeactivatedError()
         }
 

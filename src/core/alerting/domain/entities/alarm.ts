@@ -46,10 +46,6 @@ export class Alarm extends Entity<AlarmProps> {
     return this.props.parameter
   }
 
-  get isActive(): Logical {
-    return this.props.isActive
-  }
-
   get createdAt(): Timestamp {
     return this.props.createdAt
   }

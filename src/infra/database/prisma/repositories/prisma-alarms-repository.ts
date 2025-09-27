@@ -8,6 +8,7 @@ import { PrismaAlarmMapper } from '../mappers'
 import { AlarmListingParams } from '@/core/global/types/alarm-list-params'
 import { CursorPagination } from '@/core/global/domain/structures'
 import { PrismaRepository } from './prisma-repository'
+import { Id } from '@/core/global/domain/structures'
 
 @Injectable()
 export class PrismaAlarmsRepository extends PrismaRepository implements AlarmsRepository {
@@ -37,4 +38,24 @@ export class PrismaAlarmsRepository extends PrismaRepository implements AlarmsRe
   
       return result.map(PrismaAlarmMapper.toEntity)
     }
+  
+  async findById(id: Id): Promise<Alarm | null> {
+    const prismaAlarm = await this.prisma.alarm.findUnique({
+      where: {id: id.value}
+    })
+
+    if (!prismaAlarm) {
+      return null
+    }
+
+    return PrismaAlarmMapper.toEntity(prismaAlarm)
   }
+
+  async replace(alarm: Alarm): Promise<void> {
+    const prismaAlarm = PrismaAlarmMapper.toPrisma(alarm)
+    await this.prisma.alarm.update({
+      where: {id: prismaAlarm.id},
+      data: prismaAlarm
+    })
+  }
+}

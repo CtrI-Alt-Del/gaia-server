@@ -1,10 +1,13 @@
 @URL = {{BASE_URL}}/membership/users
-@ID = cmfq6ogg40007vtv26kzye6ew
+@USER_ID = cmfyf7bbs0000civ25oavg5er
 
 ### List users
 GET {{URL}}
 ?pageSize=5
 &previousCursor=cmfq3sod2002cwev23uwrgr20
+
+### Get user
+GET {{URL}}/{{USER_ID}}
 
 ### Create user
 POST {{URL}}
@@ -17,7 +20,7 @@ Authorization: Bearer {{JWT}}
 }
 
 ### Update user
-PUT {{URL}}/{{ID}}
+PUT {{URL}}/{{USER_ID}}
 Content-Type: application/json
 
 {
@@ -26,8 +29,8 @@ Content-Type: application/json
 }
 
 ### Activate user
-PATCH {{URL}}/{{ID}}/activate
+PATCH {{URL}}/{{USER_ID}}/activate
 
 ### Deactivate user
-DELETE {{URL}}/{{ID}}/deactivate
+DELETE {{URL}}/{{USER_ID}}/deactivate
 

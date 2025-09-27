@@ -7,6 +7,7 @@ import { UpdateUserController } from './users/update-user.controller'
 import { ActivateUserController } from './users/activate-user.controller'
 import { DeactivateUserController } from './users/deactivate-user.controller'
 import { QueueModule } from '@/infra/queue/queue.module'
+import { GetUserController } from './users/get-user.controller'
 
 @Module({
   imports: [DatabaseModule, QueueModule],
@@ -16,6 +17,7 @@ import { QueueModule } from '@/infra/queue/queue.module'
     CreateUserController,
     ListUsersController,
     UpdateUserController,
+    GetUserController,
   ],
 })
 export class MembershipRestModule {}

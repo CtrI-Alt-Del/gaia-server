@@ -51,7 +51,6 @@ jobs:
           docker push $REGISTRY/$ECR_REPOSITORY:$TAG
           echo "image_uri=$REGISTRY/$ECR_REPOSITORY:$TAG" >> $GITHUB_OUTPUT
 
-      # --- PASSO CORRIGIDO ---
       - name: Update ECS task definition and service
         run: |
           echo "Iniciando deploy para o cluster ${{ env.ECS_CLUSTER_NAME }}"

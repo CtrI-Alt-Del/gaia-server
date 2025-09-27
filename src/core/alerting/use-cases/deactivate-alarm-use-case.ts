@@ -1,8 +1,8 @@
 import { Id } from "@/core/global/domain/structures"
 import { AlarmsRepository, UseCase } from "@/core/global/interfaces"
-import { AlarmAlreadyActivatedError } from "@/core/telemetry/domain/errors/alarm-already-activated-error"
 import { AlarmNotFoundError } from "@/core/telemetry/domain/errors/alarm-not-found-error"
 import { Alarm } from "../domain/entities/alarm"
+import { AlarmAlreadyDeactivatedError } from "@/core/telemetry/domain/errors/alarm-already-deactivated-error"
 
 type Request = {
     id: string
@@ -15,7 +15,7 @@ export class DeactivateAlarmUseCase implements UseCase<Request, void>{
         const alarm = await this.findById(Id.create(alarmDto.id))
         
         if (alarm.isActive.isTrue) {
-            throw new AlarmAlreadyActivatedError()
+            throw new AlarmAlreadyDeactivatedError()
         }
 
         alarm.deactivate()

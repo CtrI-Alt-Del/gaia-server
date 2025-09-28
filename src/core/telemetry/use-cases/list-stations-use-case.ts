@@ -2,6 +2,7 @@ import { Id, PlusInteger, Status, Text } from '@/core/global/domain/structures'
 import { CursorPaginationDto } from '@/core/global/domain/structures/dtos'
 import type { StationsRepository, UseCase } from '@/core/global/interfaces'
 import { StationDto } from '../domain/dtos/station-dto'
+import { StationDto } from '../domain/dtos/station-dto'
 
 type Request = {
   nextCursor?: string
@@ -12,10 +13,13 @@ type Request = {
 }
 
 type Response = CursorPaginationDto<StationDto>
+type Response = CursorPaginationDto<StationDto>
 
+export class ListStationsUseCase implements UseCase<Request, Response> {
 export class ListStationsUseCase implements UseCase<Request, Response> {
   constructor(private readonly repository: StationsRepository) {}
 
+  async execute(params: Request): Promise<Response> {
   async execute(params: Request): Promise<Response> {
     const pagination = await this.repository.findMany({
       nextCursor: params.nextCursor ? Id.create(params.nextCursor) : undefined,

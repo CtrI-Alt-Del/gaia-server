@@ -1,6 +1,8 @@
 import { Entity } from '@/core/global/domain/abstracts'
 import { Logical, Text, Timestamp } from '@/core/global/domain/structures'
 import { Integer } from '@/core/global/domain/structures/integer'
+import { Logical, Text, Timestamp } from '@/core/global/domain/structures'
+import { Integer } from '@/core/global/domain/structures/integer'
 import { StationDto } from '@/core/telemetry/domain/dtos/station-dto'
 import { Coordinate, UnsignedId } from '@/core/telemetry/domain/structures'
 
@@ -10,6 +12,7 @@ type StationProps = {
   coordinate: Coordinate
   address: Text
   lastReadAt?: Timestamp
+  quantityOfParameters: Integer
   quantityOfParameters: Integer
   isActive: Logical
   createdAt: Timestamp
@@ -23,6 +26,7 @@ export class Station extends Entity<StationProps> {
         uid: UnsignedId.create(dto.uid),
         address: Text.create(dto.address),
         coordinate: Coordinate.create(dto.latitude, dto.longitude),
+        quantityOfParameters: Integer.create(dto.quantityOfParameters ?? 0),
         quantityOfParameters: Integer.create(dto.quantityOfParameters ?? 0),
         lastReadAt: dto.lastReadAt ? Timestamp.create(dto.lastReadAt) : undefined,
         isActive: Logical.create(dto?.isActive ?? true),
@@ -49,6 +53,10 @@ export class Station extends Entity<StationProps> {
     return this.props.quantityOfParameters
   }
 
+  get quantityOfParameters(): Integer {
+    return this.props.quantityOfParameters
+  }
+
   get lastReadAt(): Timestamp | undefined {
     return this.props.lastReadAt
   }
@@ -65,6 +73,7 @@ export class Station extends Entity<StationProps> {
       address: this.address.value,
       latitude: this.coordinate.latitude.value,
       longitude: this.coordinate.longitude.value,
+      quantityOfParameters: this.quantityOfParameters.value,
       quantityOfParameters: this.quantityOfParameters.value,
       lastReadAt: this.lastReadAt ? this.lastReadAt.value : undefined,
       isActive: this.isActive.value,
@@ -83,17 +92,24 @@ export class Station extends Entity<StationProps> {
 
     if (partialDto.latitude !== undefined && partialDto.longitude !== undefined) {
       this.props.coordinate = Coordinate.create(partialDto.latitude, partialDto.longitude)
-    }
 
-    if (partialDto.lastReadAt) {
-      this.props.lastReadAt = Timestamp.create(partialDto.lastReadAt)
-    }
+      if (partialDto.latitude !== undefined && partialDto.longitude !== undefined) {
+        this.props.coordinate = Coordinate.create(
+          partialDto.latitude,
+          partialDto.longitude,
+        )
+      }
 
-    if (partialDto.address !== undefined) {
-      this.props.address = Text.create(partialDto.address)
-    }
+      if (partialDto.lastReadAt) {
+        if (partialDto.lastReadAt) {
+          this.props.lastReadAt = Timestamp.create(partialDto.lastReadAt)
+        }
 
-    this.refreshLastUpdate()
-    return this
-  }
-}
+        if (partialDto.address !== undefined) {
+          this.props.address = Text.create(partialDto.address)
+        }
+
+        this.refreshLastUpdate()
+        return this
+      }
+    }

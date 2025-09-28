@@ -17,8 +17,7 @@
     "db:seed": "ts-node -r tsconfig-paths/register src/infra/database/prisma/seed.ts",
     "test": "vitest run",
     "test:watch": "vitest --watch",
-    "test:cov": "vitest run --coverage",
-    "prepare": "husky"
+    "test:cov": "vitest run --coverage"
   },
   "dependencies": {
     "@clerk/backend": "^2.14.0",

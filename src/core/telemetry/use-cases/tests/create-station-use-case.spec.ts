@@ -52,9 +52,10 @@ describe('CreateStationUseCase', () => {
       address: createStationRequest.address,
       latitude: createStationRequest.latitude,
       longitude: createStationRequest.longitude,
-      parameters: mockParameters.map((p) => p.dto),
+      quantityOfParameters: mockParameterIds.length,
+      lastReadAt: null,
     })
-    expect(stationsRepository.add).toHaveBeenCalledWith(mockStation)
+    expect(stationsRepository.add).toHaveBeenCalledWith(mockStation, mockParameterIds.map(Id.create))
     expect(result).toEqual(mockStation.dto)
   })
 

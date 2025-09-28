@@ -15,6 +15,7 @@ type StationProps = {
   createdAt: Timestamp
   updatedAt?: Timestamp
 }
+
 export class Station extends Entity<StationProps> {
   static create(dto: StationDto): Station {
     return new Station(
@@ -53,25 +54,10 @@ export class Station extends Entity<StationProps> {
     return this.props.lastReadAt
   }
 
-  get adddress(): Text {
+  get address(): Text {
     return this.props.address
   }
 
-  get dto(): StationDto {
-    return {
-      id: this.id.value,
-      name: this.name.value,
-      uid: this.uid.value.value,
-      address: this.adddress.value,
-      latitude: this.coordinate.latitude.value,
-      longitude: this.coordinate.longitude.value,
-      quantityOfParameters: this.quantityOfParameters.value,
-      lastReadAt: this.lastReadAt ? this.lastReadAt.value : undefined,
-      isActive: this.isActive.value,
-      createdAt: this.createdAt.value,
-      updatedAt: this.updatedAt?.value,
-    }
-  }
   update(partialDto: Partial<StationDto>): Station {
     if (partialDto.name !== undefined) {
       this.props.name = Text.create(partialDto.name)
@@ -81,10 +67,14 @@ export class Station extends Entity<StationProps> {
       this.props.uid = UnsignedId.create(partialDto.uid)
     }
 
-    if (partialDto.latitude !== undefined && partialDto.longitude !== undefined) {
-      this.props.coordinate = Coordinate.create(partialDto.latitude, partialDto.longitude)
-    }
 
+    if (partialDto.latitude !== undefined || partialDto.longitude !== undefined) {
+      this.props.coordinate = Coordinate.create(
+        partialDto.latitude ?? this.coordinate.latitude.value,
+        partialDto.longitude ?? this.coordinate.longitude.value,
+      )
+    }
+    
     if (partialDto.lastReadAt) {
       this.props.lastReadAt = Timestamp.create(partialDto.lastReadAt)
     }
@@ -95,5 +85,21 @@ export class Station extends Entity<StationProps> {
 
     this.refreshLastUpdate()
     return this
+  }
+
+  get dto(): StationDto {
+    return {
+      id: this.id.value,
+      name: this.name.value,
+      uid: this.uid.value.value,
+      address: this.address.value,
+      latitude: this.coordinate.latitude.value,
+      longitude: this.coordinate.longitude.value,
+      quantityOfParameters: this.quantityOfParameters.value,
+      lastReadAt: this.lastReadAt ? this.lastReadAt.value : undefined,
+      isActive: this.isActive.value,
+      createdAt: this.createdAt.value,
+      updatedAt: this.updatedAt?.value,
+    }
   }
 }

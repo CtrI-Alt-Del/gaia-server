@@ -1,20 +1,20 @@
-import { DatabaseModule } from "@/infra/database/database.module";
-import { QueueModule } from "@/infra/queue/queue.module";
-import { Module } from "@nestjs/common";
-import { CreateAlarmController } from "./controllers/alarm/create-alarm.controller";
-import { ActivateAlarmController } from "./controllers/alarm/activate-alarm.controller";
-import { ListAlarmController } from "./controllers/alarm/list-alarm.controller";
-import { DeactivateAlarmController } from "./controllers/alarm/deactivate-alarm.controller";
-import { UpdateAlarmController } from "./controllers/alarm/edit-alarm.controller";
+import { DatabaseModule } from '@/infra/database/database.module'
+import { QueueModule } from '@/infra/queue/queue.module'
+import { Module } from '@nestjs/common'
+import { CreateAlarmsController } from './controllers/alarm/create-alarm.controller'
+import { ActivateAlarmsController } from './controllers/alarm/activate-alarm.controller'
+import { ListAlarmsController } from './controllers/alarm/list-alarms.controller'
+import { DeactivateAlarmsController } from './controllers/alarm/deactivate-alarm.controller'
+import { UpdateAlarmController } from './controllers/alarm/update-alarm.controller'
 
 @Module({
   imports: [DatabaseModule, QueueModule],
   controllers: [
-    CreateAlarmController,
-    ListAlarmController,
-    ActivateAlarmController,
-    DeactivateAlarmController,
-    UpdateAlarmController
+    CreateAlarmsController,
+    ListAlarmsController,
+    ActivateAlarmsController,
+    DeactivateAlarmsController,
+    UpdateAlarmController,
   ],
 })
 export class AlertingRestModule {}

@@ -10,6 +10,9 @@ type PrismaStationWithRelations = Prisma.Station & {
   stationParameter: (Prisma.StationParameter & {
     parameter: Prisma.Parameter
   })[]
+  _count: {
+    stationParameter: number
+  }
 }
 
 type PrismaStationWithCount = Prisma.Station & {
@@ -29,7 +32,7 @@ export class PrismaStationMapper {
       name: station.name.value,
       latitude: station.coordinate.latitude.value,
       longitude: station.coordinate.longitude.value,
-      address: station.adddress.value,
+      address: station.address.value,
       isActive: station.isActive.value,
       createdAt: station.createdAt.value,
       updatedAt: station.createdAt.value,
@@ -53,9 +56,7 @@ export class PrismaStationMapper {
       latitude: prismaStation.latitude,
       longitude: prismaStation.longitude,
       isActive: prismaStation.isActive,
-      quantityOfParameters: prismaStation.stationParameter
-        ? prismaStation.stationParameter.length
-        : 0,
+      quantityOfParameters: prismaStation._count?.stationParameter ?? 0,
       lastReadAt: null,
       createdAt: prismaStation.createdAt,
       updatedAt: prismaStation.updatedAt,

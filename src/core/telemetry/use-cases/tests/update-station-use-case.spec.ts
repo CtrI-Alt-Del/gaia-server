@@ -27,7 +27,6 @@ describe('UpdateStationUseCase', () => {
       latitude: -10.0,
       longitude: -20.0,
       address: '456 New Address St',
-      parameters: [],
     }
 
     stationsRepository.findById.mockResolvedValue(existingStation)
@@ -45,7 +44,7 @@ describe('UpdateStationUseCase', () => {
       Id.create(existingStation.id.value),
     )
     expect(existingStation.update).toHaveBeenCalledWith(updateData)
-    expect(stationsRepository.replace).toHaveBeenCalledWith(updatedStation)
+    expect(stationsRepository.replace).toHaveBeenCalledWith(updatedStation, [])
     expect(result).toEqual(updatedStation.dto)
   })
 

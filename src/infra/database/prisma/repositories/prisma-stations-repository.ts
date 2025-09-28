@@ -8,7 +8,6 @@ import { Station } from '@/core/telemetry/domain/entities/station'
 import { PrismaStationMapper } from '@/infra/database/prisma/mappers'
 import { StationsListingParams } from '@/core/global/types/stations-list-params'
 
-import { StationWithCount } from '@/core/global/types'
 @Injectable()
 export class PrismaStationsRepository
   extends PrismaRepository
@@ -64,7 +63,7 @@ export class PrismaStationsRepository
     pageSize,
     status,
     name,
-  }: StationsListingParams): Promise<CursorPagination<StationWithCount>> {
+  }: StationsListingParams): Promise<CursorPagination<Station>> {
     const whereClause = status?.isAll.isTrue
       ? undefined
       : { isActive: status?.isActive.isTrue }
@@ -92,6 +91,6 @@ export class PrismaStationsRepository
       pageSize,
     })
 
-    return result.map(PrismaStationMapper.toStationWithCount)
+    return result.map(PrismaStationMapper.toEntity)
   }
 }

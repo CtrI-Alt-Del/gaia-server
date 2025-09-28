@@ -29,15 +29,15 @@ export class ListStationsUseCase implements UseCase<Request, Response> {
 
     const responseItems = pagination.items.map(
       (station): StationDto => ({
-        id: station.id,
-        name: station.name,
-        uid: station.uid,
-        latitude: station.latitude,
-        longitude: station.longitude,
-        quantityOfParameters: station.quantityOfParameters,
-        isActive: station.isActive,
-        lastReadAt: station.lastReadAt ?? null,
-        address: station.address,
+        id: station.id.value,
+        name: station.name.value,
+        uid: station.uid.value.value,
+        latitude: station.coordinate.latitude.value,
+        longitude: station.coordinate.longitude.value,
+        quantityOfParameters: station.quantityOfParameters.value,
+        isActive: station.isActive.value,
+        lastReadAt: station.lastReadAt?.value ?? null,
+        address: station.address.value,
       }),
     )
 

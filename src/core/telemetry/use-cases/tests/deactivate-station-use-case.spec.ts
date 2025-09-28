@@ -47,6 +47,6 @@ describe('DeactivateStationUseCase', () => {
       Id.create(activeStation.id.value),
     )
     expect(deactivateSpy).toHaveBeenCalledOnce()
-    expect(repository.replace).toHaveBeenCalledWith(activeStation)
+    expect(repository.replace).toHaveBeenCalledWith(activeStation, [])
   })
 })

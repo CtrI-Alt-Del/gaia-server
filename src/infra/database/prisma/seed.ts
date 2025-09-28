@@ -66,7 +66,7 @@ export async function seed() {
         id: station.id.value,
         name: station.name.value,
         uid: station.uid.value.value,
-        address: station.adddress.value,
+        address: station.address.value,
         latitude: station.coordinate.latitude.value,
         longitude: station.coordinate.longitude.value,
         isActive: station.isActive.value,

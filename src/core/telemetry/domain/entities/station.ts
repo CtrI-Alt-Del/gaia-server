@@ -53,7 +53,7 @@ export class Station extends Entity<StationProps> {
     return this.props.lastReadAt
   }
 
-  get adddress(): Text {
+  get address(): Text {
     return this.props.address
   }
 
@@ -62,7 +62,7 @@ export class Station extends Entity<StationProps> {
       id: this.id.value,
       name: this.name.value,
       uid: this.uid.value.value,
-      address: this.adddress.value,
+      address: this.address.value,
       latitude: this.coordinate.latitude.value,
       longitude: this.coordinate.longitude.value,
       quantityOfParameters: this.quantityOfParameters.value,

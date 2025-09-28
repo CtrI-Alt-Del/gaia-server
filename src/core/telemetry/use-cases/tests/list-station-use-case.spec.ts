@@ -1,30 +1,18 @@
 import { mock, MockProxy } from 'vitest-mock-extended'
 import { describe, it, expect, beforeEach } from 'vitest'
 
-import { Id, Logical, PlusInteger, Status, Text } from '@/core/global/domain/structures'
+import { Id, PlusInteger, Status, Text } from '@/core/global/domain/structures'
 import type { StationsRepository } from '@/core/global/interfaces'
 import { CursorPagination } from '@/core/global/domain/structures/cursor-pagination'
 import { ListStationsUseCase } from '@/core/telemetry/use-cases/list-stations-use-case'
+import { StationsFaker } from '../../domain/entities/fakers/station-faker'
 
 describe('ListStationsUseCase', () => {
   let repository: MockProxy<StationsRepository>
   let useCase: ListStationsUseCase
 
   const mockStationsPagination = CursorPagination.create({
-    items: [
-      {
-        id: '123',
-        name: 'Station 1',
-        uid: 'ST-001',
-        latitude: -23.1791,
-        longitude: -45.8872,
-        address: '123 Main St',
-        quantityOfParameters: 5,
-        createdAt: new Date(),
-        isActive: true,
-        updatedAt: new Date(),
-      },
-    ],
+    items: StationsFaker.fakeMany(10),
     pageSize: 10,
     nextCursor: Id.create('next-id').value,
     previousCursor: Id.create('prev-id').value,
@@ -79,21 +67,21 @@ describe('ListStationsUseCase', () => {
 
     const expectedResponse = {
       items: mockStationsPagination.items.map((station) => ({
-        id: station.id,
-        name: station.name,
-        uid: station.uid,
-        latitude: station.latitude,
-        longitude: station.longitude,
-        address: station.address,
-        quantityOfParameters: station.quantityOfParameters,
-        status: station.isActive,
-        lastMeasurement: station.updatedAt ?? null,
+        id: station.id.value,
+        name: station.name.value,
+        uid: station.uid.value.value,
+        latitude: station.coordinate.latitude.value,
+        longitude: station.coordinate.longitude.value,
+        address: station.address.value,
+        quantityOfParameters: station.quantityOfParameters.value,
+        isActive: station.isActive.value,
+        lastReadAt: station.lastReadAt?.value ?? null,
       })),
       pageSize: mockStationsPagination.pageSize.value,
-      nextCursor: mockStationsPagination.nextCursor?.value,
-      previousCursor: mockStationsPagination.previousCursor?.value,
-      hasNextPage: false,
-      hasPreviousPage: false
+      nextCursor: mockStationsPagination.nextCursor?.value ?? null,
+      previousCursor: mockStationsPagination.previousCursor?.value ?? null,
+      hasNextPage: mockStationsPagination.hasNextPage.value,
+      hasPreviousPage: mockStationsPagination.hasPreviousPage.value,
     }
 
     expect(result).toEqual(expectedResponse)

@@ -29,7 +29,7 @@ export class PrismaStationMapper {
       name: station.name.value,
       latitude: station.coordinate.latitude.value,
       longitude: station.coordinate.longitude.value,
-      address: station.adddress.value,
+      address: station.address.value,
       isActive: station.isActive.value,
       createdAt: station.createdAt.value,
       updatedAt: station.createdAt.value,

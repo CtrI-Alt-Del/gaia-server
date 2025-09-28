@@ -6,6 +6,7 @@ export type StationWithCount = {
   longitude: number
   address: string
   isActive: boolean
+  lastReadAt: Date | null
   createdAt: Date
   updatedAt: Date
   quantityOfParameters: number

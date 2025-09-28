@@ -1,8 +1,5 @@
 import { Id } from '@/core/global/domain/structures'
-import {
-  StationsRepository,
-  UseCase,
-} from '@/core/global/interfaces'
+import { StationsRepository, UseCase } from '@/core/global/interfaces'
 import { Station } from '@/core/telemetry/domain/entities/station'
 import { StationAlreadyDeactivatedError } from '@/core/telemetry/domain/errors/station-already-deactivated-error'
 import { StationNotFoundError } from '@/core/telemetry/domain/errors/station-not-found-error'
@@ -21,7 +18,7 @@ export class DeactivateStationUseCase implements UseCase<Request, void> {
       throw new StationAlreadyDeactivatedError()
     }
     station.deactivate()
-    await this.repository.replace(station)
+    await this.repository.replace(station, [])
   }
 
   async findById(id: Id): Promise<Station> {

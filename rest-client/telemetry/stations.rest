@@ -10,11 +10,13 @@ POST {{URL}}
 Content-Type: application/json
 
 {
-  "name": "Estação Central",
-  "uid": "EST001",
-  "latitude": -23.5505,
-  "longitude": -46.6333,
-  "address": "Av. Paulista, 1000 - São Paulo, SP",
+  "station": {
+    "name": "Estação Central",
+    "uid": "EST001",
+    "latitude": -23.5505,
+    "longitude": -46.6333,
+    "address": "Av. Paulista, 1000 - São Paulo, SP",
+  },
   "parameterIds": ["param1", "param2", "param3"]
 }
 
@@ -23,12 +25,14 @@ PUT {{URL}}/{{ID}}
 Content-Type: application/json
 
 {
-  "name": "Estação Central Atualizada",
-  "uid": "EST001_UPDATED",
-  "latitude": -23.5505,
-  "longitude": -46.6333,
-  "address": "Av. Paulista, 1000 - São Paulo, SP",
-  "parameters": ["param1", "param2", "param4"]
+  "station": {
+    "name": "Estação Central Atualizada",
+    "uid": "EST001_UPDATED",
+    "latitude": -23.5505,
+    "longitude": -46.6333,
+    "address": "Av. Paulista, 1000 - São Paulo, SP",
+  },
+  "parameterIds": ["param1", "param2", "param4"]
 }
 
 #### deactivate station

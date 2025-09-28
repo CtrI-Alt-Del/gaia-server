@@ -32,14 +32,16 @@ describe('CreateStationUseCase', () => {
       address: '123 Test St',
       latitude: -23.1791,
       longitude: -45.8872,
-      parameterIds: mockParameterIds,
     }
 
     parametersRepository.findManyByIds.mockResolvedValue(mockParameters)
     vi.mocked(Station.create).mockReturnValue(mockStation)
     stationsRepository.add.mockResolvedValue()
 
-    const result = await useCase.execute(createStationRequest)
+    const result = await useCase.execute({
+      stationDto: createStationRequest,
+      parameterIds: mockParameterIds,
+    })
 
     expect(parametersRepository.findManyByIds).toHaveBeenCalledWith(
       mockParameterIds.map(Id.create),
@@ -66,13 +68,15 @@ describe('CreateStationUseCase', () => {
       address: '123 Test St',
       latitude: -23.1791,
       longitude: -45.8872,
-      parameterIds: requestedIds,
     }
 
     parametersRepository.findManyByIds.mockResolvedValue(mockParameters)
 
-    await expect(useCase.execute(createStationRequest)).rejects.toThrow(
-      ParameterNotFoundError,
-    )
+    await expect(
+      useCase.execute({
+        stationDto: createStationRequest,
+        parameterIds: requestedIds,
+      }),
+    ).rejects.toThrow(ParameterNotFoundError)
   })
 })

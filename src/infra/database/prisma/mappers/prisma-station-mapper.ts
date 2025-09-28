@@ -1,9 +1,10 @@
+import type Prisma from '@prisma/client'
+
 import { Station } from '@/core/telemetry/domain/entities/station'
 import type { PrismaStation } from '../types'
-import { PrismaParameterMapper } from '@/infra/database/prisma/mappers/prisma-parameter-mapper'
-import type Prisma from '@prisma/client'
 import { StationDto } from '@/core/telemetry/domain/dtos/station-dto'
 import { StationWithCount } from '@/core/global/types'
+import { Id } from '@/core/global/domain/structures'
 
 type PrismaStationWithRelations = Prisma.Station & {
   stationParameter: (Prisma.StationParameter & {
@@ -21,8 +22,7 @@ export class PrismaStationMapper {
     return Station.create(PrismaStationMapper.toDto(prismaStation))
   }
 
-  static toPrisma(station: Station): PrismaStation {
-    const parameterItems = station.parameters.items
+  static toPrisma(station: Station, parametersIds: Id[]): PrismaStation {
     return {
       id: station.id.value,
       uid: station.uid.value.value,
@@ -33,13 +33,15 @@ export class PrismaStationMapper {
       isActive: station.isActive.value,
       createdAt: station.createdAt.value,
       updatedAt: station.createdAt.value,
-      stationParameter: {
-        create: parameterItems.map((param) => ({
-          parameter: {
-            connect: { id: param.id.value },
-          },
-        })),
-      },
+      stationParameter: parametersIds
+        ? {
+            create: parametersIds.map((paramId) => ({
+              parameter: {
+                connect: { id: paramId.value },
+              },
+            })),
+          }
+        : undefined,
     }
   }
   static toDto(prismaStation: PrismaStationWithRelations): StationDto {
@@ -51,11 +53,10 @@ export class PrismaStationMapper {
       latitude: prismaStation.latitude,
       longitude: prismaStation.longitude,
       isActive: prismaStation.isActive,
-      parameters: prismaStation.stationParameter
-        ? prismaStation.stationParameter.map((join) =>
-            PrismaParameterMapper.toDto(join.parameter),
-          )
-        : [],
+      quantityOfParameters: prismaStation.stationParameter
+        ? prismaStation.stationParameter.length
+        : 0,
+      lastReadAt: null,
       createdAt: prismaStation.createdAt,
       updatedAt: prismaStation.updatedAt,
     }
@@ -73,6 +74,7 @@ export class PrismaStationMapper {
       createdAt: prismaStation.createdAt,
       updatedAt: prismaStation.updatedAt,
       quantityOfParameters: prismaStation._count.stationParameter,
+      lastReadAt: null,
     }
   }
 }

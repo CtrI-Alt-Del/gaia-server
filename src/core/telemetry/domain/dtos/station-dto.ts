@@ -1,5 +1,3 @@
-import { ParameterDto } from '@/core/telemetry/domain/dtos/parameter-dto'
-
 export type StationDto = {
   id?: string
   name: string
@@ -7,8 +5,8 @@ export type StationDto = {
   latitude: number
   address: string
   longitude: number
-  parameters: ParameterDto[]
-  lastReadAt?: Date
+  quantityOfParameters?: number
+  lastReadAt?: Date | null
   isActive?: boolean
   createdAt?: Date
   updatedAt?: Date

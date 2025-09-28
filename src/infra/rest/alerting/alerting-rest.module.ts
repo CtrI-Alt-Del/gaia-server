@@ -4,6 +4,7 @@ import { Module } from "@nestjs/common";
 import { CreateAlarmController } from "./controllers/alarm/create-alarm.controller";
 import { ActivateAlarmController } from "./controllers/alarm/activate-alarm.controller";
 import { ListAlarmController } from "./controllers/alarm/list-alarm.controller";
+import { DeactivateAlarmController } from "./controllers/alarm/deactivate-alarm.controller";
 import { UpdateAlarmController } from "./controllers/alarm/edit-alarm.controller";
 
 @Module({
@@ -12,6 +13,7 @@ import { UpdateAlarmController } from "./controllers/alarm/edit-alarm.controller
     CreateAlarmController,
     ListAlarmController,
     ActivateAlarmController,
+    DeactivateAlarmController,
     UpdateAlarmController
   ],
 })

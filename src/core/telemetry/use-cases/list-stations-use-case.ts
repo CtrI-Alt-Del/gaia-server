@@ -1,7 +1,7 @@
 import { Id, PlusInteger, Status, Text } from '@/core/global/domain/structures'
 import { CursorPaginationDto } from '@/core/global/domain/structures/dtos'
 import type { StationsRepository, UseCase } from '@/core/global/interfaces'
-import { StationListItemDto } from '@/core/telemetry/domain/dtos/station-list-item-dto'
+import { StationDto } from '../domain/dtos/station-dto'
 
 type Request = {
   nextCursor?: string
@@ -11,13 +11,12 @@ type Request = {
   name?: string
 }
 
+type Response = CursorPaginationDto<StationDto>
 
-export class ListStationsUseCase
-  implements UseCase<Request, CursorPaginationDto<StationListItemDto>>
-{
+export class ListStationsUseCase implements UseCase<Request, Response> {
   constructor(private readonly repository: StationsRepository) {}
 
-  async execute(params: Request): Promise<CursorPaginationDto<StationListItemDto>> {
+  async execute(params: Request): Promise<Response> {
     const pagination = await this.repository.findMany({
       nextCursor: params.nextCursor ? Id.create(params.nextCursor) : undefined,
       previousCursor: params.previousCursor
@@ -29,15 +28,15 @@ export class ListStationsUseCase
     })
 
     const responseItems = pagination.items.map(
-      (station): StationListItemDto => ({
+      (station): StationDto => ({
         id: station.id,
         name: station.name,
         uid: station.uid,
         latitude: station.latitude,
         longitude: station.longitude,
         quantityOfParameters: station.quantityOfParameters,
-        status: station.isActive,
-        lastMeasurement: station.updatedAt ?? null,
+        isActive: station.isActive,
+        lastReadAt: station.lastReadAt ?? null,
         address: station.address,
       }),
     )

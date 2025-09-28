@@ -5,12 +5,26 @@ import type { ParametersRepository, StationsRepository } from '@/core/global/int
 import { UpdateStationUseCase } from '@/core/telemetry/use-cases'
 
 import { DatabaseModule } from '@/infra/database/database.module'
-import { updateStationSchema } from '@/infra/validation/schemas/zod/telemetry'
 import { StationsController } from '@/infra/rest/telemetry/controllers/stations/stations.controller'
+import z from 'zod'
+import { stringSchema } from '@/infra/validation/schemas/zod/global'
+import { latitudeSchema } from '@/infra/validation/schemas/zod/telemetry/latitude-schema'
+import { longitudeSchema } from '@/infra/validation/schemas/zod/telemetry/longitude-schema'
 
-class UpdateStationRequestBody extends createZodDto(updateStationSchema) {}
+export const schema = z.object({
+  station: z.object({
+    name: stringSchema,
+    uid: stringSchema,
+    latitude: latitudeSchema,
+    longitude: longitudeSchema,
+    address: stringSchema,
+  }),
+  parameterIds: z.array(stringSchema).min(1),
+})
 
-const bodyValidationPipe = new ZodValidationPipe(updateStationSchema)
+class UpdateStationRequestBody extends createZodDto(schema) {}
+
+const bodyValidationPipe = new ZodValidationPipe(schema)
 
 @StationsController()
 export class UpdateStationController {
@@ -30,6 +44,10 @@ export class UpdateStationController {
       this.parametersRepository,
       this.stationsRepository,
     )
-    return await useCase.execute({ data: body, stationId })
+    return await useCase.execute({
+      stationId,
+      stationDto: body.station,
+      parameterIds: body.parameterIds,
+    })
   }
 }

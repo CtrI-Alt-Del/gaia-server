@@ -18,7 +18,6 @@ Content-Type: application/json
 GET {{URL}}
 ?pageSize=20
 &status=all
-&name=Temperature
 
 #### update parameter
 PUT {{URL}}/{{ID}}

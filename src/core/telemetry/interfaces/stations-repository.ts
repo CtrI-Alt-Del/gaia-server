@@ -4,8 +4,8 @@ import { StationsListingParams } from '@/core/global/types/stations-list-params'
 import { Station } from '@/core/telemetry/domain/entities/station'
 
 export interface StationsRepository {
-  add(station: Station): Promise<void>
+  add(station: Station, parametersIds: Id[]): Promise<void>
   findById(id: Id): Promise<Station | null>
   findMany(params: StationsListingParams): Promise<CursorPagination<StationWithCount>>
-  replace(station: Station): Promise<void>
+  replace(station: Station, parametersIds: Id[]): Promise<void>
 }

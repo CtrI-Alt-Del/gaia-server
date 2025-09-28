@@ -19,8 +19,8 @@ describe('UpdateStationUseCase', () => {
   })
 
   it('should update a station and save it to the repository', async () => {
-    const existingStation = StationsFaker.fake({ parameters: [] })
-    const updatedStation = StationsFaker.fake({ parameters: [] })
+    const existingStation = StationsFaker.fake()
+    const updatedStation = StationsFaker.fake()
     const updateData = {
       name: 'New Station Name',
       uid: 'NEW-uid-001',
@@ -37,7 +37,8 @@ describe('UpdateStationUseCase', () => {
 
     const result = await useCase.execute({
       stationId: existingStation.id.value,
-      data: updateData,
+      stationDto: updateData,
+      parameterIds: [],
     })
 
     expect(stationsRepository.findById).toHaveBeenCalledWith(
@@ -54,8 +55,8 @@ describe('UpdateStationUseCase', () => {
 
     stationsRepository.findById.mockResolvedValue(null)
 
-    await expect(useCase.execute({ stationId, data: updateData })).rejects.toThrow(
-      StationNotFoundError,
-    )
+    await expect(
+      useCase.execute({ stationId, stationDto: updateData, parameterIds: [] }),
+    ).rejects.toThrow(StationNotFoundError)
   })
 })

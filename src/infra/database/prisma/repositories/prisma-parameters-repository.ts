@@ -34,10 +34,14 @@ export class PrismaParametersRepository
     previousCursor,
     pageSize,
     status,
+    name,
   }: ParametersListParams): Promise<CursorPagination<Parameter>> {
-    const whereClause = status?.isAll.isTrue
-      ? undefined
-      : { isActive: status?.isActive.isTrue }
+    const whereClause = {
+      ...(status?.isAll.isTrue ? {} : { isActive: status?.isActive.isTrue }),
+      ...(name ? { name: { contains: name.value, mode: 'insensitive' } } : {}),
+    }
+
+    console.log(whereClause)
 
     const query = this.createPaginationQuery(this.prisma.parameter, whereClause)
 
@@ -72,11 +76,11 @@ export class PrismaParametersRepository
   async findParametersByStationId(stationId: Id): Promise<Parameter[]> {
     const prismaParameters = await this.prisma.parameter.findMany({
       where: {
-        stationParameter:{
-          some:{
-            stationId: stationId.value 
-          }
-        }
+        stationParameter: {
+          some: {
+            stationId: stationId.value,
+          },
+        },
       },
     })
     return prismaParameters.map(PrismaParameterMapper.toEntity)

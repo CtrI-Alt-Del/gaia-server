@@ -1,11 +1,11 @@
-import { Delete, Inject, Param } from "@nestjs/common"
-import { AlarmController } from "./alarm.controller"
-import { DatabaseModule } from "@/infra/database/database.module"
-import { AlarmsRepository } from "@/core/alerting/interfaces"
-import { DeactivateAlarmUseCase } from "@/core/alerting/use-cases/deactivate-alarm-use-case"
+import { Delete, Inject, Param } from '@nestjs/common'
+import { AlarmsController } from './alarms.controller'
+import { DatabaseModule } from '@/infra/database/database.module'
+import { AlarmsRepository } from '@/core/alerting/interfaces'
+import { DeactivateAlarmUseCase } from '@/core/alerting/use-cases/deactivate-alarm-use-case'
 
-@AlarmController(':alarmId')
-export class DeactivateAlarmController {
+@AlarmsController(':alarmId')
+export class DeactivateAlarmsController {
   constructor(
     @Inject(DatabaseModule.ALARMS_REPOSITORY)
     private readonly repository: AlarmsRepository,

@@ -10,12 +10,13 @@ type Request = {
   nextCursor?: string
   previousCursor?: string
   pageSize: number
+  status: string
+  name?: string
 }
 
 export class ListParametersUseCase
-  implements UseCase<Request, CursorPaginationDto<ParameterDto>>
-{
-  constructor(private readonly repository: ParametersRepository) {}
+  implements UseCase<Request, CursorPaginationDto<ParameterDto>> {
+  constructor(private readonly repository: ParametersRepository) { }
 
   async execute(params: Request): Promise<CursorPaginationDto<ParameterDto>> {
     const pagination = await this.repository.findMany({

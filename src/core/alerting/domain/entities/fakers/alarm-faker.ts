@@ -9,10 +9,10 @@ export class AlarmFaker {
 
   static fakeDto(baseDto?: Partial<AlarmDto>): AlarmDto {
     return {
-        level: faker.word.adjective(),
+        level: 'warning',
         message: faker.word.verb(),
         rule: {
-            operation: "BIGGER_THAN",
+            operation: "GREATER_THAN",
             threshold: faker.number.int({min: 1, max: 100})
         },
         parameter: {},

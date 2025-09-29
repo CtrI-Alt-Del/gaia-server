@@ -13,6 +13,7 @@ export const schema = z.object({
   nextCursor: stringSchema.optional(),
   previousCursor: stringSchema.optional(),
   pageSize: plusIntegerSchema.optional().default(20),
+  level: stringSchema.optional().default("all")
 })
 
 class ListAlarmsControllerRequestQuery extends createZodDto(schema) {}

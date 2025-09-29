@@ -1,15 +1,12 @@
-import {
-  plusIntegerSchema,
-  statusSchema,
-  stringSchema,
-} from '@/infra/validation/schemas/zod/global'
-import { createZodDto, ZodValidationPipe } from 'nestjs-zod'
-import z from 'zod'
-import { AlarmsController } from './alarms.controller'
-import { Get, Inject, Query, UsePipes } from '@nestjs/common'
-import { DatabaseModule } from '@/infra/database/database.module'
-import { AlarmsRepository } from '@/core/global/interfaces'
-import { ListAlarmUseCase } from '@/core/alerting/use-cases/list-alarm-use-case'
+
+import { createZodDto, ZodValidationPipe } from "nestjs-zod";
+import z from "zod";
+import { Get, Inject, Query, UsePipes } from "@nestjs/common";
+import { plusIntegerSchema, statusSchema, stringSchema } from "@/infra/validation/schemas/zod/global";
+import { AlarmsController } from "./alarms.controller";
+import { DatabaseModule } from "@/infra/database/database.module";
+import { AlarmsRepository } from "@/core/alerting/interfaces";
+import { ListAlarmUseCase } from "@/core/alerting/use-cases/list-alarm-use-case";
 
 export const schema = z.object({
   name: stringSchema.optional(),
@@ -23,7 +20,7 @@ export const schema = z.object({
 class ListAlarmsControllerRequestQuery extends createZodDto(schema) {}
 
 @AlarmsController()
-export class ListAlarmsController {
+export class ListAlarmController{
   constructor(
     @Inject(DatabaseModule.ALARMS_REPOSITORY)
     private readonly repository: AlarmsRepository,

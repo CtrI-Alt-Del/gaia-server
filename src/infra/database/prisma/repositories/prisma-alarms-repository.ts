@@ -23,10 +23,12 @@ export class PrismaAlarmsRepository extends PrismaRepository implements AlarmsRe
       previousCursor,
       pageSize,
       status,
+      level,
     }: AlarmListingParams): Promise<CursorPagination<Alarm>> {
-      const whereClause = status?.isAll.isTrue
-        ? undefined
-        : { isActive: status?.isActive.isTrue }
+      const whereClause = {
+        ...(status?.isAll.isTrue ? {} : { isActive: status?.isActive.isTrue }),
+        ...(level ? { level: { contains: level.value === "all" ? "" : level.value } } : {}),
+      }
   
       const query = this.createPaginationQuery(this.prisma.alarm, whereClause)
   

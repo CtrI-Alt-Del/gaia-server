@@ -1,13 +1,14 @@
 import { CursorPaginationDto } from "@/core/global/domain/structures/dtos"
 import { AlarmsRepository, UseCase } from "@/core/global/interfaces"
 import { AlarmDto } from "../dtos/alarm.dto"
-import { Id, PlusInteger, Status } from "@/core/global/domain/structures"
+import { Id, PlusInteger, Status, Text } from "@/core/global/domain/structures"
 
 type Request = {
   nextCursor?: string
   previousCursor?: string
-  pageSize: number
-  status: string
+  pageSize: number,
+  status: string,
+  level?: string
 }
 
 export class ListAlarmUseCase implements UseCase<Request, CursorPaginationDto<AlarmDto>>{
@@ -19,6 +20,7 @@ export class ListAlarmUseCase implements UseCase<Request, CursorPaginationDto<Al
             previousCursor: params.previousCursor ? Id.create(params.previousCursor) : undefined,
             pageSize: PlusInteger.create(params.pageSize),
             status: Status.create(params.status),
+            level: params.level ? Text.create(params.level) : undefined
         })
         
         return pagination.map((alarm) => alarm.dto).dto

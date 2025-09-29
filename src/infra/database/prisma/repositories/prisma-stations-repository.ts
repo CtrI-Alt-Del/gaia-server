@@ -41,20 +41,26 @@ export class PrismaStationsRepository
       station,
       parametersIds,
     )
-    await this.prisma.$transaction([
-      this.prisma.stationParameter.deleteMany({
-        where: { stationId: station.id.value },
-      }),
-      this.prisma.station.update({
-        where: { id: station.id.value },
-        data: {
-          ...stationData,
-          ...(stationParameter && {
+
+    if (stationParameter) {
+      await this.prisma.$transaction([
+        this.prisma.stationParameter.deleteMany({
+          where: { stationId: station.id.value },
+        }),
+        this.prisma.station.update({
+          where: { id: station.id.value },
+          data: {
+            ...stationData,
             stationParameter: { create: stationParameter.create },
-          }),
-        },
-      }),
-    ])
+          },
+        }),
+      ])
+    }
+
+    await this.prisma.station.update({
+      where: { id: station.id.value },
+      data: stationData,
+    })
   }
 
   async findMany({

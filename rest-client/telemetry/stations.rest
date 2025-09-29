@@ -1,9 +1,9 @@
 @URL = {{BASE_URL}}/telemetry/stations
-@ID = cmfuzcg8l037nkipv7arc12cd
+@ID = cmg2unkjg037y0wv2hw285w11
 
 #### list stations
 GET {{URL}}
-?pageSize=500
+?pageSize=5
 
 #### create station
 POST {{URL}}

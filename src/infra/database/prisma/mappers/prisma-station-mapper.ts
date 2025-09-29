@@ -36,7 +36,7 @@ export class PrismaStationMapper {
       isActive: station.isActive.value,
       createdAt: station.createdAt.value,
       updatedAt: station.createdAt.value,
-      stationParameter: parametersIds
+      stationParameter: parametersIds.length > 0
         ? {
             create: parametersIds.map((paramId) => ({
               parameter: {

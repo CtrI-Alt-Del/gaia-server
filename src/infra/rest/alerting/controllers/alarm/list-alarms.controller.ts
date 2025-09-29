@@ -23,7 +23,7 @@ export const schema = z.object({
 class ListAlarmsControllerRequestQuery extends createZodDto(schema) {}
 
 @AlarmsController()
-export class ListAlarmController {
+export class ListAlarmsController {
   constructor(
     @Inject(DatabaseModule.ALARMS_REPOSITORY)
     private readonly repository: AlarmsRepository,

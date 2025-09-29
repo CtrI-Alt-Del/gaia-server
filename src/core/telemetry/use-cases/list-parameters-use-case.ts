@@ -10,8 +10,6 @@ type Request = {
   nextCursor?: string
   previousCursor?: string
   pageSize: number
-  status: string
-  name?: string
 }
 
 export class ListParametersUseCase

@@ -12,7 +12,7 @@ export class AlarmFaker {
         level: faker.word.adjective(),
         message: faker.word.verb(),
         rule: {
-            operation: "BIGGER_THAN",
+            operation: "GREATER_THAN",
             threshold: faker.number.int({min: 1, max: 100})
         },
         parameter: {},

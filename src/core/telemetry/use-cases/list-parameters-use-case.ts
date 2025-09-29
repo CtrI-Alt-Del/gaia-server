@@ -1,4 +1,4 @@
-import { Id, PlusInteger, Status } from '@/core/global/domain/structures'
+import { Id, PlusInteger, Status, Text } from '@/core/global/domain/structures'
 import { CursorPaginationDto } from '@/core/global/domain/structures/dtos'
 import type { UseCase } from '@/core/global/interfaces'
 import type { ParametersRepository } from '@/core/global/interfaces'
@@ -9,12 +9,12 @@ type Request = {
   previousCursor?: string
   pageSize: number
   status: string
+  name?: string
 }
 
 export class ListParametersUseCase
-  implements UseCase<Request, CursorPaginationDto<ParameterDto>>
-{
-  constructor(private readonly repository: ParametersRepository) {}
+  implements UseCase<Request, CursorPaginationDto<ParameterDto>> {
+  constructor(private readonly repository: ParametersRepository) { }
 
   async execute(params: Request): Promise<CursorPaginationDto<ParameterDto>> {
     const pagination = await this.repository.findMany({
@@ -24,6 +24,7 @@ export class ListParametersUseCase
         : undefined,
       pageSize: PlusInteger.create(params.pageSize),
       status: Status.create(params.status),
+      name: params.name ? Text.create(params.name) : undefined,
     })
 
     return pagination.map((parameter) => parameter.dto).dto

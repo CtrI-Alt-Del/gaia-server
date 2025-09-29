@@ -10,8 +10,7 @@ import { Parameter } from '@/core/telemetry/domain/entities/parameter'
 @Injectable()
 export class PrismaParametersRepository
   extends PrismaRepository
-  implements ParametersRepository
-{
+  implements ParametersRepository {
   async add(parameter: Parameter): Promise<void> {
     const prismaParameter = PrismaParameterMapper.toPrisma(parameter)
     await this.prisma.parameter.create({ data: prismaParameter })
@@ -34,20 +33,33 @@ export class PrismaParametersRepository
     previousCursor,
     pageSize,
     status,
+    name,
   }: ParametersListParams): Promise<CursorPagination<Parameter>> {
-    const whereClause = status?.isAll.isTrue
-      ? undefined
-      : { isActive: status?.isActive.isTrue }
+    let where: any = {}
+    if (status) {
+      if (status.isActive?.isTrue) {
+        where.isActive = true
+      } else if (status.isInactive?.isTrue) {
+        where.isActive = false
+      } else {
+      }
+    }
+    if (name) {
+      where.name = { contains: name.value, mode: 'insensitive' }
+    }
 
-    const query = this.createPaginationQuery(this.prisma.parameter, whereClause)
+    const query = this.createPaginationQuery(this.prisma.parameter, where)
 
-    const result = await this.paginateWithCursor<any>(query, {
-      nextCursor,
-      previousCursor,
-      pageSize,
-    })
-
-    return result.map(PrismaParameterMapper.toEntity)
+    try {
+      const result = await this.paginateWithCursor<any>(query, {
+        nextCursor,
+        previousCursor,
+        pageSize,
+      })
+      return result.map(PrismaParameterMapper.toEntity)
+    } catch (error) {
+      throw error
+    }
   }
 
   async replace(parameter: Parameter): Promise<void> {
@@ -72,9 +84,9 @@ export class PrismaParametersRepository
   async findParametersByStationId(stationId: Id): Promise<Parameter[]> {
     const prismaParameters = await this.prisma.parameter.findMany({
       where: {
-        stationParameter:{
-          some:{
-            stationId: stationId.value 
+        stationParameter: {
+          some: {
+            stationId: stationId.value
           }
         }
       },

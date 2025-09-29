@@ -1,8 +1,7 @@
 import { Entity } from '@/core/global/domain/abstracts'
-import { Collection, Logical, Text, Timestamp } from '@/core/global/domain/structures'
-import { ParameterDto } from '@/core/telemetry/domain/dtos/parameter-dto'
+import { Logical, Text, Timestamp } from '@/core/global/domain/structures'
+import { Integer } from '@/core/global/domain/structures/integer'
 import { StationDto } from '@/core/telemetry/domain/dtos/station-dto'
-import { Parameter } from '@/core/telemetry/domain/entities/parameter'
 import { Coordinate, UnsignedId } from '@/core/telemetry/domain/structures'
 
 type StationProps = {
@@ -11,11 +10,12 @@ type StationProps = {
   coordinate: Coordinate
   address: Text
   lastReadAt?: Timestamp
-  parameters: Collection<Parameter>
+  quantityOfParameters: Integer
   isActive: Logical
   createdAt: Timestamp
   updatedAt?: Timestamp
 }
+
 export class Station extends Entity<StationProps> {
   static create(dto: StationDto): Station {
     return new Station(
@@ -24,11 +24,8 @@ export class Station extends Entity<StationProps> {
         uid: UnsignedId.create(dto.uid),
         address: Text.create(dto.address),
         coordinate: Coordinate.create(dto.latitude, dto.longitude),
+        quantityOfParameters: Integer.create(dto.quantityOfParameters ?? 0),
         lastReadAt: dto.lastReadAt ? Timestamp.create(dto.lastReadAt) : undefined,
-        parameters: Collection.createFrom<ParameterDto, Parameter>(
-          dto.parameters,
-          (paramDto) => Parameter.create(paramDto),
-        ),
         isActive: Logical.create(dto?.isActive ?? true),
         createdAt: Timestamp.create(dto.createdAt ?? new Date()),
         updatedAt: dto.updatedAt ? Timestamp.create(dto.updatedAt) : undefined,
@@ -36,71 +33,73 @@ export class Station extends Entity<StationProps> {
       dto.id,
     )
   }
+
   get name(): Text {
     return this.props.name
   }
+
   get uid(): UnsignedId {
     return this.props.uid
   }
+
   get coordinate(): Coordinate {
     return this.props.coordinate
   }
+
+  get quantityOfParameters(): Integer {
+    return this.props.quantityOfParameters
+  }
+
   get lastReadAt(): Timestamp | undefined {
     return this.props.lastReadAt
   }
-  get parameters(): Collection<Parameter> {
-    return this.props.parameters
-  }
-  get adddress(): Text {
+
+  get address(): Text {
     return this.props.address
   }
+
+  update(partialDto: Partial<StationDto>): Station {
+    if (partialDto.name !== undefined) {
+      this.props.name = Text.create(partialDto.name)
+    }
+
+    if (partialDto.uid !== undefined) {
+      this.props.uid = UnsignedId.create(partialDto.uid)
+    }
+
+
+    if (partialDto.latitude !== undefined || partialDto.longitude !== undefined) {
+      this.props.coordinate = Coordinate.create(
+        partialDto.latitude ?? this.coordinate.latitude.value,
+        partialDto.longitude ?? this.coordinate.longitude.value,
+      )
+    }
+    
+    if (partialDto.lastReadAt) {
+      this.props.lastReadAt = Timestamp.create(partialDto.lastReadAt)
+    }
+
+    if (partialDto.address !== undefined) {
+      this.props.address = Text.create(partialDto.address)
+    }
+
+    this.refreshLastUpdate()
+    return this
+  }
+
   get dto(): StationDto {
     return {
       id: this.id.value,
       name: this.name.value,
       uid: this.uid.value.value,
-      address: this.adddress.value,
+      address: this.address.value,
       latitude: this.coordinate.latitude.value,
       longitude: this.coordinate.longitude.value,
+      quantityOfParameters: this.quantityOfParameters.value,
       lastReadAt: this.lastReadAt ? this.lastReadAt.value : undefined,
-      parameters: this.parameters.map((param) => param.dto).items,
       isActive: this.isActive.value,
       createdAt: this.createdAt.value,
       updatedAt: this.updatedAt?.value,
     }
-  }
-  update(partialDto: Partial<StationDto>): Station {
-    if (partialDto.name !== undefined) {
-      this.props.name = Text.create(partialDto.name)
-    }
-    if (partialDto.uid !== undefined) {
-      this.props.uid = UnsignedId.create(partialDto.uid)
-    }
-    if (partialDto.latitude !== undefined) {
-      this.props.coordinate = Coordinate.create(
-        partialDto.latitude,
-        this.coordinate.longitude.value,
-      )
-    }
-    if (partialDto.longitude !== undefined) {
-      this.props.coordinate = Coordinate.create(
-        this.coordinate.longitude.value,
-        partialDto.longitude,
-      )
-    }
-    if (partialDto.lastReadAt !== undefined) {
-      this.props.lastReadAt = Timestamp.create(partialDto.lastReadAt)
-    }
-    if (partialDto.parameters !== undefined) {
-      this.props.parameters = Collection.createFrom<ParameterDto, Parameter>(
-        partialDto.parameters,
-        (paramDto) => Parameter.create(paramDto),
-      )
-    }
-    if (partialDto.address !== undefined) {
-      this.props.address = Text.create(partialDto.address)
-    }
-    this.refreshLastUpdate()
-    return this
   }
 }

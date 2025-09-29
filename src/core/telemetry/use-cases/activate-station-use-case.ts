@@ -1,7 +1,6 @@
 import { Id } from '@/core/global/domain/structures'
 import { StationsRepository, UseCase } from '@/core/global/interfaces'
 import { Station } from '@/core/telemetry/domain/entities/station'
-import { ParameterNotFoundError } from '@/core/telemetry/domain/errors/parameter-not-found-error'
 import { StationAlreadyActivatedError } from '@/core/telemetry/domain/errors/station-already-activated-error'
 import { StationNotFoundError } from '@/core/telemetry/domain/errors/station-not-found-error'
 
@@ -21,7 +20,7 @@ export class ActivateStationUseCase implements UseCase<Request, void> {
 
     station.activate()
 
-    await this.repository.replace(station)
+    await this.repository.replace(station, [])
   }
 
   async findById(id: Id): Promise<Station> {

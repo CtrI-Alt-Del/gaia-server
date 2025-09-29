@@ -5,6 +5,8 @@ import type { ParametersRepository } from '@/core/global/interfaces'
 import { ParameterDto } from '@/core/telemetry/domain/dtos/parameter-dto'
 
 type Request = {
+  name?: string
+  status: string
   nextCursor?: string
   previousCursor?: string
   pageSize: number

@@ -19,15 +19,14 @@ describe('UpdateStationUseCase', () => {
   })
 
   it('should update a station and save it to the repository', async () => {
-    const existingStation = StationsFaker.fake({ parameters: [] })
-    const updatedStation = StationsFaker.fake({ parameters: [] })
+    const existingStation = StationsFaker.fake()
+    const updatedStation = StationsFaker.fake()
     const updateData = {
       name: 'New Station Name',
       uid: 'NEW-uid-001',
       latitude: -10.0,
       longitude: -20.0,
       address: '456 New Address St',
-      parameters: [],
     }
 
     stationsRepository.findById.mockResolvedValue(existingStation)
@@ -37,14 +36,15 @@ describe('UpdateStationUseCase', () => {
 
     const result = await useCase.execute({
       stationId: existingStation.id.value,
-      data: updateData,
+      stationDto: updateData,
+      parameterIds: [],
     })
 
     expect(stationsRepository.findById).toHaveBeenCalledWith(
       Id.create(existingStation.id.value),
     )
     expect(existingStation.update).toHaveBeenCalledWith(updateData)
-    expect(stationsRepository.replace).toHaveBeenCalledWith(updatedStation)
+    expect(stationsRepository.replace).toHaveBeenCalledWith(updatedStation, [])
     expect(result).toEqual(updatedStation.dto)
   })
 
@@ -54,8 +54,8 @@ describe('UpdateStationUseCase', () => {
 
     stationsRepository.findById.mockResolvedValue(null)
 
-    await expect(useCase.execute({ stationId, data: updateData })).rejects.toThrow(
-      StationNotFoundError,
-    )
+    await expect(
+      useCase.execute({ stationId, stationDto: updateData, parameterIds: [] }),
+    ).rejects.toThrow(StationNotFoundError)
   })
 })

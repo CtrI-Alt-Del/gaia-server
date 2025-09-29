@@ -8,20 +8,22 @@ import { Station } from '@/core/telemetry/domain/entities/station'
 import { PrismaStationMapper } from '@/infra/database/prisma/mappers'
 import { StationsListingParams } from '@/core/global/types/stations-list-params'
 
-import { StationWithCount } from '@/core/global/types'
 @Injectable()
 export class PrismaStationsRepository
   extends PrismaRepository
   implements StationsRepository
 {
-  async add(station: Station): Promise<void> {
-    const prismaStation = PrismaStationMapper.toPrisma(station)
+  async add(station: Station, parametersIds: Id[]): Promise<void> {
+    const prismaStation = PrismaStationMapper.toPrisma(station, parametersIds)
     await this.prisma.station.create({ data: prismaStation })
   }
   async findById(id: Id): Promise<Station | null> {
     const prismaStation = await this.prisma.station.findUnique({
       where: { id: id.value },
       include: {
+        _count: {
+          select: { stationParameter: true },
+        },
         stationParameter: {
           include: {
             parameter: true,
@@ -34,8 +36,11 @@ export class PrismaStationsRepository
     }
     return PrismaStationMapper.toEntity(prismaStation)
   }
-  async replace(station: Station): Promise<void> {
-    const { stationParameter, ...stationData } = PrismaStationMapper.toPrisma(station)
+  async replace(station: Station, parametersIds: Id[]): Promise<void> {
+    const { stationParameter, ...stationData } = PrismaStationMapper.toPrisma(
+      station,
+      parametersIds,
+    )
     await this.prisma.$transaction([
       this.prisma.stationParameter.deleteMany({
         where: { stationId: station.id.value },
@@ -58,7 +63,7 @@ export class PrismaStationsRepository
     pageSize,
     status,
     name,
-  }: StationsListingParams): Promise<CursorPagination<StationWithCount>> {
+  }: StationsListingParams): Promise<CursorPagination<Station>> {
     const whereClause = status?.isAll.isTrue
       ? undefined
       : { isActive: status?.isActive.isTrue }
@@ -86,6 +91,6 @@ export class PrismaStationsRepository
       pageSize,
     })
 
-    return result.map(PrismaStationMapper.toStationWithCount)
+    return result.map(PrismaStationMapper.toEntity)
   }
 }

@@ -1,14 +1,28 @@
 import { Body, Inject, Post, UsePipes } from '@nestjs/common'
 import { createZodDto, ZodValidationPipe } from 'nestjs-zod'
+import z from 'zod'
 
 import type { ParametersRepository, StationsRepository } from '@/core/global/interfaces'
 import { CreateStationUseCase } from '@/core/telemetry/use-cases'
 
 import { DatabaseModule } from '@/infra/database/database.module'
 import { StationsController } from '@/infra/rest/telemetry/controllers/stations/stations.controller'
-import { createStationSchema } from '@/infra/validation/schemas/zod/telemetry/create-station-schema'
+import { stringSchema } from '@/infra/validation/schemas/zod/global'
+import { latitudeSchema } from '@/infra/validation/schemas/zod/telemetry/latitude-schema'
+import { longitudeSchema } from '@/infra/validation/schemas/zod/telemetry/longitude-schema'
 
-class CreateStationRequestBody extends createZodDto(createStationSchema) {}
+export const schema = z.object({
+  station: z.object({
+    name: stringSchema,
+    uid: stringSchema,
+    latitude: latitudeSchema,
+    address: stringSchema,
+    longitude: longitudeSchema,
+  }),
+  parameterIds: z.array(stringSchema).min(1),
+})
+
+class CreateStationRequestBody extends createZodDto(schema) {}
 
 @StationsController()
 export class CreateStationController {
@@ -20,12 +34,15 @@ export class CreateStationController {
   ) {}
 
   @Post()
-  @UsePipes(new ZodValidationPipe(createStationSchema))
+  @UsePipes(ZodValidationPipe)
   async handle(@Body() body: CreateStationRequestBody) {
     const useCase = new CreateStationUseCase(
       this.stationsRepository,
       this.parametersRepository,
     )
-    return await useCase.execute(body)
+    return await useCase.execute({
+      stationDto: body.station,
+      parameterIds: body.parameterIds,
+    })
   }
 }

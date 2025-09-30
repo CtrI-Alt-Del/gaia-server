@@ -1,3 +1,5 @@
-import type { Prisma } from '@prisma/client'
+import { Alarm, Parameter } from '@prisma/client'
 
-export type PrismaAlarm = Prisma.AlarmUncheckedCreateInput
+export type PrismaAlarm = Alarm & {
+  parameter: Parameter
+}

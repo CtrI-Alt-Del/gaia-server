@@ -1,14 +1,15 @@
-import { AlarmDto } from '@/core/alerting/dtos/alarm.dto';
-import { Alarm } from '@/core/alerting/domain/entities/alarm';
-import { PrismaAlarm } from '../types';
-import { $Enums } from '@prisma/client';
+import { AlarmDto } from '@/core/alerting/dtos/alarm.dto'
+import { Alarm } from '@/core/alerting/domain/entities/alarm'
+import type Prisma from '@prisma/client'
+import { $Enums } from '@prisma/client'
+import { PrismaAlarm } from '../types'
 
 export class PrismaAlarmMapper {
   static toEntity(prismaAlarm: PrismaAlarm) {
     return Alarm.create(PrismaAlarmMapper.toDto(prismaAlarm))
   }
 
-  static toPrisma(alarm: Alarm): PrismaAlarm {
+  static toPrisma(alarm: Alarm): Prisma.Alarm {
     return {
       id: alarm.id.value,
       message: alarm.message.value,
@@ -22,21 +23,25 @@ export class PrismaAlarmMapper {
     }
   }
 
-  static toDto(alarm: PrismaAlarm): AlarmDto{
+  static toDto(alarm: PrismaAlarm): AlarmDto {
     return {
       id: alarm.id,
       message: alarm.message,
       rule: {
         threshold: alarm.value,
-        operation: alarm.operation
+        operation: alarm.operation,
       },
       parameter: {
-        id: alarm.parameterId
+        id: alarm.parameter.id,
+        entity: {
+          name: alarm.parameter.name,
+          unitOfMeasure: alarm.parameter.unitOfMeasure,
+        },
       },
       level: alarm.level,
       isActive: alarm.isActive as boolean,
       createdAt: alarm.createdAt as Date,
-      updatedAt: alarm.updatedAt as Date
-    } 
+      updatedAt: alarm.updatedAt as Date,
+    }
   }
 }

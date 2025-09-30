@@ -1,9 +1,9 @@
-import { Entity } from "@/core/global/domain/abstracts"
-import { Logical, Text, Timestamp } from "@/core/global/domain/structures"
-import { AlarmDto } from "../../dtos/alarm.dto"
-import AlarmLevel from "../structures/alarm-level"
-import AlertRule from "../structures/alert-rule"
-import { ParameterAggregate } from "../../aggregate/parameter-aggregate"
+import { Entity } from '@/core/global/domain/abstracts'
+import { Logical, Text, Timestamp } from '@/core/global/domain/structures'
+import { AlarmDto } from '../../dtos/alarm.dto'
+import AlarmLevel from '../structures/alarm-level'
+import AlertRule from '../structures/alert-rule'
+import { ParameterAggregate } from '../../aggregate/parameter-aggregate'
 
 type AlarmProps = {
   message: Text
@@ -34,11 +34,11 @@ export class Alarm extends Entity<AlarmProps> {
     return this.props.message
   }
 
-  get rule(): AlertRule{
+  get rule(): AlertRule {
     return this.props.rule
   }
 
-  get level(): AlarmLevel{
+  get level(): AlarmLevel {
     return this.props.level
   }
 
@@ -55,18 +55,18 @@ export class Alarm extends Entity<AlarmProps> {
   }
 
   update(partialDto: Partial<AlarmDto>): Alarm {
-      if (partialDto.level !== undefined) {
-        this.props.level = AlarmLevel.create(partialDto.level)
-      }
-      if (partialDto.message !== undefined) {
-        this.props.message = Text.create(partialDto.message)
-      }
-      if (partialDto.rule !== undefined) {
-        this.props.rule = AlertRule.create(partialDto.rule)
-      }
-      this.refreshLastUpdate()
-      return this
+    if (partialDto.level !== undefined) {
+      this.props.level = AlarmLevel.create(partialDto.level)
     }
+    if (partialDto.message !== undefined) {
+      this.props.message = Text.create(partialDto.message)
+    }
+    if (partialDto.rule !== undefined) {
+      this.props.rule = AlertRule.create(partialDto.rule)
+    }
+    this.refreshLastUpdate()
+    return this
+  }
 
   get dto(): AlarmDto {
     return {

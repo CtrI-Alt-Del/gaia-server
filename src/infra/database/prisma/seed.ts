@@ -3,11 +3,8 @@ import { $Enums, PrismaClient } from '@prisma/client'
 import { UsersFaker } from '@/core/membership/domain/entities/fakers'
 import { StationsFaker } from '@/core/telemetry/domain/entities/fakers/station-faker'
 import { ParameterFaker } from '@/core/telemetry/domain/entities/fakers/parameter-faker'
-import { PrismaUserMapper, PrismaParameterMapper, PrismaAlarmMapper } from './mappers'
+import { PrismaUserMapper, PrismaParameterMapper } from './mappers'
 import { AlarmFaker } from '@/core/alerting/domain/entities/fakers/alarm-faker'
-import { Alarm } from '@/core/alerting/domain/entities/alarm'
-import { Id } from '@/core/global/domain/structures'
-import { PrismaAlarm } from './types'
 
 export async function seed() {
   const prisma = new PrismaClient({
@@ -99,24 +96,27 @@ export async function seed() {
 
     console.log(`✅ ${stations.length} stations adicionadas com sucesso!`)
 
-     const alarms = AlarmFaker.fakeMany(100)
+    const alarms = AlarmFaker.fakeMany(100)
 
-      for(const alarm of alarms){
-        
-        const alarmData: PrismaAlarm = {
-            level: alarm.level.toString(),
-            message: alarm.message.value,
-            operation: alarm.rule.operation.toString() as $Enums.Operation,
-            parameterId: parameters[Math.floor(Math.random() * parameters.length)].id.value,
-            value: alarm.rule.threshold.value
-          }
-
-          await prisma.alarm.create({
-            data: alarmData
-          })
+    for (const alarm of alarms) {
+      const alarmData = {
+        level: alarm.level.toString(),
+        message: alarm.message.value,
+        operation: alarm.rule.operation.toString() as $Enums.Operation,
+        value: alarm.rule.threshold.value,
+        parameter: {
+          connect: {
+            id: parameters[Math.floor(Math.random() * parameters.length)].id.value,
+          },
+        },
       }
 
-    console.log(`✅ ${alarms.length} alarmes adicionados com sucesso!`);
+      await prisma.alarm.create({
+        data: alarmData,
+      })
+    }
+
+    console.log(`✅ ${alarms.length} alarmes adicionados com sucesso!`)
   } catch (error) {
     console.error('❌ Erro durante o seed:', error)
   } finally {

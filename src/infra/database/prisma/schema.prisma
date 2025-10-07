@@ -66,6 +66,14 @@ model StationParameter {
   @@map("station_parameters")
 }
 
+model Measure {
+  id              String  @id @default(cuid())
+  parameterId     String
+  unit_of_measure String
+  value           Float
+  createdAt       DateTime  @default(now()) @map("created_at")
+}
+
 enum Operation {
   EQUAL
   GREATER_THAN

@@ -3,8 +3,11 @@ import { StationDto } from "@/core/telemetry/domain/dtos/station-dto"
 
 export type MeasurementDto = {
   id: string
-  station: StationDto
-  parameter: ParameterDto
+  stationParameter: {
+    station: StationDto
+    parameter: ParameterDto
+  }
+  unitOfMeasure: string
   value: number
-  measuredAt: Date
+  createdAt: Date
 }

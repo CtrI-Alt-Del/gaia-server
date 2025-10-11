@@ -1,7 +1,7 @@
 import { CursorPagination } from "@/core/global/domain/structures";
 import { MeasurementListParams } from "@/core/global/types/measurement-list-params";
-import { MeasurementDto } from "../domain/dtos/measurement-dto";
+import { Measurement } from "../domain/entities/measurement";
 
 export interface MeasurementRepository{
-    findMany(params: MeasurementListParams): Promise<CursorPagination<MeasurementDto>>
+    findMany(params: MeasurementListParams): Promise<CursorPagination<Measurement>>
 }

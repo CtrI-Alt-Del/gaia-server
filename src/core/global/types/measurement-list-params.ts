@@ -3,6 +3,6 @@ import { CursorPaginationParams, ListingParams } from "../domain/types";
 
 export type MeasurementListParams = (ListingParams & CursorPaginationParams) & {
     stationName?: Text,
-    parameterName: Text,
-    data: Timestamp
+    parameterName?: Text,
+    date?: Timestamp
 }

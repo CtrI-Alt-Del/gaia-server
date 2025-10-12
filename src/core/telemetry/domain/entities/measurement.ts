@@ -7,8 +7,8 @@ import { Entity } from '@/core/global/domain/abstracts'
 
 type MeasurementProps = {
   stationParameter: {
-    station: Station
-    parameter: Parameter
+    stationId: Text
+    parameterId: Text
   }
   unitOfMeasure: Text
   value: Numeric
@@ -20,8 +20,8 @@ export class Measurement extends Entity<MeasurementProps> {
     return new Measurement(
       {
         stationParameter: {
-          station: Station.create(dto.stationParameter.station),
-          parameter: Parameter.create(dto.stationParameter.parameter)
+          stationId: Text.create(dto.stationParameter.stationId),
+          parameterId: Text.create(dto.stationParameter.parameterId)
         },
         unitOfMeasure: Text.create(dto.unitOfMeasure),
         value: Numeric.create(dto.value),
@@ -42,7 +42,7 @@ export class Measurement extends Entity<MeasurementProps> {
     return this.props.createdAt
   }
 
-  get stationParameter(): {station: Station, parameter: Parameter}{
+  get stationParameter(): {stationId: Text, parameterId: Text}{
     return this.props.stationParameter
   }
 
@@ -50,8 +50,8 @@ export class Measurement extends Entity<MeasurementProps> {
     return {
       id: this.id.value,
       stationParameter: {
-        parameter: this.stationParameter.parameter.dto,
-        station: this.stationParameter.station.dto
+        parameterId: this.stationParameter.parameterId.value,
+        stationId: this.stationParameter.stationId.value
       },
       unitOfMeasure: this.unitOfMeasure.value,
       value: this.value.value,

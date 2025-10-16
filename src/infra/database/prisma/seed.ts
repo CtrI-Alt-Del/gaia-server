@@ -5,6 +5,9 @@ import { StationsFaker } from '@/core/telemetry/domain/entities/fakers/station-f
 import { ParameterFaker } from '@/core/telemetry/domain/entities/fakers/parameter-faker'
 import { PrismaUserMapper, PrismaParameterMapper } from './mappers'
 import { AlarmFaker } from '@/core/alerting/domain/entities/fakers/alarm-faker'
+import { MeasurementFaker } from '@/core/telemetry/domain/entities/fakers/measurement-faker'
+import { Text } from '@/core/global/domain/structures'
+import { a } from 'vitest/dist/chunks/suite.d.FvehnV49.js'
 
 export async function seed() {
   const prisma = new PrismaClient({
@@ -19,6 +22,9 @@ export async function seed() {
 
     console.log('🧹 Limpando dados existentes...')
 
+    await prisma.measure.deleteMany()
+    console.log('✅ Measures removidos')
+
     await prisma.stationParameter.deleteMany()
     console.log('✅ StationParameters removidos')
 
@@ -30,9 +36,6 @@ export async function seed() {
 
     await prisma.parameter.deleteMany()
     console.log('✅ Parameters removidos')
-
-    await prisma.measure.deleteMany()
-    console.log('✅ Measures removidos')
 
     await prisma.user.deleteMany()
     console.log('✅ Users removidos')
@@ -68,6 +71,12 @@ export async function seed() {
 
     const stations = StationsFaker.fakeMany(1000)
 
+    const stationsParameter: {
+        id: string;
+        stationId: string;
+        parameterId: string;
+      }[] = []
+
     for (const station of stations) {
       const stationData = {
         id: station.id.value,
@@ -88,16 +97,40 @@ export async function seed() {
       const randomParameters = parameters.slice(0, Math.floor(Math.random() * 5) + 1)
 
       for (const parameter of randomParameters) {
-        await prisma.stationParameter.create({
+        const stationParameter = await prisma.stationParameter.create({
           data: {
             stationId: station.id.value,
             parameterId: parameter.id.value,
           },
         })
+
+        stationsParameter.push(stationParameter)
       }
     }
 
     console.log(`✅ ${stations.length} stations adicionadas com sucesso!`)
+
+    const measurements = MeasurementFaker.fakeMany(100)
+
+    for(const measurement of measurements){
+      const measurementData = {
+        id: measurement.id.value,
+        value: measurement.value.value,
+        unit_of_measure: measurement.unitOfMeasure.value,
+        createdAt: measurement.createdAt.value,
+        stationParameter: {
+        connect: {
+          id: stationsParameter[Math.floor(Math.random() * stationsParameter.length)].id,
+        }
+        }
+      }
+
+      await prisma.measure.create({
+        data: measurementData,
+      })
+    }
+
+    console.log(`✅ ${measurements.length} measurements adicionadas com sucesso!`)
 
     const alarms = AlarmFaker.fakeMany(100)
 

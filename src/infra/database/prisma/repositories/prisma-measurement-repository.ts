@@ -22,11 +22,13 @@ export class PrismaMeasurementRepository
   }: MeasurementListParams): Promise<CursorPagination<Measurement>> {
     const whereClause = {
       ...(status?.isAll.isTrue ? {} : { isActive: status?.isActive.isTrue }),
-      ...(date ? { date: { contains: date.value } } : {}),
+      ...(date ? { createdAt: { equals: date.value } } : {}),
+      ...(parameterName ? {stationParameter: { parameter: {is: {name: {contains: parameterName.value}}}}} : {}),
+      ...(stationName ? {stationParameter: { station: {is: {name: {contains: stationName.value}}}}} : {})
     }
 
     const include = {
-      stationParameter: true
+      stationParameter: true,
     }
 
     const query = this.createPaginationQuery(

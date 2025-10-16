@@ -63,7 +63,21 @@ model StationParameter {
   station     Station   @relation("station", fields: [stationId], references: [id], onDelete: Cascade)
   parameter   Parameter @relation("parameter", fields: [parameterId], references: [id], onDelete: Cascade)
 
+  measure Measure[] @relation("stationParameter")
+
   @@map("station_parameters")
+}
+
+model Measure {
+  id                 String           @id @default(cuid())
+  stationParameterId String
+  unit_of_measure    String
+  value              Int
+  createdAt          DateTime         @default(now()) @map("created_at")
+  
+  stationParameter   StationParameter @relation("stationParameter", fields: [stationParameterId], references: [id])
+
+  @@map("measure")
 }
 
 enum Operation {

@@ -31,6 +31,9 @@ export async function seed() {
     await prisma.parameter.deleteMany()
     console.log('✅ Parameters removidos')
 
+    await prisma.measure.deleteMany()
+    console.log('✅ Measures removidos')
+
     await prisma.user.deleteMany()
     console.log('✅ Users removidos')
 

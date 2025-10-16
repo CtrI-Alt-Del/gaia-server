@@ -1,6 +1,9 @@
 import { Measurement } from "@/core/telemetry/domain/entities/measurement";
 import { PrismaMeasure } from "../types/prisma-measure";
 import { MeasurementDto } from "@/core/telemetry/domain/dtos/measurement-dto";
+import { PrismaParameterMapper } from "./prisma-parameter-mapper";
+import { PrismaStationMapper } from "./prisma-station-mapper";
+import { Text } from "@/core/global/domain/structures";
 
 export class PrismaMeasurementMapper{
     static toEntity(measurement: PrismaMeasure): Measurement {
@@ -13,19 +16,16 @@ export class PrismaMeasurementMapper{
             value: measurement.value.value,
             unit_of_measure: measurement.unitOfMeasure.value,
             createdAt: measurement.createdAt.value,
+            stationParameterId: (measurement.stationParameter.id as Text).value,
             stationParameter: {
-                connect: {
-                    id: undefined,
-                    stationId: measurement.stationParameter.stationId.value,
-                    parameterId: measurement.stationParameter.parameterId.value
-                }
+                id: (measurement.stationParameter.id as Text).value,
+                parameterId: measurement.stationParameter.parameterId.value,
+                stationId: measurement.stationParameter.stationId.value
             }
         }
     }
 
     static toDto(measurement: PrismaMeasure): MeasurementDto{
-        const parameter = measurement.stationParameter.connect?.parameter
-        const station = measurement.stationParameter.connect?.station
 
         return {
             id: measurement.id,
@@ -33,8 +33,9 @@ export class PrismaMeasurementMapper{
             unitOfMeasure: measurement.unit_of_measure,
             createdAt: measurement.createdAt ? measurement.createdAt as Date : new Date(),
             stationParameter: {
-                parameterId: parameter?.id as string,
-                stationId: station?.id as string
+                id: measurement.stationParameterId,
+                parameterId: measurement.stationParameter.parameterId,
+                stationId: measurement.stationParameter.stationId
             }
         }
     }

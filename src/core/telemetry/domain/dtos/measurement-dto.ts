@@ -4,7 +4,8 @@ import { StationDto } from "@/core/telemetry/domain/dtos/station-dto"
 export type MeasurementDto = {
   id?: string
   stationParameter: {
-    stationId: string
+    id?: string,
+    stationId: string,
     parameterId: string
   }
   unitOfMeasure: string

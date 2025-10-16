@@ -1,3 +1,5 @@
-import { Prisma } from "@prisma/client";
+import { Measure, StationParameter,  } from "@prisma/client";
 
-export type PrismaMeasure = Prisma.MeasureCreateInput
+export type PrismaMeasure = Measure & {
+    stationParameter: StationParameter
+}

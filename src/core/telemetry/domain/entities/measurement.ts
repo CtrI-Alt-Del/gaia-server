@@ -1,12 +1,11 @@
 import { Numeric, Text, Timestamp } from '@/core/global/domain/structures'
 
 import { MeasurementDto } from '../dtos/measurement-dto'
-import { Parameter } from './parameter'
-import { Station } from './station'
 import { Entity } from '@/core/global/domain/abstracts'
 
 type MeasurementProps = {
   stationParameter: {
+    id?: Text
     stationId: Text
     parameterId: Text
   }
@@ -20,8 +19,9 @@ export class Measurement extends Entity<MeasurementProps> {
     return new Measurement(
       {
         stationParameter: {
+          id: dto.stationParameter.id ? Text.create(dto.stationParameter.id) : undefined,
           stationId: Text.create(dto.stationParameter.stationId),
-          parameterId: Text.create(dto.stationParameter.parameterId)
+          parameterId: Text.create(dto.stationParameter.parameterId) 
         },
         unitOfMeasure: Text.create(dto.unitOfMeasure),
         value: Numeric.create(dto.value),
@@ -42,7 +42,7 @@ export class Measurement extends Entity<MeasurementProps> {
     return this.props.createdAt
   }
 
-  get stationParameter(): {stationId: Text, parameterId: Text}{
+  get stationParameter(): {id?: Text, stationId: Text, parameterId: Text}{
     return this.props.stationParameter
   }
 
@@ -50,6 +50,7 @@ export class Measurement extends Entity<MeasurementProps> {
     return {
       id: this.id.value,
       stationParameter: {
+        id: this.stationParameter.id ? this.stationParameter.id.value : undefined,
         parameterId: this.stationParameter.parameterId.value,
         stationId: this.stationParameter.stationId.value
       },

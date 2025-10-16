@@ -8,7 +8,7 @@ type Request = {
   name?: string
   stationName?: string
   parameterName?: string
-  date?: Date
+  date?: string
   status: string
   nextCursor?: string
   previousCursor?: string
@@ -27,7 +27,7 @@ export class ListMeasurementsUseCase implements UseCase<Request, CursorPaginatio
             status: params.status ? Status.create(params.status) : undefined,
             stationName: params.stationName ? Text.create(params.stationName) : undefined,
             parameterName: params.parameterName ? Text.create(params.parameterName) : undefined,
-            date: params.date ? Timestamp.create(params.date) : undefined
+            date: params.date ? Text.create(params.date) : undefined
         })
 
         return pagination.map((measurement) => measurement.dto).dto

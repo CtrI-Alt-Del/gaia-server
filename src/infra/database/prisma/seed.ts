@@ -113,14 +113,16 @@ export async function seed() {
     const measurements = MeasurementFaker.fakeMany(100)
 
     for(const measurement of measurements){
+      const randomStationParameter = stationsParameter[Math.floor(Math.random() * stationsParameter.length)]
+
       const measurementData = {
         id: measurement.id.value,
         value: measurement.value.value,
-        unit_of_measure: measurement.unitOfMeasure.value,
+        unit_of_measure: parameters.find(p => p.id.value === randomStationParameter.parameterId)?.unitOfMeasure.value as string,
         createdAt: measurement.createdAt.value,
         stationParameter: {
         connect: {
-          id: stationsParameter[Math.floor(Math.random() * stationsParameter.length)].id,
+          id: randomStationParameter.id,
         }
         }
       }

@@ -13,6 +13,7 @@ import {
   ActivateStationController,
   GetStationDetailsController,
   ListMeasurementController,
+  ListStationsByCoordsController,
 } from './controllers'
 import { DatabaseModule } from '@/infra/database/database.module'
 
@@ -31,7 +32,8 @@ import { DatabaseModule } from '@/infra/database/database.module'
     ActivateStationController,
     GetStationDetailsController,
     GetStationParametersController,
-    ListMeasurementController
+    ListStationsByCoordsController,
+    ListMeasurementController,
   ],
 })
 export class TelemetryRestModule {}

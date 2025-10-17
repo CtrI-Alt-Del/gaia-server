@@ -6,8 +6,8 @@ import { Id, PlusInteger, Status, Text, Timestamp } from "@/core/global/domain/s
 
 type Request = {
   name?: string
-  stationName?: string
-  parameterName?: string
+  stationId?: string
+  parameterId?: string
   date?: string
   status: string
   nextCursor?: string
@@ -25,8 +25,8 @@ export class ListMeasurementsUseCase implements UseCase<Request, CursorPaginatio
             name: params.name ? Text.create(params.name) : undefined,
             pageSize: PlusInteger.create(params.pageSize),
             status: params.status ? Status.create(params.status) : undefined,
-            stationName: params.stationName ? Text.create(params.stationName) : undefined,
-            parameterName: params.parameterName ? Text.create(params.parameterName) : undefined,
+            stationId: params.stationId ? Text.create(params.stationId) : undefined,
+            parameterId: params.parameterId ? Text.create(params.parameterId) : undefined,
             date: params.date ? Text.create(params.date) : undefined
         })
 

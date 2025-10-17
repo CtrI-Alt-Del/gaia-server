@@ -17,14 +17,14 @@ export class PrismaMeasurementRepository
     previousCursor,
     status,
     date,
-    parameterName,
-    stationName,
+    parameterId,
+    stationId,
   }: MeasurementListParams): Promise<CursorPagination<Measurement>> {
     const whereClause = {
       ...(status?.isAll.isTrue ? {} : { isActive: status?.isActive.isTrue }),
       ...(date ? { createdAt: { equals: date.value } } : {}),
-      ...(parameterName ? {stationParameter: { parameter: {is: {name: {contains: parameterName.value}}}}} : {}),
-      ...(stationName ? {stationParameter: { station: {is: {name: {contains: stationName.value}}}}} : {})
+      ...(parameterId ? {stationParameter: { parameterId: {equals: parameterId.value} }} : {}),
+      ...(stationId ? {stationParameter: { stationId: {equals: stationId.value}}} : {})
     }
 
     const include = {

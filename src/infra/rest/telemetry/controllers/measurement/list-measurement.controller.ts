@@ -13,8 +13,8 @@ export const schema = z.object({
   previousCursor: stringSchema.optional(),
   pageSize: plusIntegerSchema.optional().default(20),
   date: stringSchema.optional(),
-  parameterName: stringSchema.optional(),
-  stationName: stringSchema.optional()
+  parameterId: stringSchema.optional(),
+  stationId: stringSchema.optional()
 })
 
 class ListMeasurementsControllerRequestQuery extends createZodDto(schema) {}

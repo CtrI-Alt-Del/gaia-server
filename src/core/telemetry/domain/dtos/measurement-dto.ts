@@ -5,8 +5,14 @@ export type MeasurementDto = {
   id?: string
   stationParameter: {
     id?: string,
-    stationId: string,
-    parameterId: string
+    station: {
+      id: string,
+      name: string
+    },
+    parameter: {
+      id: string,
+      name: string
+    }
   }
   unitOfMeasure: string
   value: number

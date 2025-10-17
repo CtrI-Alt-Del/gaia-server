@@ -28,7 +28,12 @@ export class PrismaMeasurementRepository
     }
 
     const include = {
-      stationParameter: true,
+      stationParameter: {
+        include: {
+          parameter: true,
+          station: true
+        }
+      }
     }
 
     const query = this.createPaginationQuery(

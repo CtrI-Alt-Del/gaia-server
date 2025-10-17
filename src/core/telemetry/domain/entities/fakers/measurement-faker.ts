@@ -52,8 +52,14 @@ export class MeasurementFaker {
         'ppm',
       ]),
       stationParameter: {
-        parameterId: faker.person.firstName(),
-        stationId: faker.person.firstName()
+        parameter: {
+          id: faker.person.firstName(),
+          name: faker.person.fullName()
+        },
+        station: {
+          id: faker.person.firstName(),
+          name: faker.person.fullName()
+        },
       },
       createdAt: new Date(),
       ...baseDto,

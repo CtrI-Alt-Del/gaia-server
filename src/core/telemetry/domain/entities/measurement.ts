@@ -6,8 +6,14 @@ import { Entity } from '@/core/global/domain/abstracts'
 type MeasurementProps = {
   stationParameter: {
     id?: Text
-    stationId: Text
-    parameterId: Text
+    station: {
+      id: Text,
+      name: Text
+    }
+    parameter: {
+      id: Text,
+      name: Text
+    }
   }
   unitOfMeasure: Text
   value: Numeric
@@ -20,8 +26,14 @@ export class Measurement extends Entity<MeasurementProps> {
       {
         stationParameter: {
           id: dto.stationParameter.id ? Text.create(dto.stationParameter.id) : undefined,
-          stationId: Text.create(dto.stationParameter.stationId),
-          parameterId: Text.create(dto.stationParameter.parameterId) 
+          station: {
+            id: Text.create(dto.stationParameter.station.id),
+            name: Text.create(dto.stationParameter.station.name),
+          },
+          parameter: {
+            id: Text.create(dto.stationParameter.parameter.id),
+            name: Text.create(dto.stationParameter.parameter.name),
+          },
         },
         unitOfMeasure: Text.create(dto.unitOfMeasure),
         value: Numeric.create(dto.value),
@@ -42,7 +54,15 @@ export class Measurement extends Entity<MeasurementProps> {
     return this.props.createdAt
   }
 
-  get stationParameter(): {id?: Text, stationId: Text, parameterId: Text}{
+  get stationParameter(): {id?: Text,
+    station: {
+      id: Text,
+      name: Text
+    },
+    parameter: {
+      id: Text,
+      name: Text
+    }}{
     return this.props.stationParameter
   }
 
@@ -51,8 +71,14 @@ export class Measurement extends Entity<MeasurementProps> {
       id: this.id.value,
       stationParameter: {
         id: this.stationParameter.id ? this.stationParameter.id.value : undefined,
-        parameterId: this.stationParameter.parameterId.value,
-        stationId: this.stationParameter.stationId.value
+        parameter: {
+          id: this.stationParameter.parameter.id.value,
+          name: this.stationParameter.parameter.name.value
+        },
+        station: {
+          id: this.stationParameter.station.id.value,
+          name: this.stationParameter.station.name.value
+        }
       },
       unitOfMeasure: this.unitOfMeasure.value,
       value: this.value.value,

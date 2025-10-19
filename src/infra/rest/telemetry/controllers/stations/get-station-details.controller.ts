@@ -10,8 +10,9 @@ export class GetStationDetailsController {
     @Inject(DatabaseModule.STATIONS_REPOSITORY)
     private readonly repository: StationsRepository,
   ) {}
-  @Get('/:stationId')
+  @Get(':stationId')
   async execute(@Param('stationId') stationId: string) {
+    console.log('[GetStationDetailsController] Chamado com stationId:', stationId)
     const useCase = new GetStationDetailsUseCase(this.repository)
     return await useCase.execute({stationId})
   }

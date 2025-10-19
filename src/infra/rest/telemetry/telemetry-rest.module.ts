@@ -14,12 +14,14 @@ import {
   GetStationDetailsController,
   ListMeasurementController,
   ListStationsByCoordsController,
+  CountStationsController,
 } from './controllers'
 import { DatabaseModule } from '@/infra/database/database.module'
 
 @Module({
   imports: [DatabaseModule],
   controllers: [
+    CountStationsController,
     CreateParameterController,
     DeactivateParameterController,
     UpdateParameterController,

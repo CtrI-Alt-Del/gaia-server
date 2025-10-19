@@ -7,6 +7,7 @@ import { DeactivateAlarmsController } from './controllers/alarms/deactivate-alar
 import { UpdateAlarmController } from './controllers/alarms/update-alarm.controller'
 import { ListAlarmsController } from './controllers/alarms/list-alarms.controller'
 import { ListAlertsController } from './controllers/alerts/list-alerts.controller'
+import { CountAlertsByLevelController } from './controllers/alerts/count-alerts-by-level.controller'
 
 @Module({
   imports: [DatabaseModule, QueueModule],
@@ -17,6 +18,7 @@ import { ListAlertsController } from './controllers/alerts/list-alerts.controlle
     DeactivateAlarmsController,
     UpdateAlarmController,
     ListAlertsController,
+    CountAlertsByLevelController,
   ],
 })
 export class AlertingRestModule {}

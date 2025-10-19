@@ -8,7 +8,8 @@ import {
   PrismaUsersRepository,
 } from './prisma/repositories'
 import { EnvProviderModule } from '@/infra/provision/env/env-provider.module'
-import { PrismaMeasurementRepository } from './prisma/repositories/prisma-measurement-repository'
+import { PrismaMeasurementsRepository } from './prisma/repositories/prisma-measurements-repository'
+import { PrismaAlertsRepository } from './prisma/repositories/prisma-alerts-repository'
 
 @Module({
   providers: [
@@ -31,7 +32,11 @@ import { PrismaMeasurementRepository } from './prisma/repositories/prisma-measur
     },
     {
       provide: DatabaseModule.MEASUREMENTS_REPOSITORY,
-      useClass: PrismaMeasurementRepository,
+      useClass: PrismaMeasurementsRepository,
+    },
+    {
+      provide: DatabaseModule.ALERTS_REPOSITORY,
+      useClass: PrismaAlertsRepository,
     },
   ],
   imports: [EnvProviderModule],
@@ -42,6 +47,7 @@ import { PrismaMeasurementRepository } from './prisma/repositories/prisma-measur
     DatabaseModule.ALARMS_REPOSITORY,
     DatabaseModule.STATIONS_REPOSITORY,
     DatabaseModule.MEASUREMENTS_REPOSITORY,
+    DatabaseModule.ALERTS_REPOSITORY,
   ],
 })
 export class DatabaseModule {
@@ -50,4 +56,5 @@ export class DatabaseModule {
   static readonly ALARMS_REPOSITORY = 'ALARMS_REPOSITORY'
   static readonly STATIONS_REPOSITORY = 'STATIONS_REPOSITORY'
   static readonly MEASUREMENTS_REPOSITORY = 'MEASUREMENTS_REPOSITORY'
+  static readonly ALERTS_REPOSITORY = 'ALERTS_REPOSITORY'
 }

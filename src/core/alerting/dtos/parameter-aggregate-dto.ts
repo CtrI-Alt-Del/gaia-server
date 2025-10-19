@@ -3,5 +3,6 @@ export type ParameterAggregateDto = {
   entity?: {
     name: string
     unitOfMeasure: string
+    stationName: string
   }
 }

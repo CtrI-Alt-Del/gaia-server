@@ -1,0 +1,6 @@
+@URL = {{BASE_URL}}/alerting/alerts
+
+#### List alerts
+GET {{URL}}
+?pageSize=2
+&level=all

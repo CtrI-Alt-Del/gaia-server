@@ -4,7 +4,7 @@ import type { AlarmsRepository } from '@/core/global/interfaces'
 
 import { Id } from '@/core/global/domain/structures'
 import { Alarm } from '@/core/alerting/domain/entities/alarm'
-import { AlarmListingParams } from '@/core/global/types/alarm-list-params'
+import { AlarmListingParams } from '@/core/global/types/alarm-listing-params'
 import { CursorPagination } from '@/core/global/domain/structures'
 
 import { PrismaRepository } from './prisma-repository'
@@ -35,7 +35,12 @@ export class PrismaAlarmsRepository extends PrismaRepository implements AlarmsRe
       undefined,
       undefined,
       {
-        parameter: true,
+        StationParameter: {
+          include: {
+            station: true,
+            parameter: true,
+          },
+        },
       },
     )
 
@@ -52,7 +57,12 @@ export class PrismaAlarmsRepository extends PrismaRepository implements AlarmsRe
     const prismaAlarm = await this.prisma.alarm.findUnique({
       where: { id: id.value },
       include: {
-        parameter: true,
+        StationParameter: {
+          include: {
+            station: true,
+            parameter: true,
+          },
+        },
       },
     })
 

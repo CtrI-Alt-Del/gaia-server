@@ -1,6 +1,6 @@
-import { faker } from "@faker-js/faker"
-import { MeasurementDto } from "../../dtos/measurement-dto"
-import { Measurement } from "../measurement"
+import { faker } from '@faker-js/faker'
+import { MeasurementDto } from '../../dtos/measurement-dto'
+import { Measurement } from '../measurement'
 
 export class MeasurementFaker {
   static fake(baseDto?: Partial<MeasurementDto>): Measurement {
@@ -51,16 +51,10 @@ export class MeasurementFaker {
         'µg/m³',
         'ppm',
       ]),
-      stationParameter: {
-        parameter: {
-          id: faker.person.firstName(),
-          name: faker.person.fullName()
-        },
-        station: {
-          id: faker.person.firstName(),
-          name: faker.person.fullName()
-        },
-      },
+      parameterId: faker.string.uuid(),
+      stationId: faker.string.uuid(),
+      stationName: faker.person.fullName(),
+      parameterName: faker.person.fullName(),
       createdAt: new Date(),
       ...baseDto,
     }

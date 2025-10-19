@@ -1,5 +1,8 @@
-import { Alarm, Parameter } from '@prisma/client'
+import { Alarm, Parameter, Station, StationParameter } from '@prisma/client'
 
 export type PrismaAlarm = Alarm & {
-  parameter: Parameter
+  StationParameter: StationParameter & {
+    station: Station
+    parameter: Parameter
+  }
 }

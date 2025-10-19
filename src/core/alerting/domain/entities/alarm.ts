@@ -1,8 +1,8 @@
 import { Entity } from '@/core/global/domain/abstracts'
 import { Logical, Text, Timestamp } from '@/core/global/domain/structures'
 import { AlarmDto } from '../../dtos/alarm.dto'
-import AlarmLevel from '../structures/alarm-level'
-import AlertRule from '../structures/alert-rule'
+import { AlarmLevel } from '../structures/alarm-level'
+import { AlertRule } from '../structures/alert-rule'
 import { ParameterAggregate } from '../../aggregate/parameter-aggregate'
 
 type AlarmProps = {

@@ -16,7 +16,7 @@ export class PrismaAlarmMapper {
       value: alarm.rule.threshold.value,
       operation: alarm.rule.operation.toString() as $Enums.Operation,
       level: alarm.level.toString(),
-      parameterId: alarm.parameter.id.value,
+      stationParameterId: alarm.parameter.id.value,
       isActive: alarm.isActive.value,
       createdAt: alarm.createdAt.value,
       updatedAt: alarm.createdAt.value,
@@ -32,10 +32,11 @@ export class PrismaAlarmMapper {
         operation: alarm.operation,
       },
       parameter: {
-        id: alarm.parameter.id,
+        id: alarm.StationParameter.parameter.id,
         entity: {
-          name: alarm.parameter.name,
-          unitOfMeasure: alarm.parameter.unitOfMeasure,
+          name: alarm.StationParameter.parameter.name,
+          unitOfMeasure: alarm.StationParameter.parameter.unitOfMeasure,
+          stationName: alarm.StationParameter.station.name,
         },
       },
       level: alarm.level,

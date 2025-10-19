@@ -9,7 +9,7 @@ import {
 import { AlarmsController } from './alarms.controller'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { AlarmsRepository } from '@/core/alerting/interfaces'
-import { ListAlarmUseCase } from '@/core/alerting/use-cases/list-alarm-use-case'
+import { ListAlarmsUseCase } from '@/core/alerting/use-cases/list-alarms-use-case'
 
 export const schema = z.object({
   name: stringSchema.optional(),
@@ -32,7 +32,7 @@ export class ListAlarmsController {
   @Get()
   @UsePipes(ZodValidationPipe)
   async handle(@Query() query: ListAlarmsControllerRequestQuery) {
-    const useCase = new ListAlarmUseCase(this.repository)
+    const useCase = new ListAlarmsUseCase(this.repository)
     return await useCase.execute(query)
   }
 }

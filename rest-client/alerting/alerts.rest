@@ -2,5 +2,8 @@
 
 #### List alerts
 GET {{URL}}
-?pageSize=2
+?pageSize=20
 &level=all
+
+#### Get last alerts
+GET {{URL}}/last

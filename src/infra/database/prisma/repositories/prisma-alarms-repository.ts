@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 
-import type { AlarmsRepository } from '@/core/global/interfaces'
+import { AlarmsRepository } from '@/core/alerting/interfaces'
 
 import { Id } from '@/core/global/domain/structures'
 import { Alarm } from '@/core/alerting/domain/entities/alarm'
@@ -51,6 +51,21 @@ export class PrismaAlarmsRepository extends PrismaRepository implements AlarmsRe
     })
 
     return result.map(PrismaAlarmMapper.toEntity)
+  }
+
+  async findAllByStationParameter(stationParameterId: Id): Promise<Alarm[]> {
+    const prismaAlarms = await this.prisma.alarm.findMany({
+      where: { stationParameterId: stationParameterId.value },
+      include: {
+        StationParameter: {
+          include: {
+            station: true,
+            parameter: true,
+          },
+        },
+      },
+    })
+    return prismaAlarms.map(PrismaAlarmMapper.toEntity)
   }
 
   async findById(id: Id): Promise<Alarm | null> {

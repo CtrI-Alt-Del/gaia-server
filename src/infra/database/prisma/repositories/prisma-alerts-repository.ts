@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common'
 
-import type { AlertsRepository } from '@/core/global/interfaces'
-
-import { Id } from '@/core/global/domain/structures'
+import { AlertsRepository } from '@/core/alerting/interfaces'
+import { Id, Numeric } from '@/core/global/domain/structures'
 import { Alert } from '@/core/alerting/domain/entities'
 import { AlertListingParams } from '@/core/global/types/alerts-listing-params'
 import { CursorPagination } from '@/core/global/domain/structures'
@@ -12,11 +11,16 @@ import { PrismaAlertMapper } from '../mappers'
 
 @Injectable()
 export class PrismaAlertsRepository extends PrismaRepository implements AlertsRepository {
-  async add(alarmId: Id, measurementId: Id): Promise<void> {
+  async add(
+    alarmId: Id,
+    stationParameterId: Id,
+    measurementValue: Numeric,
+  ): Promise<void> {
     await this.prisma.alert.create({
       data: {
         alarmId: alarmId.value,
-        measurementId: measurementId.value,
+        measurementValue: measurementValue.value,
+        stationParameterId: stationParameterId.value,
       },
     })
   }
@@ -41,15 +45,11 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
       undefined,
       undefined,
       {
-        measurement: true,
-        alarm: {
+        alarm: true,
+        stationParameter: {
           include: {
-            StationParameter: {
-              include: {
-                parameter: true,
-                station: true,
-              },
-            },
+            parameter: true,
+            station: true,
           },
         },
       },
@@ -61,22 +61,37 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
       pageSize,
     })
 
+    console.log(result)
+
     return result.map(PrismaAlertMapper.toEntity)
+  }
+
+  async findLast(): Promise<Alert[]> {
+    const prismaAlerts = await this.prisma.alert.findMany({
+      include: {
+        alarm: true,
+        stationParameter: {
+          include: {
+            parameter: true,
+            station: true,
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 5,
+    })
+    return prismaAlerts.map(PrismaAlertMapper.toEntity)
   }
 
   async findById(id: Id): Promise<Alert | null> {
     const prismaAlert = await this.prisma.alert.findUnique({
       where: { id: id.value },
       include: {
-        measurement: true,
-        alarm: {
+        alarm: true,
+        stationParameter: {
           include: {
-            StationParameter: {
-              include: {
-                parameter: true,
-                station: true,
-              },
-            },
+            parameter: true,
+            station: true,
           },
         },
       },

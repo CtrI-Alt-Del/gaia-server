@@ -57,26 +57,26 @@ model Station {
 
 model StationParameter {
   id          String    @id @default(cuid())
-  stationId   String
-  parameterId String
+  stationId   String    @map("station_id")
+  parameterId String    @map("parameter_id")
   station     Station   @relation("station", fields: [stationId], references: [id], onDelete: Cascade)
   parameter   Parameter @relation("parameter", fields: [parameterId], references: [id], onDelete: Cascade)
 
   measure Measure[] @relation("stationParameter")
   alarms  Alarm[]
+  Alert   Alert[]
 
   @@map("station_parameters")
 }
 
 model Measure {
   id                 String   @id @default(cuid())
-  stationParameterId String
-  unit_of_measure    String
+  stationParameterId String   @map("station_parameter_id")
+  unitOfMeasure      String   @map("unit_of_measure")
   value              Int
   createdAt          DateTime @default(now()) @map("created_at")
 
   stationParameter StationParameter @relation("stationParameter", fields: [stationParameterId], references: [id])
-  Alert            Alert[]          @relation("measurement")
 
   @@map("measure")
 }
@@ -112,13 +112,14 @@ model Alarm {
 }
 
 model Alert {
-  id            String   @id @default(cuid())
-  alarmId       String   @map("alarm_id")
-  measurementId String   @map("measurement_id")
-  createdAt     DateTime @default(now()) @map("created_at")
+  id                 String   @id @default(cuid())
+  measurementValue   Float    @map("measurement_value")
+  alarmId            String   @map("alarm_id")
+  stationParameterId String   @map("station_parameter_id")
+  createdAt          DateTime @default(now()) @map("created_at")
 
-  alarm       Alarm   @relation("alarm", fields: [alarmId], references: [id])
-  measurement Measure @relation("measurement", fields: [measurementId], references: [id])
+  alarm            Alarm            @relation("alarm", fields: [alarmId], references: [id])
+  stationParameter StationParameter @relation(fields: [stationParameterId], references: [id])
 
   @@map("alerts")
 }

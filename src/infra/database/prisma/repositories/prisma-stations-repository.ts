@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 
-import type { StationsRepository } from '@/core/global/interfaces'
+import { StationsRepository } from '@/core/telemetry/interfaces'
 
 import { PrismaRepository } from './prisma-repository'
 import { CursorPagination, Id } from '@/core/global/domain/structures'
@@ -103,14 +103,14 @@ export class PrismaStationsRepository
 
   async findManyByFourCoords(coords: StationFourCoordsParams): Promise<Station[]> {
     const prismaStations = await this.prisma.station.findMany({
-      where:{
+      where: {
         AND: [
-          {latitude: {lt: Math.max(coords.lat1, coords.lat2)}},
-          {latitude: {gt: Math.min(coords.lat1, coords.lat2)}},
-          {longitude: {lt: Math.max(coords.long1, coords.long2)}},
-          {longitude: {gt: Math.min(coords.long1, coords.long2)}},
-        ]
-      }
+          { latitude: { lt: Math.max(coords.lat1, coords.lat2) } },
+          { latitude: { gt: Math.min(coords.lat1, coords.lat2) } },
+          { longitude: { lt: Math.max(coords.long1, coords.long2) } },
+          { longitude: { gt: Math.min(coords.long1, coords.long2) } },
+        ],
+      },
     })
 
     return await prismaStations.map(PrismaStationMapper.toEntity)

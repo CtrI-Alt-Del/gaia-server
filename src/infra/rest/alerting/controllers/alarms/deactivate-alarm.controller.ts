@@ -2,7 +2,7 @@ import { Delete, Inject, Param } from '@nestjs/common'
 import { AlarmsController } from './alarms.controller'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { AlarmsRepository } from '@/core/alerting/interfaces'
-import { DeactivateAlarmUseCase } from '@/core/alerting/use-cases/deactivate-alarm-use-case'
+import { DeactivateAlarmUseCase } from '@/core/alerting/use-cases/deactivate-alarms-use-case'
 
 @AlarmsController(':alarmId')
 export class DeactivateAlarmsController {

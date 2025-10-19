@@ -4,7 +4,7 @@ import { AlarmsController } from './alarms.controller'
 import { Body, Inject, Param, Put } from '@nestjs/common'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { AlarmsRepository } from '@/core/alerting/interfaces'
-import { UpdateAlarmUseCase } from '@/core/alerting/use-cases/update-alarm-use-case'
+import { UpdateAlarmUseCase } from '@/core/alerting/use-cases/update-alarms-use-case'
 
 class UpdateAlarmRequestBody extends createZodDto(updateAlarmSchema) {}
 

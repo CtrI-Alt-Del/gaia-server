@@ -1,10 +1,11 @@
 import { Aggregate } from '@/core/global/domain/abstracts/aggregate'
-import {Text} from '@/core/global/domain/structures'
-import { ParameterAggregateDto } from '../dtos/parameter-aggregate.dto'
+import { Text } from '@/core/global/domain/structures'
+import { ParameterAggregateDto } from '../dtos/parameter-aggregate-dto'
 
 type ParameterAggregateEntity = {
   name: Text
   unitOfMeasure: Text
+  stationName: Text
 }
 
 export class ParameterAggregate extends Aggregate<ParameterAggregateEntity> {
@@ -14,29 +15,39 @@ export class ParameterAggregate extends Aggregate<ParameterAggregateEntity> {
       const entity = {
         name: Text.create(dto.entity.name),
         unitOfMeasure: Text.create(dto.entity.unitOfMeasure),
+        stationName: Text.create(dto.entity.stationName),
       }
 
-      return new ParameterAggregate(ParameterAggregate.ENTITY_NAME, dto.id as string, entity)
+      return new ParameterAggregate(
+        ParameterAggregate.ENTITY_NAME,
+        dto.id as string,
+        entity,
+      )
     } else {
       return new ParameterAggregate(ParameterAggregate.ENTITY_NAME, dto.id as string)
     }
   }
 
   get name(): Text {
-    return this.getEntity().name
+    return this.entity.name
   }
 
   get unitOfMeasure(): Text {
-    return this.getEntity().unitOfMeasure
+    return this.entity.unitOfMeasure
+  }
+
+  get stationName(): Text {
+    return this.entity.stationName
   }
 
   get dto(): ParameterAggregateDto {
     return {
       id: this.id.value,
-      entity: this.hasEntity().isTrue
+      entity: this.hasEntity.isTrue
         ? {
-            name: this.getEntity().name.value,
-            unitOfMeasure: this.getEntity().unitOfMeasure.value
+            name: this.name.value,
+            unitOfMeasure: this.unitOfMeasure.value,
+            stationName: this.stationName.value,
           }
         : undefined,
     }

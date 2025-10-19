@@ -4,45 +4,29 @@ import { MeasurementDto } from '../dtos/measurement-dto'
 import { Entity } from '@/core/global/domain/abstracts'
 
 type MeasurementProps = {
-  stationParameter: {
-    id?: Text
-    station: {
-      id: Text,
-      name: Text
-    }
-    parameter: {
-      id: Text,
-      name: Text
-    }
-  }
+  stationId: Text
+  parameterId: Text
+  stationName: Text
+  parameterName: Text
   unitOfMeasure: Text
   value: Numeric
   createdAt: Timestamp
 }
 
 export class Measurement extends Entity<MeasurementProps> {
-  static create(dto: MeasurementDto): Measurement{
-    return new Measurement(
-      {
-        stationParameter: {
-          id: dto.stationParameter.id ? Text.create(dto.stationParameter.id) : undefined,
-          station: {
-            id: Text.create(dto.stationParameter.station.id),
-            name: Text.create(dto.stationParameter.station.name),
-          },
-          parameter: {
-            id: Text.create(dto.stationParameter.parameter.id),
-            name: Text.create(dto.stationParameter.parameter.name),
-          },
-        },
-        unitOfMeasure: Text.create(dto.unitOfMeasure),
-        value: Numeric.create(dto.value),
-        createdAt: Timestamp.create(dto.createdAt)
-      }
-    )
+  static create(dto: MeasurementDto): Measurement {
+    return new Measurement({
+      stationId: Text.create(dto.stationId),
+      parameterId: Text.create(dto.parameterId),
+      stationName: Text.create(dto.stationName),
+      parameterName: Text.create(dto.parameterName),
+      unitOfMeasure: Text.create(dto.unitOfMeasure),
+      value: Numeric.create(dto.value),
+      createdAt: Timestamp.create(dto.createdAt),
+    })
   }
 
-  get unitOfMeasure(): Text{
+  get unitOfMeasure(): Text {
     return this.props.unitOfMeasure
   }
 
@@ -50,39 +34,36 @@ export class Measurement extends Entity<MeasurementProps> {
     return this.props.value
   }
 
-  get createdAt(): Timestamp{
+  get createdAt(): Timestamp {
     return this.props.createdAt
   }
 
-  get stationParameter(): {id?: Text,
-    station: {
-      id: Text,
-      name: Text
-    },
-    parameter: {
-      id: Text,
-      name: Text
-    }}{
-    return this.props.stationParameter
+  get stationId(): Text {
+    return this.props.stationId
   }
 
-  get dto(): MeasurementDto{
+  get parameterId(): Text {
+    return this.props.parameterId
+  }
+
+  get stationName(): Text {
+    return this.props.stationName
+  }
+
+  get parameterName(): Text {
+    return this.props.parameterName
+  }
+
+  get dto(): MeasurementDto {
     return {
       id: this.id.value,
-      stationParameter: {
-        id: this.stationParameter.id ? this.stationParameter.id.value : undefined,
-        parameter: {
-          id: this.stationParameter.parameter.id.value,
-          name: this.stationParameter.parameter.name.value
-        },
-        station: {
-          id: this.stationParameter.station.id.value,
-          name: this.stationParameter.station.name.value
-        }
-      },
+      stationId: this.stationId.value,
+      parameterId: this.parameterId.value,
+      stationName: this.stationName.value,
+      parameterName: this.parameterName.value,
       unitOfMeasure: this.unitOfMeasure.value,
       value: this.value.value,
-      createdAt: this.createdAt.value
+      createdAt: this.createdAt.value,
     }
   }
 }

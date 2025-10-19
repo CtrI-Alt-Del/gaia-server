@@ -1,4 +1,5 @@
 export { PrismaUserMapper } from './prisma-user-mapper'
 export { PrismaParameterMapper } from './prisma-parameter-mapper'
 export { PrismaAlarmMapper } from './prisma-alarm-mapper'
+export { PrismaAlertMapper } from './prisma-alert-mapper'
 export { PrismaStationMapper } from './prisma-station-mapper'

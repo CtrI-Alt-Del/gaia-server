@@ -1,9 +1,9 @@
-import { mock, MockProxy } from "vitest-mock-extended"
-import { AlarmsRepository } from "../../interfaces"
-import { UpdateAlarmUseCase } from "../update-alarm-use-case"
-import { AlarmFaker } from "../../domain/entities/fakers/alarm-faker"
-import { Id } from "@/core/global/domain/structures"
-import { AlarmNotFoundError } from "@/core/telemetry/domain/errors/alarm-not-found-error"
+import { mock, MockProxy } from 'vitest-mock-extended'
+import { AlarmsRepository } from '../../interfaces'
+import { UpdateAlarmUseCase } from '../update-alarms-use-case'
+import { AlarmsFaker } from '../../domain/entities/fakers/alarms-faker'
+import { Id } from '@/core/global/domain/structures'
+import { AlarmNotFoundError } from '@/core/telemetry/domain/errors/alarm-not-found-error'
 
 describe('UpdateAlarmUseCase', () => {
   let alarmRepository: MockProxy<AlarmsRepository>
@@ -15,15 +15,15 @@ describe('UpdateAlarmUseCase', () => {
   })
 
   it('should update a alarm and save it to the repository', async () => {
-    const existingAlarm = AlarmFaker.fake({})
-    const updatedAlarm = AlarmFaker.fake({})
+    const existingAlarm = AlarmsFaker.fake({})
+    const updatedAlarm = AlarmsFaker.fake({})
 
     const updateData = {
       message: 'Test Alarm',
       level: 'WARNING',
       rule: {
         threshold: 1000,
-        operation: "LESS_THAN"
+        operation: 'LESS_THAN',
       },
     }
 

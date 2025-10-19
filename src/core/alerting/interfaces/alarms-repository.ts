@@ -7,4 +7,5 @@ export interface AlarmsRepository {
     findMany(params: AlarmListingParams): Promise<CursorPagination<Alarm>>
     findById(id: Id): Promise<Alarm | null>
     replace(alarm: Alarm): Promise<void>
+    countByLevel(level: 'warning' | 'critical'): Promise<number>
 }

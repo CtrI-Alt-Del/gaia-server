@@ -12,6 +12,14 @@ import { PrismaAlarmMapper } from '../mappers'
 
 @Injectable()
 export class PrismaAlarmsRepository extends PrismaRepository implements AlarmsRepository {
+  async countByLevel(level: 'warning' | 'critical'): Promise<number> {
+    return await this.prisma.alarm.count({
+      where: {
+        level: level.toUpperCase(),
+        isActive: true,
+      },
+    });
+  }
   async add(alarm: Alarm): Promise<void> {
     const prismaAlarm = PrismaAlarmMapper.toPrisma(alarm)
     await this.prisma.alarm.create({ data: prismaAlarm })

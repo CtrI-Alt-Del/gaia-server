@@ -4,10 +4,8 @@ import { UsersFaker } from '@/core/membership/domain/entities/fakers'
 import { StationsFaker } from '@/core/telemetry/domain/entities/fakers/station-faker'
 import { ParameterFaker } from '@/core/telemetry/domain/entities/fakers/parameter-faker'
 import { PrismaUserMapper, PrismaParameterMapper } from './mappers'
-import { AlarmFaker } from '@/core/alerting/domain/entities/fakers/alarm-faker'
+import { AlarmsFaker } from '@/core/alerting/domain/entities/fakers/alarms-faker'
 import { MeasurementFaker } from '@/core/telemetry/domain/entities/fakers/measurement-faker'
-import { Text } from '@/core/global/domain/structures'
-import { a } from 'vitest/dist/chunks/suite.d.FvehnV49.js'
 
 export async function seed() {
   const prisma = new PrismaClient({
@@ -39,6 +37,9 @@ export async function seed() {
 
     await prisma.user.deleteMany()
     console.log('✅ Users removidos')
+
+    await prisma.alert.deleteMany()
+    console.log('✅ Alerts removidos')
 
     console.log('✅ Limpeza concluída!')
 
@@ -72,10 +73,10 @@ export async function seed() {
     const stations = StationsFaker.fakeMany(1000)
 
     const stationsParameter: {
-        id: string;
-        stationId: string;
-        parameterId: string;
-      }[] = []
+      id: string
+      stationId: string
+      parameterId: string
+    }[] = []
 
     for (const station of stations) {
       const stationData = {
@@ -112,19 +113,22 @@ export async function seed() {
 
     const measurements = MeasurementFaker.fakeMany(100)
 
-    for(const measurement of measurements){
-      const randomStationParameter = stationsParameter[Math.floor(Math.random() * stationsParameter.length)]
+    for (const measurement of measurements) {
+      const randomStationParameter =
+        stationsParameter[Math.floor(Math.random() * stationsParameter.length)]
 
       const measurementData = {
         id: measurement.id.value,
         value: measurement.value.value,
-        unit_of_measure: parameters.find(p => p.id.value === randomStationParameter.parameterId)?.unitOfMeasure.value as string,
+        unit_of_measure: parameters.find(
+          (p) => p.id.value === randomStationParameter.parameterId,
+        )?.unitOfMeasure.value as string,
         createdAt: measurement.createdAt.value,
         stationParameter: {
-        connect: {
-          id: randomStationParameter.id,
-        }
-        }
+          connect: {
+            id: randomStationParameter.id,
+          },
+        },
       }
 
       await prisma.measure.create({
@@ -134,27 +138,43 @@ export async function seed() {
 
     console.log(`✅ ${measurements.length} measurements adicionadas com sucesso!`)
 
-    const alarms = AlarmFaker.fakeMany(100)
+    const alarms = AlarmsFaker.fakeMany(100)
 
     for (const alarm of alarms) {
-      const alarmData = {
-        level: alarm.level.toString(),
-        message: alarm.message.value,
-        operation: alarm.rule.operation.toString() as $Enums.Operation,
-        value: alarm.rule.threshold.value,
-        parameter: {
-          connect: {
-            id: parameters[Math.floor(Math.random() * parameters.length)].id.value,
-          },
-        },
-      }
-
       await prisma.alarm.create({
-        data: alarmData,
+        data: {
+          message: alarm.message.value,
+          value: alarm.rule.threshold.value,
+          operation: alarm.rule.operation.toString() as $Enums.Operation,
+          level: alarm.level.toString(),
+          stationParameterId:
+            stationsParameter[Math.floor(Math.random() * stationsParameter.length)].id,
+          isActive: alarm.isActive.value,
+          createdAt: alarm.createdAt.value,
+          updatedAt: alarm.updatedAt?.value,
+        },
       })
     }
 
     console.log(`✅ ${alarms.length} alarmes adicionados com sucesso!`)
+
+    const createdAlarms = await prisma.alarm.findMany()
+    const createdMeasures = await prisma.measure.findMany()
+
+    for (let i = 0; i < 5; i++) {
+      const randomAlarm = createdAlarms[Math.floor(Math.random() * createdAlarms.length)]
+      const randomMeasure =
+        createdMeasures[Math.floor(Math.random() * createdMeasures.length)]
+
+      await prisma.alert.create({
+        data: {
+          alarmId: randomAlarm.id,
+          measurementId: randomMeasure.id,
+        },
+      })
+    }
+
+    console.log('✅ 5 alerts adicionados com sucesso!')
   } catch (error) {
     console.error('❌ Erro durante o seed:', error)
   } finally {

@@ -1,13 +1,13 @@
-import { MeasurementRepository } from "@/core/telemetry/interfaces/measurement-repository";
-import { PrismaRepository } from "./prisma-repository";
-import { CursorPagination } from "@/core/global/domain/structures";
-import { MeasurementListParams } from "@/core/global/types/measurement-list-params";
-import { Measurement } from "@/core/telemetry/domain/entities/measurement";
-import { Injectable } from "@nestjs/common";
-import { PrismaMeasurementMapper } from "../mappers/prisma-measurement-mapper";
+import { MeasurementRepository } from '@/core/telemetry/interfaces/measurement-repository'
+import { PrismaRepository } from './prisma-repository'
+import { CursorPagination } from '@/core/global/domain/structures'
+import { MeasurementListParams } from '@/core/global/types/measurement-list-params'
+import { Measurement } from '@/core/telemetry/domain/entities/measurement'
+import { Injectable } from '@nestjs/common'
+import { PrismaMeasurementMapper } from '../mappers/prisma-measurement-mapper'
 
 @Injectable()
-export class PrismaMeasurementRepository
+export class PrismaMeasurementsRepository
   extends PrismaRepository
   implements MeasurementRepository
 {
@@ -23,17 +23,21 @@ export class PrismaMeasurementRepository
     const whereClause = {
       ...(status?.isAll.isTrue ? {} : { isActive: status?.isActive.isTrue }),
       ...(date ? { createdAt: { equals: date.value } } : {}),
-      ...(parameterId ? {stationParameter: { parameterId: {equals: parameterId.value} }} : {}),
-      ...(stationId ? {stationParameter: { stationId: {equals: stationId.value}}} : {})
+      ...(parameterId
+        ? { stationParameter: { parameterId: { equals: parameterId.value } } }
+        : {}),
+      ...(stationId
+        ? { stationParameter: { stationId: { equals: stationId.value } } }
+        : {}),
     }
 
     const include = {
       stationParameter: {
         include: {
           parameter: true,
-          station: true
-        }
-      }
+          station: true,
+        },
+      },
     }
 
     const query = this.createPaginationQuery(
@@ -41,13 +45,13 @@ export class PrismaMeasurementRepository
       whereClause,
       undefined,
       undefined,
-      include
+      include,
     )
 
     const result = await this.paginateWithCursor<any>(query, {
       nextCursor,
       previousCursor,
-      pageSize
+      pageSize,
     })
 
     return result.map(PrismaMeasurementMapper.toEntity)

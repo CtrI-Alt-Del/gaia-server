@@ -1,5 +1,6 @@
 import { CursorPaginationDto } from '@/core/global/domain/structures/dtos'
-import { AlarmsRepository, UseCase } from '@/core/global/interfaces'
+import { AlarmsRepository } from '@/core/alerting/interfaces'
+import { UseCase } from '@/core/global/interfaces'
 import { AlarmDto } from '../dtos/alarm.dto'
 import { Id, PlusInteger, Status, Text } from '@/core/global/domain/structures'
 

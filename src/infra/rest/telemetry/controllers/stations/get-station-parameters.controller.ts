@@ -1,7 +1,5 @@
-import { ParametersRepository, StationsRepository } from '@/core/global/interfaces'
-import {
-  GetStationParametersUseCase,
-} from '@/core/telemetry/use-cases'
+import { ParametersRepository, StationsRepository } from '@/core/telemetry/interfaces'
+import { GetStationParametersUseCase } from '@/core/telemetry/use-cases'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { StationsController } from '@/infra/rest/telemetry/controllers/stations/stations.controller'
 import { Get, Inject, Param } from '@nestjs/common'

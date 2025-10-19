@@ -1,6 +1,6 @@
 import { Inject, Param, Patch } from '@nestjs/common'
 
-import { ParametersRepository } from '@/core/global/interfaces'
+import { ParametersRepository } from '@/core/telemetry/interfaces'
 
 import { DatabaseModule } from '@/infra/database/database.module'
 import { ParametersController } from '@/infra/rest/telemetry/controllers/parameters/parameters.controller'

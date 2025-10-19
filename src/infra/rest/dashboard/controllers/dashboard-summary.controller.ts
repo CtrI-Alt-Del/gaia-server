@@ -2,7 +2,7 @@ import { Get, Inject } from '@nestjs/common'
 import { DashboardController } from './dashboard.controller'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { StationsRepository } from '@/core/global/interfaces'
-import { AlarmsRepository } from '@/core/alerting/interfaces'
+import { AlertsRepository } from '@/core/alerting/interfaces/alerts-repository'
 import { GetDashboardSummaryUseCase } from '@/core/dashboard/use-cases/get-dashboard-summary-use-case'
 
 @DashboardController()
@@ -10,8 +10,8 @@ export class DashboardSummaryController {
   constructor(
     @Inject(DatabaseModule.STATIONS_REPOSITORY)
     private readonly stationsRepository: StationsRepository,
-    @Inject(DatabaseModule.ALARMS_REPOSITORY)
-    private readonly alarmsRepository: AlarmsRepository,
+    @Inject(DatabaseModule.ALERTS_REPOSITORY)
+    private readonly alertsRepository: AlertsRepository,
   ) {}
 
   @Get('summary')
@@ -19,7 +19,7 @@ export class DashboardSummaryController {
     try {
       const useCase = new GetDashboardSummaryUseCase(
         this.stationsRepository,
-        this.alarmsRepository,
+        this.alertsRepository,
       )
       return await useCase.execute()
     } catch (error) {

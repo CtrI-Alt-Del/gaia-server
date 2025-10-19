@@ -12,6 +12,21 @@ import { PrismaAlertMapper } from '../mappers'
 
 @Injectable()
 export class PrismaAlertsRepository extends PrismaRepository implements AlertsRepository {
+  async countByLevel(level: 'WARNING' | 'CRITICAL'): Promise<number> {
+    console.log(`[ALERTS] countByLevel: ${level}`)
+    const count = await this.prisma.alert.count({
+      where: {
+        alarm: {
+          level: {
+            equals: level,
+            mode: 'insensitive',
+          },
+        },
+      },
+    })
+    console.log(`[ALERTS] Found ${count} alerts for level ${level}`)
+    return count
+  }
   async add(alarmId: Id, measurementId: Id): Promise<void> {
     await this.prisma.alert.create({
       data: {

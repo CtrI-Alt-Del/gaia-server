@@ -15,6 +15,7 @@ export class CountAlertsByLevelController {
   @Get('count')
   async handle() {
     const useCase = new CountAlertsByLevelUseCase(this.repository)
-    return await useCase.execute()
+    const result = await useCase.execute()
+    return result
   }
 }

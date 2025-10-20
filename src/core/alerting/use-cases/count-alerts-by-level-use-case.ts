@@ -8,7 +8,6 @@ export class CountAlertsByLevelUseCase {
       this.alertsRepository.countByLevel('WARNING'),
       this.alertsRepository.countByLevel('CRITICAL'),
     ])
-
     return {
       warningAlerts,
       criticalAlerts,

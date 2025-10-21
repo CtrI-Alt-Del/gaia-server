@@ -56,3 +56,6 @@ http-client.*
 
 # Gemini
 GEMINI.md
+
+# GPT Codex
+AGENTS.md

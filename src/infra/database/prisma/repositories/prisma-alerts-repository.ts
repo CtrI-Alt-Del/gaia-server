@@ -8,6 +8,7 @@ import { CursorPagination } from '@/core/global/domain/structures'
 
 import { PrismaRepository } from './prisma-repository'
 import { PrismaAlertMapper } from '../mappers'
+import { AlarmLevel } from '@/core/alerting/domain/structures'
 
 @Injectable()
 export class PrismaAlertsRepository extends PrismaRepository implements AlertsRepository {
@@ -102,5 +103,15 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
     }
 
     return PrismaAlertMapper.toEntity(prismaAlert)
+  }
+
+  async countByAlarmLevel(alertLevel: AlarmLevel): Promise<number> {
+    return await this.prisma.alert.count({
+      where: {
+        alarm: {
+          level: alertLevel.value,
+        },
+      },
+    })
   }
 }

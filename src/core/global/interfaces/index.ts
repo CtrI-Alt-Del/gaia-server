@@ -1,3 +1,6 @@
 export { UseCase } from './use-case'
+export { StationsRepository } from '../../telemetry/interfaces/stations-repository'
+export { ParametersRepository } from '../../telemetry/interfaces/parameters-repository'
+export { AlarmsRepository } from '../../alerting/interfaces/alarms-repository'
 export { Broker } from './broker'
 export { CacheProvider } from './cache-provider'

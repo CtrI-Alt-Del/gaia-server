@@ -115,4 +115,12 @@ export class PrismaStationsRepository
 
     return await prismaStations.map(PrismaStationMapper.toEntity)
   }
+
+  async countAll(): Promise<number> {
+    return await this.prisma.station.count()
+  }
+
+  async countActive(): Promise<number> {
+    return await this.prisma.station.count({ where: { isActive: true } })
+  }
 }

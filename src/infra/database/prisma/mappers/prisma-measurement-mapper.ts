@@ -14,7 +14,7 @@ export class PrismaMeasurementMapper {
       value: measurement.value.value,
       unitOfMeasure: measurement.unitOfMeasure.value,
       createdAt: measurement.createdAt.value,
-      stationParameterId: measurement.stationId.value as string,
+      stationParameterId: measurement.parameterId.value,
     }
   }
 

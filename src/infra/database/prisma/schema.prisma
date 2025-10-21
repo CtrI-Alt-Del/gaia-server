@@ -116,6 +116,7 @@ model Alert {
   measurementValue   Float    @map("measurement_value")
   alarmId            String   @map("alarm_id")
   stationParameterId String   @map("station_parameter_id")
+  isRead             Boolean  @default(false) @map("is_read")
   createdAt          DateTime @default(now()) @map("created_at")
 
   alarm            Alarm            @relation("alarm", fields: [alarmId], references: [id])

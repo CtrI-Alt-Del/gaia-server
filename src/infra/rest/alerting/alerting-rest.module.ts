@@ -8,6 +8,7 @@ import { ListAlarmsController } from './controllers/alarms/list-alarms.controlle
 import { ListAlertsController } from './controllers/alerts/list-alerts.controller'
 import { GetLastAlertsController } from './controllers/alerts/get-last-alerts.controller'
 import { CacheProviderModule } from '@/infra/provision/cache/cache.porvider.module'
+import { ReadAlertController } from './controllers/alerts/read-alert.controller'
 
 @Module({
   imports: [DatabaseModule, CacheProviderModule],
@@ -19,6 +20,7 @@ import { CacheProviderModule } from '@/infra/provision/cache/cache.porvider.modu
     UpdateAlarmController,
     ListAlertsController,
     GetLastAlertsController,
+    ReadAlertController,
   ],
 })
 export class AlertingRestModule {}

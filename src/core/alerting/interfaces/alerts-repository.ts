@@ -9,4 +9,5 @@ export interface AlertsRepository {
   findById(id: Id): Promise<Alert | null>
   findLast(): Promise<Alert[]>
   countByAlarmLevel(alertLevel: AlarmLevel): Promise<number>
+  replace(alert: Alert): Promise<void>
 }

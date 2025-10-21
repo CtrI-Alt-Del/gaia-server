@@ -9,6 +9,7 @@ export class AlertFaker {
 
   static fakeDto(baseDto?: Partial<AlertDto>): AlertDto {
     return {
+      id: faker.string.uuid(),
       level: faker.helpers.arrayElement(['WARNING', 'CRITICAL']),
       message: faker.lorem.sentence(),
       createdAt: faker.date.recent(),
@@ -16,6 +17,7 @@ export class AlertFaker {
       parameterName: faker.lorem.word(),
       parameterUnitOfMeasure: faker.lorem.word(),
       parameterStationName: faker.lorem.word(),
+      isRead: faker.datatype.boolean(),
       ...baseDto,
     }
   }

@@ -115,6 +115,7 @@ model Alert {
   id            String   @id @default(cuid())
   alarmId       String   @map("alarm_id")
   measurementId String   @map("measurement_id")
+  isRead        Boolean  @default(false) @map("is_read")
   createdAt     DateTime @default(now()) @map("created_at")
 
   alarm       Alarm   @relation("alarm", fields: [alarmId], references: [id])

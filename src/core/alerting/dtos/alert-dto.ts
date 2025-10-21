@@ -1,4 +1,5 @@
 export type AlertDto = {
+  id?: string
   message: string
   measurementValue: number
   parameterName: string

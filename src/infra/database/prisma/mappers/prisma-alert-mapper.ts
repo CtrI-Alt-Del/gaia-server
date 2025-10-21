@@ -1,10 +1,10 @@
-import { AlertDto } from '@/core/alerting/dtos/alert-dto'
 import { PrismaAlert } from '../types'
 import { Alert } from '@/core/alerting/domain/entities'
 
 export class PrismaAlertMapper {
   static toEntity(prismaAlert: PrismaAlert): Alert {
-    const alertDto: AlertDto = {
+    return Alert.create({
+      id: prismaAlert.id,
       message: prismaAlert.alarm.message,
       level: prismaAlert.alarm.level as 'WARNING' | 'CRITICAL',
       createdAt: prismaAlert.alarm.createdAt,
@@ -12,7 +12,7 @@ export class PrismaAlertMapper {
       parameterUnitOfMeasure: prismaAlert.alarm.StationParameter.parameter.unitOfMeasure,
       parameterStationName: prismaAlert.alarm.StationParameter.station.name,
       measurementValue: prismaAlert.measurement.value,
-    }
-    return Alert.create(alertDto)
+      isRead: prismaAlert.isRead,
+    })
   }
 }

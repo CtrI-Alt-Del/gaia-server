@@ -78,6 +78,7 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
   }
 
   async findById(id: Id): Promise<Alert | null> {
+    console.log(id.value)
     const prismaAlert = await this.prisma.alert.findUnique({
       where: { id: id.value },
       include: {
@@ -100,5 +101,14 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
     }
 
     return PrismaAlertMapper.toEntity(prismaAlert)
+  }
+
+  async replace(alert: Alert): Promise<void> {
+    await this.prisma.alert.update({
+      where: { id: alert.id.value },
+      data: {
+        isRead: alert.isRead.value,
+      },
+    })
   }
 }

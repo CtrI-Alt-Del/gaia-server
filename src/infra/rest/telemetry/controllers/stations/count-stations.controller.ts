@@ -15,7 +15,6 @@ export class CountStationsController {
 
   @Get('count')
   async handle() {
-    console.log('[CountStationsController] Chamado /count')
     const useCase = new CountStationsUseCase(this.repository)
     return await useCase.execute()
   }

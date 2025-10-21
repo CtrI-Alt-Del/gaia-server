@@ -12,7 +12,6 @@ export class GetStationDetailsController {
   ) {}
   @Get(':stationId')
   async execute(@Param('stationId') stationId: string) {
-    console.log('[GetStationDetailsController] Chamado com stationId:', stationId)
     const useCase = new GetStationDetailsUseCase(this.repository)
     return await useCase.execute({stationId})
   }

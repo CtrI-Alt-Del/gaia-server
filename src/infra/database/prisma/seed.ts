@@ -146,7 +146,7 @@ export async function seed() {
           message: alarm.message.value,
           value: alarm.rule.threshold.value,
           operation: alarm.rule.operation.toString() as $Enums.Operation,
-          level: alarm.level.toString(),
+          level: alarm.level.value,
           stationParameterId:
             stationsParameter[Math.floor(Math.random() * stationsParameter.length)].id,
           isActive: alarm.isActive.value,

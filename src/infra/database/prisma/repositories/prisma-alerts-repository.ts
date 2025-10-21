@@ -35,9 +35,7 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
   }: AlertListingParams): Promise<CursorPagination<Alert>> {
     const whereClause = {
       ...(date ? { createdAt: { equals: date.value } } : {}),
-      ...(level
-        ? { alarm: { level: { contains: level.value === 'all' ? '' : level.value } } }
-        : {}),
+      ...(level && level.value !== 'all' ? { alarm: { level: level.value } } : {}),
     }
 
     const query = this.createPaginationQuery(
@@ -62,8 +60,6 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
       pageSize,
     })
 
-    console.log(result)
-
     return result.map(PrismaAlertMapper.toEntity)
   }
 
@@ -85,7 +81,6 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
   }
 
   async findById(id: Id): Promise<Alert | null> {
-    console.log(id.value)
     const prismaAlert = await this.prisma.alert.findUnique({
       where: { id: id.value },
       include: {

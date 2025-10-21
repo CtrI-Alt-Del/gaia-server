@@ -29,13 +29,14 @@ export class GetLastAlertsController {
         await this.cacheProvider.set(CACHE.lastAlerts.key, lastAlerts)
       }
 
+      console.log({ lastAlerts })
       return lastAlerts
     }).pipe(
       repeat({
         delay: 1000,
       }),
       map((lastAlerts) => ({
-        type: 'last-alerts',
+        type: 'message',
         data: lastAlerts,
       })),
     )

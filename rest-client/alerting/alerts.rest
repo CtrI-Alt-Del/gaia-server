@@ -1,15 +1,18 @@
 @URL = {{BASE_URL}}/alerting/alerts
 @ALERT_ID = cmh0vaiwr04vrv2egfbir996j
 
-#### List alerts
+### List alerts
 GET {{URL}}
 ?pageSize=2
 &level=all
 
-#### Get last alerts
+### Get last alerts
 GET {{URL}}/last
 
-#### Read alert
+### Read alert
 PATCH {{URL}}/{{ALERT_ID}}
 Content-Type: application/json
 Authorization: Bearer {{JWT}}
+
+### Count alerts by level
+GET {{URL}}/count

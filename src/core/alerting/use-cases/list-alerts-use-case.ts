@@ -24,10 +24,11 @@ export class ListAlertsUseCase
         ? Id.create(params.previousCursor)
         : undefined,
       pageSize: PlusInteger.create(params.pageSize),
-      level: params.level ? Text.create(params.level) : undefined,
+      level: params.level
+        ? Text.create(params.level === 'all' ? params.level : params.level.toUpperCase())
+        : undefined,
       date: params.date ? Timestamp.createFromString(params.date) : undefined,
     })
-
     return pagination.map((alert) => alert.dto).dto
   }
 }

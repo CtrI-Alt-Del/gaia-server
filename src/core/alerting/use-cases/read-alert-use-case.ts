@@ -1,17 +1,22 @@
-import { AlertsRepository, UseCase } from '@/core/global/interfaces'
+import { AlertsRepository, CacheProvider, UseCase } from '@/core/global/interfaces'
 import { Id } from '@/core/global/domain/structures'
 
+import { CACHE } from '@/infra/constants'
 import { AlertDto } from '../dtos/alert-dto'
 import { AlertNotFoundError } from '../domain/errors'
 import { Alert } from '../domain/entities'
 
 export class ReadAlertUseCase implements UseCase<string, AlertDto> {
-  constructor(private readonly repository: AlertsRepository) {}
+  constructor(
+    private readonly repository: AlertsRepository,
+    private readonly cacheProvider: CacheProvider,
+  ) {}
 
   async execute(alertId: string): Promise<AlertDto> {
     const alert = await this.findAlert(Id.create(alertId))
     alert.read()
     await this.repository.replace(alert)
+    await this.cacheProvider.clear(CACHE.lastAlerts.key)
     return alert.dto
   }
 

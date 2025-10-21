@@ -25,7 +25,9 @@ export class ListAlarmsUseCase
         : undefined,
       pageSize: PlusInteger.create(params.pageSize),
       status: Status.create(params.status),
-      level: params.level ? Text.create(params.level) : undefined,
+      level: params.level
+        ? Text.create(params.level === 'all' ? params.level : params.level.toUpperCase())
+        : undefined,
     })
 
     return pagination.map((alarm) => alarm.dto).dto

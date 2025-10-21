@@ -10,7 +10,10 @@ import { StationsListingParams } from '@/core/global/types/stations-list-params'
 import { StationFourCoordsParams } from '@/core/global/types/station-four-coords-params'
 
 @Injectable()
-export class PrismaStationsRepository extends PrismaRepository implements StationsRepository {
+export class PrismaStationsRepository
+  extends PrismaRepository
+  implements StationsRepository
+{
   async add(station: Station, parametersIds: Id[]): Promise<void> {
     const prismaStation = PrismaStationMapper.toPrisma(station, parametersIds)
     await this.prisma.station.create({ data: prismaStation })
@@ -100,24 +103,24 @@ export class PrismaStationsRepository extends PrismaRepository implements Statio
 
   async findManyByFourCoords(coords: StationFourCoordsParams): Promise<Station[]> {
     const prismaStations = await this.prisma.station.findMany({
-      where:{
+      where: {
         AND: [
-          {latitude: {lt: Math.max(coords.lat1, coords.lat2)}},
-          {latitude: {gt: Math.min(coords.lat1, coords.lat2)}},
-          {longitude: {lt: Math.max(coords.long1, coords.long2)}},
-          {longitude: {gt: Math.min(coords.long1, coords.long2)}},
-        ]
-      }
+          { latitude: { lt: Math.max(coords.lat1, coords.lat2) } },
+          { latitude: { gt: Math.min(coords.lat1, coords.lat2) } },
+          { longitude: { lt: Math.max(coords.long1, coords.long2) } },
+          { longitude: { gt: Math.min(coords.long1, coords.long2) } },
+        ],
+      },
     })
 
     return await prismaStations.map(PrismaStationMapper.toEntity)
   }
 
   async countAll(): Promise<number> {
-    return await this.prisma.station.count();
+    return await this.prisma.station.count()
   }
 
   async countActive(): Promise<number> {
-  return await this.prisma.station.count({ where: { isActive: true } });
+    return await this.prisma.station.count({ where: { isActive: true } })
   }
 }

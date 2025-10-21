@@ -10,4 +10,6 @@ export interface StationsRepository {
   findMany(params: StationsListingParams): Promise<CursorPagination<Station>>
   replace(station: Station, parametersIds: Id[]): Promise<void>
   findManyByFourCoords(coords: StationFourCoordsParams): Promise<Station[]>
+  countAll(): Promise<number>
+  countActive(): Promise<number>
 }

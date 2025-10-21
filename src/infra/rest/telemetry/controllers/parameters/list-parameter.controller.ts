@@ -1,7 +1,7 @@
 import { Get, Inject, Query, UsePipes } from '@nestjs/common'
 import { createZodDto, ZodValidationPipe } from 'nestjs-zod'
 
-import { ParametersRepository } from '@/core/global/interfaces'
+import { ParametersRepository } from '@/core/telemetry/interfaces'
 
 import { DatabaseModule } from '@/infra/database/database.module'
 import { ParametersController } from '@/infra/rest/telemetry/controllers/parameters/parameters.controller'

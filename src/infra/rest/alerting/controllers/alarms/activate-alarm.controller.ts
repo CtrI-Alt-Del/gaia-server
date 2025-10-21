@@ -1,7 +1,7 @@
 import { Inject, Param, Patch } from '@nestjs/common'
 import { AlarmsController } from './alarms.controller'
 import { DatabaseModule } from '@/infra/database/database.module'
-import { AlarmsRepository } from '@/core/global/interfaces'
+import { AlarmsRepository } from '@/core/alerting/interfaces'
 import { ActivateAlarmUseCase } from '@/core/alerting/use-cases/activate-alarms-use-case'
 
 @AlarmsController(':alarmId')

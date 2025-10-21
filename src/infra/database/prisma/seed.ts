@@ -120,7 +120,7 @@ export async function seed() {
       const measurementData = {
         id: measurement.id.value,
         value: measurement.value.value,
-        unit_of_measure: parameters.find(
+        unitOfMeasure: parameters.find(
           (p) => p.id.value === randomStationParameter.parameterId,
         )?.unitOfMeasure.value as string,
         createdAt: measurement.createdAt.value,
@@ -146,7 +146,7 @@ export async function seed() {
           message: alarm.message.value,
           value: alarm.rule.threshold.value,
           operation: alarm.rule.operation.toString() as $Enums.Operation,
-          level: alarm.level.toString(),
+          level: alarm.level.value,
           stationParameterId:
             stationsParameter[Math.floor(Math.random() * stationsParameter.length)].id,
           isActive: alarm.isActive.value,
@@ -169,7 +169,8 @@ export async function seed() {
       await prisma.alert.create({
         data: {
           alarmId: randomAlarm.id,
-          measurementId: randomMeasure.id,
+          measurementValue: randomMeasure.value,
+          stationParameterId: randomMeasure.stationParameterId,
         },
       })
     }

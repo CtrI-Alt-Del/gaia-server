@@ -4,18 +4,18 @@ import { UsersRepository } from '@/core/membership/interfaces'
 import { CreateUserUseCase } from '../create-user-use-case'
 import { UsersFaker } from '../../domain/entities/fakers'
 import { EmailAlreadyInUseError, OwnerCreationNotAllowed } from '../../domain/errors'
-import { EventBroker } from '@/core/global/interfaces'
+import { Broker } from '@/core/global/interfaces'
 import { UserCreatedEvent } from '../../domain/events'
 
 describe('Create User Use Case', () => {
   let repository: MockProxy<UsersRepository>
-  let eventBroker: MockProxy<EventBroker>
+  let broker: MockProxy<Broker>
   let useCase: CreateUserUseCase
 
   beforeEach(() => {
     repository = mock<UsersRepository>()
-    eventBroker = mock<EventBroker>()
-    useCase = new CreateUserUseCase(repository, eventBroker)
+    broker = mock<Broker>()
+    useCase = new CreateUserUseCase(repository, broker)
   })
 
   it('should throw an error if the user to be created is an owner', async () => {
@@ -65,7 +65,7 @@ describe('Create User Use Case', () => {
       userEmail: user.email.value,
     })
 
-    expect(eventBroker.publish).toHaveBeenCalledWith(event)
+    expect(broker.publish).toHaveBeenCalledWith(event)
   })
 
   it('should not publish event when user creation fails due to owner role', async () => {
@@ -74,7 +74,7 @@ describe('Create User Use Case', () => {
 
     await expect(useCase.execute(request)).rejects.toThrow(OwnerCreationNotAllowed)
 
-    expect(eventBroker.publish).not.toHaveBeenCalled()
+    expect(broker.publish).not.toHaveBeenCalled()
   })
 
   it('should not publish event when user creation fails due to email already in use', async () => {
@@ -84,6 +84,6 @@ describe('Create User Use Case', () => {
 
     await expect(useCase.execute(request)).rejects.toThrow(EmailAlreadyInUseError)
 
-    expect(eventBroker.publish).not.toHaveBeenCalled()
+    expect(broker.publish).not.toHaveBeenCalled()
   })
 })

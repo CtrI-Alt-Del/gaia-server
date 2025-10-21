@@ -1,7 +1,7 @@
 import { Id, PlusInteger, Status, Text } from '@/core/global/domain/structures'
 import { CursorPaginationDto } from '@/core/global/domain/structures/dtos'
 import type { UseCase } from '@/core/global/interfaces'
-import type { ParametersRepository } from '@/core/global/interfaces'
+import { ParametersRepository } from '../interfaces/parameters-repository'
 import { ParameterDto } from '@/core/telemetry/domain/dtos/parameter-dto'
 
 type Request = {
@@ -13,8 +13,9 @@ type Request = {
 }
 
 export class ListParametersUseCase
-  implements UseCase<Request, CursorPaginationDto<ParameterDto>> {
-  constructor(private readonly repository: ParametersRepository) { }
+  implements UseCase<Request, CursorPaginationDto<ParameterDto>>
+{
+  constructor(private readonly repository: ParametersRepository) {}
 
   async execute(params: Request): Promise<CursorPaginationDto<ParameterDto>> {
     const pagination = await this.repository.findMany({

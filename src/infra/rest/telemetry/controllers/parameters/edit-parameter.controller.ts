@@ -1,7 +1,7 @@
 import { Body, Inject, Param, Put } from '@nestjs/common'
 import { createZodDto, ZodValidationPipe } from 'nestjs-zod'
 
-import type { ParametersRepository } from '@/core/global/interfaces'
+import { ParametersRepository } from '@/core/telemetry/interfaces'
 import { UpdateParameterUseCase } from '@/core/telemetry/use-cases'
 
 import { DatabaseModule } from '@/infra/database/database.module'

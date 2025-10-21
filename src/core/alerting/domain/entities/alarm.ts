@@ -3,7 +3,7 @@ import { Logical, Text, Timestamp } from '@/core/global/domain/structures'
 import { AlarmDto } from '../../dtos/alarm.dto'
 import { AlarmLevel } from '../structures/alarm-level'
 import { AlertRule } from '../structures/alert-rule'
-import { ParameterAggregate } from '../../aggregate/parameter-aggregate'
+import { ParameterAggregate } from '../aggregates/parameter-aggregate'
 
 type AlarmProps = {
   message: Text

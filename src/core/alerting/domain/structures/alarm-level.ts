@@ -4,7 +4,8 @@ import { Logical, Text } from '@/core/global/domain/structures'
 export type type = 'WARNING' | 'CRITICAL'
 
 export class AlarmLevel {
-  private value: type
+  value: type
+
   private constructor(value: type) {
     this.value = value
   }

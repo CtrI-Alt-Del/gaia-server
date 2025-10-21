@@ -1,5 +1,6 @@
 import { CursorPaginationDto } from '@/core/global/domain/structures/dtos'
-import { AlertsRepository, UseCase } from '@/core/global/interfaces'
+import { AlertsRepository } from '../interfaces/alerts-repository'
+import { UseCase } from '@/core/global/interfaces'
 import { Id, PlusInteger, Text, Timestamp } from '@/core/global/domain/structures'
 import { AlertDto } from '../dtos/alert-dto'
 
@@ -23,10 +24,11 @@ export class ListAlertsUseCase
         ? Id.create(params.previousCursor)
         : undefined,
       pageSize: PlusInteger.create(params.pageSize),
-      level: params.level ? Text.create(params.level) : undefined,
+      level: params.level
+        ? Text.create(params.level === 'all' ? params.level : params.level.toUpperCase())
+        : undefined,
       date: params.date ? Timestamp.createFromString(params.date) : undefined,
     })
-
     return pagination.map((alert) => alert.dto).dto
   }
 }

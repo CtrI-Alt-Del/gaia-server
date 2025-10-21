@@ -48,27 +48,27 @@ export class Operation {
     return new Operation('EQUAL')
   }
 
-  public isTypeGreaterThan(): Logical {
+  get isTypeGreaterThan(): Logical {
     return Logical.create(this.value === 'GREATER_THAN')
   }
 
-  public isTypeLessThan(): Logical {
+  get isTypeLessThan(): Logical {
     return Logical.create(this.value === 'LESS_THAN')
   }
 
-  public isTypeGreaterThanOrEqual(): Logical {
+  get isTypeGreaterThanOrEqual(): Logical {
     return Logical.create(this.value === 'GREATER_THAN_OR_EQUAL')
   }
 
-  public isTypeLessThanOrEqual(): Logical {
+  get isTypeLessThanOrEqual(): Logical {
     return Logical.create(this.value === 'LESS_THAN_OR_EQUAL')
   }
 
-  public isTypeEqual(): Logical {
+  get isTypeEqual(): Logical {
     return Logical.create(this.value === 'EQUAL')
   }
 
-  public toString(): string {
+  toString(): string {
     return this.value.toString().toLocaleUpperCase()
   }
 }

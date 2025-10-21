@@ -1,5 +1,6 @@
 import { Id } from '@/core/global/domain/structures'
-import { StationsRepository, UseCase } from '@/core/global/interfaces'
+import { StationsRepository } from '../interfaces/stations-repository'
+import { UseCase } from '@/core/global/interfaces'
 import { Station } from '@/core/telemetry/domain/entities/station'
 import { StationAlreadyDeactivatedError } from '@/core/telemetry/domain/errors/station-already-deactivated-error'
 import { StationNotFoundError } from '@/core/telemetry/domain/errors/station-not-found-error'

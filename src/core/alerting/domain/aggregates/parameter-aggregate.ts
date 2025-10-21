@@ -1,6 +1,6 @@
 import { Aggregate } from '@/core/global/domain/abstracts/aggregate'
 import { Text } from '@/core/global/domain/structures'
-import { ParameterAggregateDto } from '../dtos/parameter-aggregate-dto'
+import { ParameterAggregateDto } from '../../dtos/parameter-aggregate-dto'
 
 type ParameterAggregateEntity = {
   name: Text

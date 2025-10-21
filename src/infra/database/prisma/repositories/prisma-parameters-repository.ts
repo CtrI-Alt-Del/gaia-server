@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 
-import type { ParametersRepository } from '@/core/global/interfaces'
+import { ParametersRepository } from '@/core/telemetry/interfaces'
 import { CursorPagination, Id } from '@/core/global/domain/structures'
 import { PrismaParameterMapper } from '@/infra/database/prisma/mappers'
 import { ParametersListParams } from '@/core/global/types'
@@ -10,7 +10,8 @@ import { Parameter } from '@/core/telemetry/domain/entities/parameter'
 @Injectable()
 export class PrismaParametersRepository
   extends PrismaRepository
-  implements ParametersRepository {
+  implements ParametersRepository
+{
   async add(parameter: Parameter): Promise<void> {
     const prismaParameter = PrismaParameterMapper.toPrisma(parameter)
     await this.prisma.parameter.create({ data: prismaParameter })
@@ -86,9 +87,9 @@ export class PrismaParametersRepository
       where: {
         stationParameter: {
           some: {
-            stationId: stationId.value
-          }
-        }
+            stationId: stationId.value,
+          },
+        },
       },
     })
     return prismaParameters.map(PrismaParameterMapper.toEntity)

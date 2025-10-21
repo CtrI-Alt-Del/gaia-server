@@ -3,4 +3,5 @@ export { StationsRepository } from '../../telemetry/interfaces/stations-reposito
 export { ParametersRepository } from '../../telemetry/interfaces/parameters-repository'
 export { AlarmsRepository } from '../../alerting/interfaces/alarms-repository'
 export { AlertsRepository } from '../../alerting/interfaces/alerts-repository'
-export { EventBroker } from './event-broker'
+export { Broker } from './broker'
+export { CacheProvider } from './cache-provider'

@@ -1,6 +1,7 @@
 import { Id, PlusInteger, Status, Text } from '@/core/global/domain/structures'
 import { CursorPaginationDto } from '@/core/global/domain/structures/dtos'
-import type { StationsRepository, UseCase } from '@/core/global/interfaces'
+import { StationsRepository } from '../interfaces/stations-repository'
+import { UseCase } from '@/core/global/interfaces'
 import { StationDto } from '../domain/dtos/station-dto'
 
 type Request = {

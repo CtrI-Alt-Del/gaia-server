@@ -1,5 +1,5 @@
 import { Text } from '@/core/global/domain/structures'
-import { EventBroker, UseCase } from '@/core/global/interfaces'
+import { Broker, UseCase } from '@/core/global/interfaces'
 import { UsersRepository } from '@/core/membership/interfaces'
 import { UserDto } from '../domain/entities/dtos'
 import { User } from '../domain/entities/user'
@@ -9,7 +9,7 @@ import { UserCreatedEvent } from '../domain/events'
 export class CreateUserUseCase implements UseCase<UserDto, UserDto> {
   constructor(
     private readonly repository: UsersRepository,
-    private readonly eventBroker: EventBroker,
+    private readonly broker: Broker,
   ) {}
 
   async execute(userDto: UserDto): Promise<UserDto> {
@@ -27,7 +27,7 @@ export class CreateUserUseCase implements UseCase<UserDto, UserDto> {
       userId: user.id.value,
       userEmail: user.email.value,
     })
-    await this.eventBroker.publish(event)
+    await this.broker.publish(event)
 
     return user.dto
   }

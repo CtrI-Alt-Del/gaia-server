@@ -1,5 +1,5 @@
 import type { UseCase } from '@/core/global/interfaces'
-import type { ParametersRepository } from '@/core/global/interfaces'
+import { ParametersRepository } from '../interfaces/parameters-repository'
 import { ParameterDto } from '@/core/telemetry/domain/dtos/parameter-dto'
 import { Parameter } from '@/core/telemetry/domain/entities/parameter'
 

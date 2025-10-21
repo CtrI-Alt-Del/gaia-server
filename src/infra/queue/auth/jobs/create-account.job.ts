@@ -1,5 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { OnEvent } from '@nestjs/event-emitter'
 
 import { AuthProvider } from '@/core/auth/interfaces'
 import { EventPayload } from '@/core/global/domain/types/event-payload'
@@ -15,7 +14,6 @@ export class CreateAccountJob {
     private readonly authProvider: AuthProvider,
   ) {}
 
-  @OnEvent(UserCreatedEvent._NAME)
   async handle(payload: Payload) {
     await this.authProvider.createAccount(payload.userId, payload.userEmail)
   }

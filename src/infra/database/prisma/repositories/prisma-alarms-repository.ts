@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 
-import type { AlarmsRepository } from '@/core/global/interfaces'
+import { AlarmsRepository } from '@/core/alerting/interfaces'
 
 import { Id } from '@/core/global/domain/structures'
 import { Alarm } from '@/core/alerting/domain/entities/alarm'
@@ -12,14 +12,6 @@ import { PrismaAlarmMapper } from '../mappers'
 
 @Injectable()
 export class PrismaAlarmsRepository extends PrismaRepository implements AlarmsRepository {
-  async countByLevel(level: 'warning' | 'critical'): Promise<number> {
-    return await this.prisma.alarm.count({
-      where: {
-        level: level.toUpperCase(),
-        isActive: true,
-      },
-    });
-  }
   async add(alarm: Alarm): Promise<void> {
     const prismaAlarm = PrismaAlarmMapper.toPrisma(alarm)
     await this.prisma.alarm.create({ data: prismaAlarm })
@@ -34,7 +26,7 @@ export class PrismaAlarmsRepository extends PrismaRepository implements AlarmsRe
   }: AlarmListingParams): Promise<CursorPagination<Alarm>> {
     const whereClause = {
       ...(status?.isAll.isTrue ? {} : { isActive: status?.isActive.isTrue }),
-      ...(level ? { level: { contains: level.value === 'all' ? '' : level.value } } : {}),
+      ...(level && level.value !== 'all' ? { level: level.value } : {}),
     }
 
     const query = this.createPaginationQuery(
@@ -59,6 +51,21 @@ export class PrismaAlarmsRepository extends PrismaRepository implements AlarmsRe
     })
 
     return result.map(PrismaAlarmMapper.toEntity)
+  }
+
+  async findAllByStationParameter(stationParameterId: Id): Promise<Alarm[]> {
+    const prismaAlarms = await this.prisma.alarm.findMany({
+      where: { stationParameterId: stationParameterId.value },
+      include: {
+        StationParameter: {
+          include: {
+            station: true,
+            parameter: true,
+          },
+        },
+      },
+    })
+    return prismaAlarms.map(PrismaAlarmMapper.toEntity)
   }
 
   async findById(id: Id): Promise<Alarm | null> {

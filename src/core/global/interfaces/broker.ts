@@ -1,5 +1,5 @@
 import { Event } from '../domain/abstracts'
 
-export interface EventBroker {
+export interface Broker {
   publish(event: Event): Promise<void>
 }

@@ -1,4 +1,5 @@
-import { AlarmsRepository, UseCase } from '@/core/global/interfaces'
+import { AlarmsRepository } from '../interfaces/alarms-repository'
+import { UseCase } from '@/core/global/interfaces'
 import { AlarmDto } from '../dtos/alarm.dto'
 import { Id } from '@/core/global/domain/structures'
 import { Alarm } from '../domain/entities/alarm'

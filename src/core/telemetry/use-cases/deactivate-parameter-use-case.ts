@@ -1,5 +1,6 @@
 import { Id } from '@/core/global/domain/structures'
-import { ParametersRepository, UseCase } from '@/core/global/interfaces'
+import { ParametersRepository } from '../interfaces/parameters-repository'
+import { UseCase } from '@/core/global/interfaces'
 import { Parameter } from '@/core/telemetry/domain/entities/parameter'
 import { ParameterAlreadyDeactivatedError } from '@/core/telemetry/domain/errors/parameter-already-deactivated-error'
 import { ParameterNotFoundError } from '@/core/telemetry/domain/errors/parameter-not-found-error'

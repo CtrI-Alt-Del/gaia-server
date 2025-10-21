@@ -1,6 +1,6 @@
 import { Delete, Inject, Param } from '@nestjs/common'
 
-import { StationsRepository } from '@/core/global/interfaces'
+import { StationsRepository } from '@/core/telemetry/interfaces'
 
 import { DatabaseModule } from '@/infra/database/database.module'
 import { StationsController } from '@/infra/rest/telemetry/controllers/stations/stations.controller'

@@ -1,11 +1,11 @@
-import { numberSchema } from "@/infra/validation/schemas/zod/global"
-import { createZodDto, ZodValidationPipe } from "nestjs-zod"
-import z from "zod"
-import { StationsController } from "./stations.controller"
-import { Get, Inject, Query, UsePipes } from "@nestjs/common"
-import { DatabaseModule } from "@/infra/database/database.module"
-import { StationsRepository } from "@/core/global/interfaces"
-import { ListStationsByCoordsUseCase } from "@/core/telemetry/use-cases/"
+import { numberSchema } from '@/infra/validation/schemas/zod/global'
+import { createZodDto, ZodValidationPipe } from 'nestjs-zod'
+import z from 'zod'
+import { StationsController } from './stations.controller'
+import { Get, Inject, Query, UsePipes } from '@nestjs/common'
+import { DatabaseModule } from '@/infra/database/database.module'
+import { StationsRepository } from '@/core/telemetry/interfaces'
+import { ListStationsByCoordsUseCase } from '@/core/telemetry/use-cases/'
 
 const coordSchema = z.object({
   lat1: numberSchema,
@@ -16,7 +16,7 @@ const coordSchema = z.object({
 
 class ListStationsByCoordsControllerRequestQuery extends createZodDto(coordSchema) {}
 
-@StationsController("box/coords")
+@StationsController('box/coords')
 export class ListStationsByCoordsController {
   constructor(
     @Inject(DatabaseModule.STATIONS_REPOSITORY)

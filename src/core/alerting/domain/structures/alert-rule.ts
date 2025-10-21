@@ -1,6 +1,7 @@
 import { Operation } from './operation'
 import { AlarmRuleDto } from '../../dtos/alarm-rule.dto'
 import { Integer } from '@/core/global/domain/structures/integer'
+import { Logical, Numeric } from '@/core/global/domain/structures'
 
 type Type = { threshold: number; operation: string }
 
@@ -15,6 +16,25 @@ export class AlertRule {
 
   static create(rule: Type) {
     return new AlertRule(rule)
+  }
+
+  apply(value: Numeric): Logical {
+    if (this.operation.isTypeGreaterThan.isTrue) {
+      return value.isGreaterThan(this.threshold.numeric)
+    }
+    if (this.operation.isTypeLessThan.isTrue) {
+      return value.isLessThan(this.threshold.numeric)
+    }
+    if (this.operation.isTypeGreaterThanOrEqual.isTrue) {
+      return value.isGreaterThanOrEqual(this.threshold.numeric)
+    }
+    if (this.operation.isTypeLessThanOrEqual.isTrue) {
+      return value.isLessThanOrEqual(this.threshold.numeric)
+    }
+    if (this.operation.isTypeEqual.isTrue) {
+      return value.isEqual(this.threshold.numeric)
+    }
+    return Logical.createAsFalse()
   }
 
   get dto(): AlarmRuleDto {

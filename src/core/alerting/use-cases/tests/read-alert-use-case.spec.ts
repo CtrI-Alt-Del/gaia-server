@@ -1,19 +1,24 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { mock, MockProxy } from 'vitest-mock-extended'
 
+import { Id } from '@/core/global/domain/structures'
+import { CacheProvider } from '@/core/global/interfaces'
 import { ReadAlertUseCase } from '../read-alert-use-case'
 import { AlertsRepository } from '../../interfaces/alerts-repository'
 import { AlertFaker } from '../../domain/entities/fakers/alerts-faker'
 import { AlertNotFoundError } from '../../domain/errors/alert-not-found-error'
-import { Id } from '@/core/global/domain/structures'
+
+import { CACHE } from '@/infra/constants'
 
 describe('Read Alert Use Case', () => {
   let repository: MockProxy<AlertsRepository>
+  let cacheProvider: MockProxy<CacheProvider>
   let useCase: ReadAlertUseCase
 
   beforeEach(() => {
     repository = mock<AlertsRepository>()
-    useCase = new ReadAlertUseCase(repository)
+    cacheProvider = mock<CacheProvider>()
+    useCase = new ReadAlertUseCase(repository, cacheProvider)
   })
 
   it('should mark the alert as read and replace it in the repository', async () => {
@@ -28,6 +33,7 @@ describe('Read Alert Use Case', () => {
 
     expect(alert.isRead.isTrue).toBe(true)
     expect(repository.replace).toHaveBeenCalledWith(alert)
+    expect(cacheProvider.clear).toHaveBeenCalledWith(CACHE.lastAlerts.key)
     expect(result).toEqual(alert.dto)
   })
 

@@ -71,6 +71,7 @@ export class Alert extends Entity<AlertProps> {
   }
 
   get dto(): AlertDto {
+    console.log(this.id.value)
     return {
       id: this.id.value,
       message: this.message.value,

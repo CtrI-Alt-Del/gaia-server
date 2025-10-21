@@ -15,7 +15,7 @@ export class PrismaAlarmMapper {
       message: alarm.message.value,
       value: alarm.rule.threshold.value,
       operation: alarm.rule.operation.toString() as $Enums.Operation,
-      level: alarm.level.toString(),
+      level: alarm.level.value,
       stationParameterId: alarm.parameter.id.value,
       isActive: alarm.isActive.value,
       createdAt: alarm.createdAt.value,

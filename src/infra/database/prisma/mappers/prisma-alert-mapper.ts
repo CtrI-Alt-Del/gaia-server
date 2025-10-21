@@ -8,10 +8,10 @@ export class PrismaAlertMapper {
       message: prismaAlert.alarm.message,
       level: prismaAlert.alarm.level as 'WARNING' | 'CRITICAL',
       createdAt: prismaAlert.alarm.createdAt,
-      parameterName: prismaAlert.alarm.StationParameter.parameter.name,
-      parameterUnitOfMeasure: prismaAlert.alarm.StationParameter.parameter.unitOfMeasure,
-      parameterStationName: prismaAlert.alarm.StationParameter.station.name,
-      measurementValue: prismaAlert.measurement.value,
+      parameterName: prismaAlert.stationParameter.parameter.name,
+      parameterUnitOfMeasure: prismaAlert.stationParameter.parameter.unitOfMeasure,
+      parameterStationName: prismaAlert.stationParameter.station.name,
+      measurementValue: prismaAlert.measurementValue,
       isRead: prismaAlert.isRead,
     })
   }

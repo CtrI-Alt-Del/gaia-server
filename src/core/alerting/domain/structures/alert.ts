@@ -1,4 +1,4 @@
-import { Numeric, Text } from '@/core/global/domain/structures'
+import { Logical, Numeric, Text } from '@/core/global/domain/structures'
 import { Timestamp } from '@/core/global/domain/structures'
 import { AlertDto } from '../../dtos/alert-dto'
 import { AlarmLevel } from './alarm-level'
@@ -12,6 +12,7 @@ export class Alert {
     readonly measurementValue: Numeric,
     readonly level: AlarmLevel,
     readonly createdAt: Timestamp,
+    readonly isRead: Logical,
   ) {}
 
   static create(dto: AlertDto): Alert {
@@ -23,6 +24,7 @@ export class Alert {
       Numeric.create(dto.measurementValue),
       AlarmLevel.create(dto.level),
       Timestamp.create(dto.createdAt),
+      Logical.create(dto.isRead),
     )
   }
 
@@ -33,6 +35,7 @@ export class Alert {
       parameterUnitOfMeasure: this.parameterUnitOfMeasure.value,
       parameterStationName: this.parameterStationName.value,
       measurementValue: this.measurementValue.value,
+      isRead: this.isRead.value,
       level: this.level.toString(),
       createdAt: this.createdAt.value,
     }

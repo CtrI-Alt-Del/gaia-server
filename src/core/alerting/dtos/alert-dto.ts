@@ -5,5 +5,6 @@ export type AlertDto = {
   parameterUnitOfMeasure: string
   parameterStationName: string
   level: string
+  isRead: boolean
   createdAt: Date
 }

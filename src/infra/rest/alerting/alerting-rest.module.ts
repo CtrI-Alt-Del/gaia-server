@@ -9,7 +9,6 @@ import { UpdateAlarmController } from './controllers/alarms/update-alarm.control
 import { ListAlarmsController } from './controllers/alarms/list-alarms.controller'
 import { ListAlertsController } from './controllers/alerts/list-alerts.controller'
 import { GetLastAlertsController } from './controllers/alerts/get-last-alerts.controller'
-import { ReadAlertController } from './controllers/alerts/read-alert.controller'
 import { CountAlertsByLevelController } from './controllers/alerts/count-alerts-by-level.controller'
 import { ReadAlertController } from './controllers/alerts/read-alert.controller'
 

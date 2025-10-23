@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { Prisma as PrismaClient } from '../client'
+import { Prisma as PrismaClient } from '../prisma'
 import { CursorPagination, Id, PlusInteger } from '@/core/global/domain/structures'
 import { CursorPaginationParams } from '@/core/global/domain/types/cursor-pagination-params'
 import { AppError } from '@/core/global/domain/errors'

@@ -12,9 +12,9 @@ export class PrismaMeasurementMapper {
     return {
       id: measurement.id.value,
       value: measurement.value.value,
-      unit_of_measure: measurement.unitOfMeasure.value,
+      unitOfMeasure: measurement.unitOfMeasure.value,
       createdAt: measurement.createdAt.value,
-      stationParameterId: measurement.stationId.value as string,
+      stationParameterId: measurement.parameterId.value,
     }
   }
 
@@ -22,7 +22,7 @@ export class PrismaMeasurementMapper {
     return {
       id: measurement.id,
       value: measurement.value,
-      unitOfMeasure: measurement.unit_of_measure,
+      unitOfMeasure: measurement.unitOfMeasure,
       createdAt: measurement.createdAt ? (measurement.createdAt as Date) : new Date(),
       stationId: measurement.stationParameter.station.id,
       parameterId: measurement.stationParameter.parameter.id,

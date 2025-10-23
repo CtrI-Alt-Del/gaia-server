@@ -1,11 +1,13 @@
-import { CursorPagination, Id } from '@/core/global/domain/structures'
+import { CursorPagination, Id, Numeric } from '@/core/global/domain/structures'
 import { AlertListingParams } from '@/core/global/types/'
 import { Alert } from '../domain/entities'
+import { AlarmLevel } from '../domain/structures'
 
 export interface AlertsRepository {
-  add(alarmId: Id, measurementId: Id): Promise<void>
+  add(alarmId: Id, stationParameterId: Id, measurementValue: Numeric): Promise<void>
   findMany(params: AlertListingParams): Promise<CursorPagination<Alert>>
   findById(id: Id): Promise<Alert | null>
-  countByLevel(level: 'WARNING' | 'CRITICAL'): Promise<number>
-  countByTimePeriod(timePeriod: 'YEAR' | 'WEEK'): Promise<{count: number, time: string}>
+  findLast(): Promise<Alert[]>
+  countByAlarmLevel(alertLevel: AlarmLevel): Promise<number>
+  replace(alert: Alert): Promise<void>
 }

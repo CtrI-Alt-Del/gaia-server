@@ -1,6 +1,6 @@
 import { Inject, Param, Patch } from '@nestjs/common'
 
-import { StationsRepository } from '@/core/global/interfaces'
+import { StationsRepository } from '@/core/telemetry/interfaces'
 
 import { DatabaseModule } from '@/infra/database/database.module'
 import { ActivateStationUseCase } from '@/core/telemetry/use-cases'

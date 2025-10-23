@@ -1,5 +1,6 @@
 import { CursorPaginationDto } from '@/core/global/domain/structures/dtos'
-import { AlarmsRepository, UseCase } from '@/core/global/interfaces'
+import { AlarmsRepository } from '@/core/alerting/interfaces'
+import { UseCase } from '@/core/global/interfaces'
 import { AlarmDto } from '../dtos/alarm.dto'
 import { Id, PlusInteger, Status, Text } from '@/core/global/domain/structures'
 
@@ -24,7 +25,9 @@ export class ListAlarmsUseCase
         : undefined,
       pageSize: PlusInteger.create(params.pageSize),
       status: Status.create(params.status),
-      level: params.level ? Text.create(params.level) : undefined,
+      level: params.level
+        ? Text.create(params.level === 'all' ? params.level : params.level.toUpperCase())
+        : undefined,
     })
 
     return pagination.map((alarm) => alarm.dto).dto

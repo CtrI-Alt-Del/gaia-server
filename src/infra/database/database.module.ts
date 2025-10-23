@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 
-import { Prisma } from './prisma/client'
+import { Prisma } from './prisma/prisma'
 import {
   PrismaAlarmsRepository,
   PrismaParametersRepository,

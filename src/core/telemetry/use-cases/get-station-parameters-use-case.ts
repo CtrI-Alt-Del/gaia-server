@@ -1,9 +1,7 @@
 import { Id } from '@/core/global/domain/structures'
-import {
-  ParametersRepository,
-  StationsRepository,
-  UseCase,
-} from '@/core/global/interfaces'
+import { ParametersRepository } from '../interfaces/parameters-repository'
+import { StationsRepository } from '../interfaces/stations-repository'
+import { UseCase } from '@/core/global/interfaces'
 import { ParameterDto } from '@/core/telemetry/domain/dtos/parameter-dto'
 import { Station } from '@/core/telemetry/domain/entities/station'
 import { StationNotFoundError } from '@/core/telemetry/domain/errors/station-not-found-error'

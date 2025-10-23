@@ -1,4 +1,4 @@
-import { StationsRepository } from '@/core/global/interfaces'
+import { StationsRepository } from '@/core/telemetry/interfaces'
 import { GetStationDetailsUseCase } from '@/core/telemetry/use-cases'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { StationsController } from '@/infra/rest/telemetry/controllers/stations/stations.controller'
@@ -13,6 +13,6 @@ export class GetStationDetailsController {
   @Get(':stationId')
   async execute(@Param('stationId') stationId: string) {
     const useCase = new GetStationDetailsUseCase(this.repository)
-    return await useCase.execute({stationId})
+    return await useCase.execute({ stationId })
   }
 }

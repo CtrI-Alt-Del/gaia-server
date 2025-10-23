@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 
-import type { StationsRepository } from '@/core/global/interfaces'
+import { StationsRepository } from '@/core/telemetry/interfaces'
 
 import { PrismaRepository } from './prisma-repository'
 import { CursorPagination, Id } from '@/core/global/domain/structures'

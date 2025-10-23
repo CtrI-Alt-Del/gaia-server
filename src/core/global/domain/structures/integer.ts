@@ -1,4 +1,5 @@
 import { Logical } from '@/core/global/domain/structures/logical'
+import { Numeric } from './numeric'
 
 export class Integer {
   readonly value: number
@@ -25,5 +26,9 @@ export class Integer {
   minus(other: Integer): Integer {
     const result = this.value - other.value
     return new Integer(result)
+  }
+
+  get numeric(): Numeric {
+    return Numeric.create(this.value)
   }
 }

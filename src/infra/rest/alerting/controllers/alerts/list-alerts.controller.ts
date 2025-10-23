@@ -2,11 +2,12 @@ import { createZodDto, ZodValidationPipe } from 'nestjs-zod'
 import { Get, Inject, Query, UsePipes } from '@nestjs/common'
 import z from 'zod'
 
+import { AlertsRepository } from '@/core/alerting/interfaces/alerts-repository'
+import { ListAlertsUseCase } from '@/core/alerting/use-cases/list-alerts-use-case'
+
 import { plusIntegerSchema, stringSchema } from '@/infra/validation/schemas/zod/global'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { AlertsController } from './alerts.controller'
-import { AlertsRepository } from '@/core/alerting/interfaces/alerts-repository'
-import { ListAlertsUseCase } from '@/core/alerting/use-cases/list-alerts-use-case'
 
 export const schema = z.object({
   level: stringSchema.optional().default('all'),

@@ -9,7 +9,7 @@ export class AlarmsFaker {
 
   static fakeDto(baseDto?: Partial<AlarmDto>): AlarmDto {
     return {
-      level: 'warning',
+      level: faker.helpers.arrayElement(['WARNING', 'CRITICAL']),
       message: faker.word.verb(),
       rule: {
         operation: 'GREATER_THAN',

@@ -5,9 +5,13 @@ import { StationsRepository } from '@/core/telemetry/interfaces'
 import { PrismaRepository } from './prisma-repository'
 import { CursorPagination, Id } from '@/core/global/domain/structures'
 import { Station } from '@/core/telemetry/domain/entities/station'
-import { PrismaStationMapper } from '@/infra/database/prisma/mappers'
+import {
+  PrismaParameterMapper,
+  PrismaStationMapper,
+} from '@/infra/database/prisma/mappers'
 import { StationsListingParams } from '@/core/global/types/stations-list-params'
 import { StationFourCoordsParams } from '@/core/global/types/station-four-coords-params'
+import { Parameter } from '@/core/telemetry/domain/entities/parameter'
 
 @Injectable()
 export class PrismaStationsRepository
@@ -113,7 +117,7 @@ export class PrismaStationsRepository
       },
     })
 
-    return await prismaStations.map(PrismaStationMapper.toEntity)
+    return prismaStations.map(PrismaStationMapper.toEntity)
   }
 
   async countAll(): Promise<number> {
@@ -122,5 +126,39 @@ export class PrismaStationsRepository
 
   async countActive(): Promise<number> {
     return await this.prisma.station.count({ where: { isActive: true } })
+  }
+  async findStationParameterDetails(
+    stationUid: string,
+    parameterName: string,
+  ): Promise<{ parameter: Parameter; station: Station; stationParameterId: Id } | null> {
+    const result = await this.prisma.stationParameter.findFirst({
+      where: {
+        station: {
+          uid: stationUid,
+        },
+        parameter: {
+          name: parameterName,
+        },
+      },
+      select: {
+        id: true,
+        stationId: true,
+        parameter: true,
+      },
+    })
+
+    if (!result) {
+      return null
+    }
+
+    const station = await this.findById(Id.create(result.stationId))
+
+    if (!station) {
+      return null
+    }
+
+    const parameter = PrismaParameterMapper.toEntity(result.parameter)
+
+    return { station, parameter, stationParameterId: Id.create(result.id) }
   }
 }

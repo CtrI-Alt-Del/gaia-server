@@ -2,19 +2,22 @@ import { Measurement } from '@/core/telemetry/domain/entities/measurement'
 import { PrismaMeasure } from '../types/prisma-measure'
 import { MeasurementDto } from '@/core/telemetry/domain/dtos/measurement-dto'
 import type Prisma from '@prisma/client'
+import { Id } from '@/core/global/domain/structures'
 
 export class PrismaMeasurementMapper {
   static toEntity(measurement: PrismaMeasure): Measurement {
     return Measurement.create(PrismaMeasurementMapper.toDto(measurement))
   }
 
-  static toPrisma(measurement: Measurement): Prisma.Measure {
+  static toPrisma(measurement: Measurement, stationParameterId?: Id): Prisma.Measure {
     return {
       id: measurement.id.value,
       value: measurement.value.value,
       unitOfMeasure: measurement.unitOfMeasure.value,
       createdAt: measurement.createdAt.value,
-      stationParameterId: measurement.parameterId.value,
+      stationParameterId: stationParameterId
+        ? stationParameterId.value
+        : measurement.parameterId.value,
     }
   }
 

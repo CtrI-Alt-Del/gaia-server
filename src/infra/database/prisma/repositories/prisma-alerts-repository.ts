@@ -119,4 +119,62 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
       },
     })
   }
+
+  async countByTimePeriod(timePeriod: 'YEARLY' | 'WEEKLY'): Promise<{ count: number; time: string }[]> {
+    const prismaAlerts = await this.prisma.alert.findMany({
+      orderBy: {
+        createdAt: "asc"
+      },
+      include: {
+        alarm: true,
+        stationParameter: {
+          include: {
+            parameter: true,
+            station: true
+          }
+        }
+      }
+    })
+
+    const entityAlerts = prismaAlerts.map(PrismaAlertMapper.toEntity)
+
+    const countByTimePeriod:{count: number, time: string}[] = []
+    
+    if (timePeriod === "YEARLY") {
+      entityAlerts.forEach(alert => {
+        const year = alert.createdAt.value.getFullYear()
+
+        const countTime = countByTimePeriod.find(i => Number(i.time).valueOf() === year)
+
+        if (countTime) {
+          countTime.count += 1
+        } else {
+          countByTimePeriod.push({count: 1, time: year.toString()})
+        }
+      })
+    } else if(timePeriod === "WEEKLY") {
+      entityAlerts.forEach(alert => {
+        if (countByTimePeriod.length === 0) {
+          countByTimePeriod.push({count: 1, time: alert.createdAt.value.toISOString().split("T")[0]})
+        } else {
+          if (countByTimePeriod.filter(i => Number(i.time.split("-")[0]).valueOf() === alert.createdAt.value.getFullYear())) {
+            if (countByTimePeriod.filter(i => Number(i.time.split("-")[1]).valueOf() === (alert.createdAt.value.getMonth() + 1))) {
+              const countTime = countByTimePeriod.find(i => (Number(i.time.split("-")[2]) - alert.createdAt.value.getDate()) - new Date(i.time + " 01:00").getDay() < 7)
+              if (countTime) {
+                countTime.count += 1
+              } else {
+                countByTimePeriod.push({count: 1, time: alert.createdAt.value.toISOString().split("T")[0]})
+              }
+            } else {
+              countByTimePeriod.push({count: 1, time: alert.createdAt.value.toISOString().split("T")[0]})
+            }
+          } else {
+            countByTimePeriod.push({count: 1, time: alert.createdAt.value.toISOString().split("T")[0]})
+          }
+        }
+      })
+    }
+    
+    return await countByTimePeriod
+  }
 }

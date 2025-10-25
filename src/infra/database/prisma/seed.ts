@@ -23,23 +23,23 @@ export async function seed() {
     await prisma.measure.deleteMany()
     console.log('✅ Measures removidos')
 
+    await prisma.alert.deleteMany()
+    console.log('✅ Alerts removidos')
+
+    await prisma.alarm.deleteMany()
+    console.log('✅ Alarms removidos')
+
     await prisma.stationParameter.deleteMany()
     console.log('✅ StationParameters removidos')
 
     await prisma.station.deleteMany()
     console.log('✅ Stations removidas')
 
-    await prisma.alarm.deleteMany()
-    console.log('✅ Alarms removidos')
-
     await prisma.parameter.deleteMany()
     console.log('✅ Parameters removidos')
 
     await prisma.user.deleteMany()
     console.log('✅ Users removidos')
-
-    await prisma.alert.deleteMany()
-    console.log('✅ Alerts removidos')
 
     console.log('✅ Limpeza concluída!')
 

@@ -22,7 +22,7 @@ export class ParseMeasurementsJob {
     private readonly stationsRepository: StationsRepository,
   ) {}
 
-  @Cron(CronExpression.EVERY_SECOND)
+  @Cron(CronExpression.EVERY_30_MINUTES)
   async handle() {
     const useCase = new TransferRawMeasurementsUseCase(
       this.broker,

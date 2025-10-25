@@ -12,6 +12,7 @@ export class TransferRawMeasurementsUseCase implements UseCase<void, void> {
     private readonly measurementsRepository: MeasurementRepository,
     private readonly stationsRepository: StationsRepository,
   ) {}
+
   async execute(): Promise<void> {
     const BATCH_SIZE = 1000
     const rawMeasurements =
@@ -21,16 +22,21 @@ export class TransferRawMeasurementsUseCase implements UseCase<void, void> {
       console.log('No raw measurements to process.')
       return
     }
+
     const measuresToInsert: MeasurementDto[] = []
     const eventDataList: { stationParameterId: string; value: number }[] = []
-    const processedIds: string[] = []
+    const processedIds = new Set<string>()
     const metadataKeys = ['_id', 'uid', 'uxt', 'receivedAt', 'topic']
+
     for (const raw of rawMeasurements) {
       const { _id, uid: stationUid, uxt, receivedAt } = raw
       if (!stationUid || !uxt || !receivedAt) {
         console.warn(`Skipping raw measurement with missing required fields: ${_id}`)
         continue
       }
+
+      let hasValidParams = false
+
       for (const paramName in raw) {
         if (metadataKeys.includes(paramName)) continue
         const rawValue = raw[paramName]
@@ -40,18 +46,23 @@ export class TransferRawMeasurementsUseCase implements UseCase<void, void> {
           )
           continue
         }
+
         const details = await this.stationsRepository.findStationParameterDetails(
           stationUid,
           paramName,
         )
+
         if (!details) {
           console.warn(
             `No parameter details found for station ${stationUid} and parameter ${paramName}. Skipping.`,
           )
           continue
         }
+
+        hasValidParams = true
         const { parameter, stationParameterId, station } = details
         const finalValue = (rawValue * parameter.factor.value) / parameter.offset.value
+
         measuresToInsert.push({
           stationId: station.id.value,
           parameterId: parameter.id.value,
@@ -61,30 +72,35 @@ export class TransferRawMeasurementsUseCase implements UseCase<void, void> {
           value: finalValue,
           createdAt: uxt ? new Date(uxt * 1000) : receivedAt,
         })
-        processedIds.push(_id)
         eventDataList.push({
           stationParameterId: stationParameterId.value,
           value: finalValue,
         })
       }
-      if (measuresToInsert.length > 0) {
-        const measurementEntities = measuresToInsert.map((dto) => Measurement.create(dto))
-        await this.measurementsRepository.createMany(measurementEntities)
-        await this.mongoMeasurmentsRepository.markAsProcessed(processedIds)
-        console.log(
-          `Processed and transferred ${measuresToInsert.length} measurements from raw data.`,
-        )
-        for (const eventData of eventDataList) {
-          console.log(`Publishing ${eventDataList.length} events...`)
-          const event = new MeasurementCreatedEvent({
-            measurementValue: eventData.value,
-            stationParameterId: eventData.stationParameterId,
-          })
-          await this.broker.publish(event)
-        }
-        eventDataList.length = 0
-        measuresToInsert.length = 0
-        processedIds.length = 0
+
+      if (hasValidParams) {
+        processedIds.add(_id)
+      }
+    }
+
+    if (measuresToInsert.length > 0) {
+      const measurementEntities = measuresToInsert.map((dto) => Measurement.create(dto))
+
+      await this.measurementsRepository.createMany(measurementEntities)
+
+      await this.mongoMeasurmentsRepository.deleteProcessed(Array.from(processedIds))
+
+      console.log(
+        `Processed and transferred ${measuresToInsert.length} measurements from ${processedIds.size} raw documents.`,
+      )
+
+      console.log(`Publishing ${eventDataList.length} events...`)
+      for (const eventData of eventDataList) {
+        const event = new MeasurementCreatedEvent({
+          measurementValue: eventData.value,
+          stationParameterId: eventData.stationParameterId,
+        })
+        await this.broker.publish(event)
       }
     }
   }

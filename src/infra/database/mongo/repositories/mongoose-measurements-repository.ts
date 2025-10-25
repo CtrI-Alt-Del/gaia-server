@@ -27,21 +27,19 @@ export class MongooseMeasurementsRepository implements MongoMeasurementsReposito
       const { _id, ...rest } = doc
       const timestampInSeconds = rest.uxt || rest.unix || rest.receivedAt.getTime() / 1000
       return {
-        ...rest, 
+        ...rest,
         _id: _id.toString(),
-        uxt: Math.floor(timestampInSeconds), 
-      } as RawMeasurement 
+        uxt: Math.floor(timestampInSeconds),
+      } as RawMeasurement
     })
   }
 
-  async markAsProcessed(ids: string[]): Promise<void> {
+  async deleteProcessed(ids: string[]): Promise<void> {
     if (ids.length === 0) {
       return
     }
     const objectIds = ids.map((id) => new Types.ObjectId(id))
 
-    await this.measurementModel
-      .updateMany({ _id: { $in: objectIds } }, { $set: { processed: true } })
-      .exec()
+    await this.measurementModel.deleteMany({ _id: { $in: objectIds } }).exec()
   }
 }

@@ -1,20 +1,22 @@
-name: Deployment to Staging
+name: Deployment
 
 on:
-  pull_request:
-    branches: [main]
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
 
 permissions:
   id-token: write
   contents: read
 
 env:
-  AWS_REGION: us-east-1
-  ECR_REPOSITORY: dev-gaia-server-ecr-repository
-  ECS_CLUSTER_NAME: dev-gaia-cluster
-  ECS_SERVICE_NAME: dev-gaia-server-service
-  ECS_TASK_FAMILY: dev-gaia-server-task
-  CONTAINER_NAME: dev-gaia
+  ECR_REPOSITORY: ${{ inputs.environment }}-gaia-server-ecr-repository
+  ECS_CLUSTER_NAME: ${{ inputs.environment }}-gaia-cluster
+  ECS_SERVICE_NAME: ${{ inputs.environment }}-gaia-server-service
+  ECS_TASK_FAMILY: ${{ inputs.environment }}-gaia-server-task
+  CONTAINER_NAME: ${{ inputs.environment }}-gaia-server
 
 jobs:
   deploy:
@@ -32,8 +34,8 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::549291472718:role/gaia-server-role
-          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Login to AWS ECR
         id: login_ecr

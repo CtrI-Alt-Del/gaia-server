@@ -1,7 +1,7 @@
-name: Continuous Deployment to Staging
+name: Deployment to Staging
 
 on:
-  push:
+  pull_request:
     branches: [main]
 
 permissions:

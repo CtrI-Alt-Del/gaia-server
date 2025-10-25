@@ -1,0 +1,17 @@
+name: Production Deployment
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  staging:
+    uses: ./.github/workflows/deployment.yaml
+    with:
+      environment: prod
+    secrets: inherit

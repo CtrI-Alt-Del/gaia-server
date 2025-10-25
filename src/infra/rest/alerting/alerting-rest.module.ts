@@ -11,6 +11,7 @@ import { ListAlertsController } from './controllers/alerts/list-alerts.controlle
 import { GetLastAlertsController } from './controllers/alerts/get-last-alerts.controller'
 import { CountAlertsByLevelController } from './controllers/alerts/count-alerts-by-level.controller'
 import { ReadAlertController } from './controllers/alerts/read-alert.controller'
+import { CountAlertsByTimePeriodController } from './controllers/alerts/count-alerts-by-time-period.controller'
 
 @Module({
   imports: [DatabaseModule, CacheProviderModule],
@@ -25,6 +26,7 @@ import { ReadAlertController } from './controllers/alerts/read-alert.controller'
     ReadAlertController,
     CountAlertsByLevelController,
     ReadAlertController,
+    CountAlertsByTimePeriodController,
   ],
 })
 export class AlertingRestModule {}

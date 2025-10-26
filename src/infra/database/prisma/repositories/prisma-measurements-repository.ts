@@ -31,14 +31,21 @@ export class PrismaMeasurementsRepository
   }: MeasurementListParams): Promise<CursorPagination<Measurement>> {
     const whereClause = {
       ...(status?.isAll.isTrue ? {} : { isActive: status?.isActive.isTrue }),
-      ...(date ? { createdAt: { equals: date.value } } : {}),
-      ...(parameterId
-        ? { stationParameter: { parameterId: { equals: parameterId.value } } }
-        : {}),
+      ...(date ? { createdAt: this.createDateQuery(date) } : {}),
       ...(stationId
         ? { stationParameter: { stationId: { equals: stationId.value } } }
         : {}),
+      ...(stationId && parameterId
+        ? {
+            AND: [
+              { stationParameter: { stationId: { equals: stationId.value } } },
+              { stationParameter: { parameterId: { equals: parameterId.value } } },
+            ],
+          }
+        : {}),
     }
+
+    console.log(date?.value)
 
     const include = {
       stationParameter: {

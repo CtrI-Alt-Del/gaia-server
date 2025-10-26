@@ -38,6 +38,7 @@
     "@scalar/nestjs-api-reference": "^1.0.1",
     "bull": "^4.16.5",
     "cuid": "^3.0.0",
+    "dayjs": "^1.11.18",
     "ioredis": "^5.8.1",
     "mongoose": "^8.19.2",
     "nestjs-zod": "^5.0.1",

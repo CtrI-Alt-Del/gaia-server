@@ -34,7 +34,7 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
     date,
   }: AlertListingParams): Promise<CursorPagination<Alert>> {
     const whereClause = {
-      ...(date ? { createdAt: { equals: date.value } } : {}),
+      ...(date ? { createdAt: this.createDateQuery(date) } : {}),
       ...(level && level.value !== 'all' ? { alarm: { level: level.value } } : {}),
     }
 

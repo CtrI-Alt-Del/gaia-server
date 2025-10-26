@@ -17,6 +17,7 @@ import {
 } from '@/infra/database/mongo'
 import { RawMeasurementSchema } from '@/infra/database/mongo/schemas/raw-measurement-schema'
 import { EnvProvider } from '@/infra/provision/env/env-provider'
+import { DatetimeProviderModule } from '../provision/datetime/datetime-provider.module'
 
 @Module({
   providers: [
@@ -52,6 +53,7 @@ import { EnvProvider } from '@/infra/provision/env/env-provider'
   ],
   imports: [
     EnvProviderModule,
+    DatetimeProviderModule,
     MongooseModule.forRootAsync({
       imports: [EnvProviderModule],
       inject: [EnvProvider],
@@ -77,7 +79,7 @@ import { EnvProvider } from '@/infra/provision/env/env-provider'
     DatabaseModule.STATIONS_REPOSITORY,
     DatabaseModule.MEASUREMENTS_REPOSITORY,
     DatabaseModule.ALERTS_REPOSITORY,
-    DatabaseModule.MONGO_MEASUREMENTS_REPOSITORY
+    DatabaseModule.MONGO_MEASUREMENTS_REPOSITORY,
   ],
 })
 export class DatabaseModule {

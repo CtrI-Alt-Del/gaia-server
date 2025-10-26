@@ -11,5 +11,6 @@ export const DEPENDENCIES = {
   },
   provision: {
     cacheProvider: 'CACHE_PROVIDER',
+    datetimeProvider: 'DATETIME_PROVIDER',
   },
 } as const

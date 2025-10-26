@@ -183,9 +183,13 @@ export async function seed() {
       const randomMeasure =
         createdMeasures[Math.floor(Math.random() * createdMeasures.length)]
 
-      const randomDate = new Date(
-        `${Math.floor(Math.random() * (2025 - 2023 + 1) + 2023).toString()}-${Math.floor(Math.random() * (12 - 1 + 1) + 1).toString()}-${Math.floor(Math.random() * (28 - 1 + 1) + 1).toString()} 01:00`,
-      )
+      const randomYear = Math.floor(Math.random() * (2025 - 2023 + 1) + 2023).toString()
+      const randomMonth = Math.floor(Math.random() * (12 - 1 + 1) + 1).toString()
+      const randomDay = Math.floor(
+        Math.random() * ((randomMonth === '2' ? 28 : 30) - 1 + 1) + 1,
+      ).toString()
+
+      const randomDate = new Date(`${randomYear}-${randomMonth}-${randomDay} 01:00`)
 
       await prisma.alert.create({
         data: {

@@ -13,18 +13,18 @@ describe('Count Alerts By Time Period Use Case', () => {
     useCase = new CountAlertsByTimePeriod(alertsRepository)
   })
 
-  it('should return correct count for weeks', async () => {
-    alertsRepository.countByTimePeriod.mockResolvedValueOnce([{count: 3, time: "2025-10-05"}, {count: 5, time: "2025-10-12"}])
+  it('should return correct count for the last week', async () => {
+    alertsRepository.countByTimePeriod.mockResolvedValueOnce([{criticalCount: 3, warningCount: 2, time: "2025-10-13"}, {criticalCount: 5, warningCount: 8 , time: "2025-10-15"}])
 
     const result = await useCase.execute({timePeriod: "WEEKLY"})
-    expect(result).toEqual([{count: 3, time: "2025-10-05"}, {count: 5, time: "2025-10-12"}])
+    expect(result).toEqual([{criticalCount: 3, warningCount: 2, time: "2025-10-13"}, {criticalCount: 5, warningCount: 8 , time: "2025-10-15"}])
   })
 
-  it('shoul return correct count for year', async() => {
-    alertsRepository.countByTimePeriod.mockResolvedValueOnce([{count: 4, time: "2023"}, {count: 3, time: "2024"}, {count: 8, time: "2025"}])
+  it('shoul return correct count for the last year', async() => {
+    alertsRepository.countByTimePeriod.mockResolvedValueOnce([{criticalCount: 2, warningCount: 3, time: "2025-02-01"}, {criticalCount: 8, warningCount: 5, time: "2025-04-01"}, {criticalCount: 1, warningCount: 1, time: "2025-06-1"}])
 
-    const result = await useCase.execute({timePeriod: "YEARLY"})
+    const result = await useCase.execute({timePeriod: "MONTHLY"})
     
-    expect(result).toEqual([{count: 4, time: "2023"}, {count: 3, time: "2024"}, {count: 8, time: "2025"}])
+    expect(result).toEqual([{criticalCount: 2, warningCount: 3, time: "2025-02-01"}, {criticalCount: 8, warningCount: 5, time: "2025-04-01"}, {criticalCount: 1, warningCount: 1, time: "2025-06-1"}])
   })
 })

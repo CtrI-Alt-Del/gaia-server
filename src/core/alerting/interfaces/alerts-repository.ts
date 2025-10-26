@@ -15,5 +15,7 @@ export interface AlertsRepository {
   findLast(): Promise<Alert[]>
   countByAlarmLevel(alertLevel: AlarmLevel): Promise<number>
   replace(alert: Alert): Promise<void>
-  countByTimePeriod(timePeriod: TimePeriod): Promise<{ count: number; time: string }[]>
+  countByTimePeriod(
+    timePeriod: TimePeriod,
+  ): Promise<{ criticalCount: number; warningCount: number; time: string }[]>
 }

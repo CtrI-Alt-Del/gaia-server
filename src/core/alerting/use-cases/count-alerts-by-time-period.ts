@@ -5,13 +5,18 @@ type Request = {
   timePeriod: string
 }
 
-export class CountAlertsByTimePeriod
-  implements UseCase<Request, { count: number; time: string }[]>
-{
+type Response = {
+  criticalCount: number
+  warningCount: number
+  time: string
+}
+
+export class CountAlertsByTimePeriod implements UseCase<Request, Response[]> {
   constructor(private readonly repository: AlertsRepository) {}
 
-  async execute({ timePeriod }: Request): Promise<{ count: number; time: string }[]> {
+  async execute({ timePeriod }: Request): Promise<Response[]> {
     const alerts = await this.repository.countByTimePeriod(TimePeriod.create(timePeriod))
+
     return alerts
   }
 }

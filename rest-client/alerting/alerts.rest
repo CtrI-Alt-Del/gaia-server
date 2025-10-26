@@ -8,6 +8,5 @@ GET {{URL}}
 ### Get last alerts
 GET {{URL}}/last
 
-
 ### Count alerts by time period
 GET {{URL}}/count/WEEKLY

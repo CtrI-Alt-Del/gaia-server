@@ -154,22 +154,43 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
       })
     } else if(timePeriod === "WEEKLY") {
       entityAlerts.forEach(alert => {
+        const alertCreatedAtDate = alert.createdAt.value
+
         if (countByTimePeriod.length === 0) {
-          countByTimePeriod.push({count: 1, time: alert.createdAt.value.toISOString().split("T")[0]})
+          alertCreatedAtDate.setDate(alertCreatedAtDate.getDate() - alertCreatedAtDate.getDay())
+          countByTimePeriod.push({count: 1, time: alertCreatedAtDate.toISOString().split("T")[0]})
         } else {
-          if (countByTimePeriod.filter(i => Number(i.time.split("-")[0]).valueOf() === alert.createdAt.value.getFullYear())) {
-            if (countByTimePeriod.filter(i => Number(i.time.split("-")[1]).valueOf() === (alert.createdAt.value.getMonth() + 1))) {
-              const countTime = countByTimePeriod.find(i => (Number(i.time.split("-")[2]) - alert.createdAt.value.getDate()) - new Date(i.time + " 01:00").getDay() < 7)
-              if (countTime) {
-                countTime.count += 1
+          const yearsWithAlert = countByTimePeriod.filter(i => Number(i.time.split("-")[0]).valueOf() === alertCreatedAtDate.getFullYear())
+          if (yearsWithAlert.length > 0) {
+            const monthWithAlert = yearsWithAlert.filter(i => Number(i.time.split("-")[1]).valueOf() === (alertCreatedAtDate.getMonth() + 1))
+            if (monthWithAlert.length > 0) {
+              const weekWithAlert = monthWithAlert.find(i => alertCreatedAtDate.getDate() - Number(i.time.split("-")[2]).valueOf() < 7)
+              if (weekWithAlert) {
+                weekWithAlert.count += 1
               } else {
-                countByTimePeriod.push({count: 1, time: alert.createdAt.value.toISOString().split("T")[0]})
+                alertCreatedAtDate.setDate(alertCreatedAtDate.getDate() - alertCreatedAtDate.getDay())
+                countByTimePeriod.push({count: 1, time: alertCreatedAtDate.toISOString().split("T")[0]})
               }
             } else {
-              countByTimePeriod.push({count: 1, time: alert.createdAt.value.toISOString().split("T")[0]})
+              const firtsDayOfWeek = new Date(alertCreatedAtDate)
+              firtsDayOfWeek.setDate(alertCreatedAtDate.getDate() - alertCreatedAtDate.getDay())
+              const monthInEndWithAlert = countByTimePeriod.find(i => i.time === firtsDayOfWeek.toISOString().split("T")[0])
+              if (monthInEndWithAlert) {
+                monthInEndWithAlert.count += 1
+              } else {
+                countByTimePeriod.push({count: 1, time: firtsDayOfWeek.toISOString().split("T")[0]})
+              }
             }
           } else {
-            countByTimePeriod.push({count: 1, time: alert.createdAt.value.toISOString().split("T")[0]})
+            const firtsDayOfWeek = new Date(alertCreatedAtDate)
+            firtsDayOfWeek.setDate(alertCreatedAtDate.getDate() - alertCreatedAtDate.getDay())
+            const yearInEndWithAlert = countByTimePeriod.find(i => i.time === firtsDayOfWeek.toISOString().split("T")[0])
+            if (yearInEndWithAlert) {
+              yearInEndWithAlert.count += 1
+            } else {
+              alertCreatedAtDate.setDate(alertCreatedAtDate.getDate() - alertCreatedAtDate.getDay())
+              countByTimePeriod.push({count: 1, time: alertCreatedAtDate.toISOString().split("T")[0]})
+            }
           }
         }
       })

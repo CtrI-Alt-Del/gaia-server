@@ -3,4 +3,9 @@
 #### List measurements
 GET {{URL}}
 ?pageSize=20
+&stationId=cmh6sqenk00465rv2htm79xyh
+&parameterId=cmh6sqen8002t5rv277sseosi
+&date=2025-10-25T00:32:48.248Z
+
+
 &stationId=cmh84fzlj004dnlv27gz8857y

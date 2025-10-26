@@ -16,6 +16,7 @@ import { PrismaMeasurementsRepository } from './prisma/repositories/prisma-measu
 import { PrismaAlertsRepository } from './prisma/repositories/prisma-alerts-repository'
 import { ReadingSchema } from './mongoose/schemas'
 import { MongooseReadingsRepository } from './mongoose/repositories'
+import { DatetimeProviderModule } from '../provision/datetime/datetime-provider.module'
 
 @Module({
   providers: [
@@ -51,6 +52,7 @@ import { MongooseReadingsRepository } from './mongoose/repositories'
   ],
   imports: [
     EnvProviderModule,
+    DatetimeProviderModule,
     MongooseModule.forRootAsync({
       imports: [EnvProviderModule],
       inject: [EnvProvider],

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 
 import { ParametersRepository } from '@/core/telemetry/interfaces'
-import { CursorPagination, Id } from '@/core/global/domain/structures'
+import { CursorPagination, Id, Text } from '@/core/global/domain/structures'
 import { PrismaParameterMapper } from '@/infra/database/prisma/mappers'
 import { ParametersListParams } from '@/core/global/types'
 import { PrismaRepository } from './prisma-repository'
@@ -36,7 +36,7 @@ export class PrismaParametersRepository
     status,
     name,
   }: ParametersListParams): Promise<CursorPagination<Parameter>> {
-    let where: any = {}
+    const where: any = {}
     if (status) {
       if (status.isActive?.isTrue) {
         where.isActive = true
@@ -59,8 +59,30 @@ export class PrismaParametersRepository
       })
       return result.map(PrismaParameterMapper.toEntity)
     } catch (error) {
-      throw error
+      throw new Error(error)
     }
+  }
+
+  async findParameterByCode(code: Text): Promise<Parameter | null> {
+    const prismaParameter = await this.prisma.parameter.findUnique({
+      where: { code: code.value },
+      include: {
+        stationParameter: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    })
+
+    if (!prismaParameter || prismaParameter.stationParameter.length === 0) {
+      return null
+    }
+
+    return PrismaParameterMapper.toEntity({
+      ...prismaParameter,
+      id: prismaParameter.stationParameter[0].id,
+    })
   }
 
   async replace(parameter: Parameter): Promise<void> {

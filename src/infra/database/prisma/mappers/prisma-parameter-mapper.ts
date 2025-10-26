@@ -14,6 +14,7 @@ export class PrismaParameterMapper {
       id: parameter.id.value,
       name: parameter.name.value,
       unitOfMeasure: parameter.unitOfMeasure.value,
+      code: parameter.code.value,
       factor: parameter.factor.value,
       offset: parameter.offset.value,
       isActive: parameter.isActive.value,
@@ -25,6 +26,7 @@ export class PrismaParameterMapper {
     return {
       id: parameter.id,
       name: parameter.name,
+      code: parameter.code,
       unitOfMeasure: parameter.unitOfMeasure,
       factor: parameter.factor,
       offset: parameter.offset,

@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common'
 import { BullModule } from '@nestjs/bull'
 
+import { CacheProviderModule } from '@/infra/provision/cache/cache.porvider.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { CreateAlertJob } from './jobs'
-import { BullTelemetryProcessor } from '../bull/processors'
-import { CacheProviderModule } from '@/infra/provision/cache/cache.porvider.module'
+import { BullAlertingProcessor } from '../bull/processors'
 
 @Module({
   imports: [
@@ -14,7 +14,7 @@ import { CacheProviderModule } from '@/infra/provision/cache/cache.porvider.modu
     DatabaseModule,
     CacheProviderModule,
   ],
-  providers: [BullTelemetryProcessor, CreateAlertJob],
+  providers: [BullAlertingProcessor, CreateAlertJob],
 })
 export class AlertingQueueModule {
   static readonly ALERTING_QUEUE = 'ALERTING_QUEUE'

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 
 import { AlertsRepository } from '@/core/alerting/interfaces'
-import { Id, Numeric } from '@/core/global/domain/structures'
+import { Id, Numeric, TimePeriod } from '@/core/global/domain/structures'
 import { Alert } from '@/core/alerting/domain/entities'
 import { AlertListingParams } from '@/core/global/types/alerts-listing-params'
 import { CursorPagination } from '@/core/global/domain/structures'
@@ -121,7 +121,7 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
   }
 
   async countByTimePeriod(
-    timePeriod: 'YEARLY' | 'WEEKLY',
+    timePeriod: TimePeriod,
   ): Promise<{ count: number; time: string }[]> {
     const prismaAlerts = await this.prisma.alert.findMany({
       orderBy: {
@@ -142,7 +142,7 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
 
     const countByTimePeriod: { count: number; time: string }[] = []
 
-    if (timePeriod === 'YEARLY') {
+    if (timePeriod.value === 'YEARLY') {
       entityAlerts.forEach((alert) => {
         const year = alert.createdAt.value.getFullYear()
 
@@ -154,7 +154,7 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
           countByTimePeriod.push({ count: 1, time: year.toString() })
         }
       })
-    } else if (timePeriod === 'WEEKLY') {
+    } else if (timePeriod.value === 'WEEKLY') {
       entityAlerts.forEach((alert) => {
         if (countByTimePeriod.length === 0) {
           countByTimePeriod.push({

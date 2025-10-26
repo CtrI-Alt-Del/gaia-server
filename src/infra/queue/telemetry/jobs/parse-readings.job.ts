@@ -32,7 +32,6 @@ export class ParseReadingsJob {
       this.parametersRepository,
     )
     try {
-      console.log('Parsing readings')
       await useCase.execute()
     } catch (error) {
       console.error(error)

@@ -120,82 +120,128 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
     })
   }
 
-  async countByTimePeriod(timePeriod: 'YEARLY' | 'WEEKLY'): Promise<{ count: number; time: string }[]> {
-    const prismaAlerts = await this.prisma.alert.findMany({
-      orderBy: {
-        createdAt: "asc"
-      },
-      include: {
-        alarm: true,
-        stationParameter: {
-          include: {
-            parameter: true,
-            station: true
+  async countByTimePeriod(timePeriod: 'MONTHLY' | 'WEEKLY'): Promise<{countCritical: number, countWarning: number, time: string}[]> {
+    
+    const today = new Date()
+    if (timePeriod === "MONTHLY") {
+      const lastYearToday = new Date(today)
+      lastYearToday.setFullYear(today.getFullYear() - 1)
+
+      const prismaAlerts = await this.prisma.alert.findMany({
+        orderBy: {
+          createdAt: "asc"
+        },
+        where: {
+          AND: [
+             {createdAt: {gt: lastYearToday}},
+             {createdAt: {lt: today}}
+          ]
+        },
+        include: {
+          alarm: true,
+          stationParameter: {
+            include: {
+              parameter: true,
+              station: true
+            }
           }
         }
-      }
-    })
-
-    const entityAlerts = prismaAlerts.map(PrismaAlertMapper.toEntity)
-
-    const countByTimePeriod:{count: number, time: string}[] = []
-    
-    if (timePeriod === "YEARLY") {
-      entityAlerts.forEach(alert => {
-        const year = alert.createdAt.value.getFullYear()
-
-        const countTime = countByTimePeriod.find(i => Number(i.time).valueOf() === year)
-
-        if (countTime) {
-          countTime.count += 1
-        } else {
-          countByTimePeriod.push({count: 1, time: year.toString()})
-        }
       })
-    } else if(timePeriod === "WEEKLY") {
-      entityAlerts.forEach(alert => {
-        const alertCreatedAtDate = alert.createdAt.value
 
-        if (countByTimePeriod.length === 0) {
-          alertCreatedAtDate.setDate(alertCreatedAtDate.getDate() - alertCreatedAtDate.getDay())
-          countByTimePeriod.push({count: 1, time: alertCreatedAtDate.toISOString().split("T")[0]})
+      const entityAlerts = prismaAlerts.map(PrismaAlertMapper.toEntity)
+
+      const countByTimePeriod:{countCritical: number, countWarning: number, time: string}[] = []
+
+      entityAlerts.forEach(alert => {
+        const alertCreatedAt = alert.createdAt.value
+        if (countByTimePeriod.length < 1) {
+          alertCreatedAt.setDate(1)
+          const count = {
+            countCritical: alert.level.value === "CRITICAL" ? 1 : 0, 
+            countWarning: alert.level.value === "WARNING" ? 1 : 0, 
+            time: alertCreatedAt.toISOString().split("T")[0]
+          }
+          countByTimePeriod.push(count)
         } else {
-          const yearsWithAlert = countByTimePeriod.filter(i => Number(i.time.split("-")[0]).valueOf() === alertCreatedAtDate.getFullYear())
-          if (yearsWithAlert.length > 0) {
-            const monthWithAlert = yearsWithAlert.filter(i => Number(i.time.split("-")[1]).valueOf() === (alertCreatedAtDate.getMonth() + 1))
-            if (monthWithAlert.length > 0) {
-              const weekWithAlert = monthWithAlert.find(i => alertCreatedAtDate.getDate() - Number(i.time.split("-")[2]).valueOf() < 7)
-              if (weekWithAlert) {
-                weekWithAlert.count += 1
-              } else {
-                alertCreatedAtDate.setDate(alertCreatedAtDate.getDate() - alertCreatedAtDate.getDay())
-                countByTimePeriod.push({count: 1, time: alertCreatedAtDate.toISOString().split("T")[0]})
-              }
+          alertCreatedAt.setDate(1)
+          const monthWithAlert = countByTimePeriod.find(c => c.time === alertCreatedAt.toISOString().split("T")[0])
+          if (monthWithAlert) {
+            if (alert.level.value === "CRITICAL") {
+              monthWithAlert.countCritical += 1
             } else {
-              const firtsDayOfWeek = new Date(alertCreatedAtDate)
-              firtsDayOfWeek.setDate(alertCreatedAtDate.getDate() - alertCreatedAtDate.getDay())
-              const monthInEndWithAlert = countByTimePeriod.find(i => i.time === firtsDayOfWeek.toISOString().split("T")[0])
-              if (monthInEndWithAlert) {
-                monthInEndWithAlert.count += 1
-              } else {
-                countByTimePeriod.push({count: 1, time: firtsDayOfWeek.toISOString().split("T")[0]})
-              }
+              monthWithAlert.countWarning += 1
             }
           } else {
-            const firtsDayOfWeek = new Date(alertCreatedAtDate)
-            firtsDayOfWeek.setDate(alertCreatedAtDate.getDate() - alertCreatedAtDate.getDay())
-            const yearInEndWithAlert = countByTimePeriod.find(i => i.time === firtsDayOfWeek.toISOString().split("T")[0])
-            if (yearInEndWithAlert) {
-              yearInEndWithAlert.count += 1
-            } else {
-              alertCreatedAtDate.setDate(alertCreatedAtDate.getDate() - alertCreatedAtDate.getDay())
-              countByTimePeriod.push({count: 1, time: alertCreatedAtDate.toISOString().split("T")[0]})
+            alertCreatedAt.setDate(1)
+            const count = {
+              countCritical: alert.level.value === "CRITICAL" ? 1 : 0, 
+              countWarning: alert.level.value === "WARNING" ? 1 : 0, 
+              time: alertCreatedAt.toISOString().split("T")[0]
+            }
+            countByTimePeriod.push(count)
+          }
+        }
+      })
+
+      return countByTimePeriod
+      
+    } else {
+      const lastWeekToday = new Date(today)
+      lastWeekToday.setDate(lastWeekToday.getDate() - 7)
+
+      const prismaAlerts = await this.prisma.alert.findMany({
+        orderBy: {
+          createdAt: "asc"
+        },
+        where: {
+          AND: [
+             {createdAt: {gt: lastWeekToday}},
+             {createdAt: {lt: today}}
+          ]
+        },
+        include: {
+          alarm: true,
+          stationParameter: {
+            include: {
+              parameter: true,
+              station: true
             }
           }
         }
       })
+
+      const entityAlerts = prismaAlerts.map(PrismaAlertMapper.toEntity)
+      const countByTimePeriod:{countCritical: number, countWarning: number, time: string}[] = []
+
+      entityAlerts.forEach(alert => {
+        const alertCreatedAt = alert.createdAt.value
+        if (countByTimePeriod.length < 1) {
+          const count = {
+            countCritical: alert.level.value === "CRITICAL" ? 1 : 0, 
+            countWarning: alert.level.value === "WARNING" ? 1 : 0, 
+            time: alertCreatedAt.toISOString().split("T")[0]
+          }
+          countByTimePeriod.push(count)
+        } else {
+          const monthWithAlert = countByTimePeriod.find(c => c.time === alertCreatedAt.toISOString().split("T")[0])
+          if (monthWithAlert) {
+            if (alert.level.value === "CRITICAL") {
+              monthWithAlert.countCritical += 1
+            } else {
+              monthWithAlert.countWarning += 1
+            }
+          } else {
+            const count = {
+              countCritical: alert.level.value === "CRITICAL" ? 1 : 0, 
+              countWarning: alert.level.value === "WARNING" ? 1 : 0, 
+              time: alertCreatedAt.toISOString().split("T")[0]
+            }
+            countByTimePeriod.push(count)
+          }
+        }
+      })
+
+      return countByTimePeriod
     }
-    
-    return await countByTimePeriod
   }
 }

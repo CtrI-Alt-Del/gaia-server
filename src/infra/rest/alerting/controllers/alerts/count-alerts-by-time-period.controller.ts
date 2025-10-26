@@ -13,7 +13,7 @@ export class CountAlertsByTimePeriodController {
   ) {}
 
   @Get()
-  async handle(@Param("timePeriod") timePeriod: "YEARLY" | "WEEKLY") {
+  async handle(@Param("timePeriod") timePeriod: "MONTHLY" | "WEEKLY") {
     const useCase = new CountAlertsByTimePeriod(this.repository)
     const result = await useCase.execute({timePeriod: timePeriod})
     return result

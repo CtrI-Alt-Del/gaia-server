@@ -208,7 +208,7 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
       })
 
       const entityAlerts = prismaAlerts.map(PrismaAlertMapper.toEntity)
-      const countByTimePeriod:{criticalCount: number, warningCount: number, time: string}[] = []
+      const countByTimePeriod: {criticalCount: number, warningCount: number, time: string}[] = []
 
       for (let i = 0; i < 7; i++) {
         countByTimePeriod.push({

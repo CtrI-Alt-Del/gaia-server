@@ -120,7 +120,7 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
     })
   }
 
-  async countByTimePeriod(timePeriod: 'MONTHLY' | 'WEEKLY'): Promise<{countCritical: number, countWarning: number, time: string}[]> {
+  async countByTimePeriod(timePeriod: 'MONTHLY' | 'WEEKLY'): Promise<{criticalCount: number, warningCount: number, time: string}[]> {
     
     const today = new Date()
     if (timePeriod === "MONTHLY") {
@@ -150,35 +150,30 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
 
       const entityAlerts = prismaAlerts.map(PrismaAlertMapper.toEntity)
 
-      const countByTimePeriod:{countCritical: number, countWarning: number, time: string}[] = []
+      const countByTimePeriod:{criticalCount: number, warningCount: number, time: string}[] = []
+      lastYearToday.setDate(1)
+
+      for (let i = 0; i < 12; i++) {
+        countByTimePeriod.push({
+          criticalCount: 0,
+          warningCount: 0,
+          time: lastYearToday.toISOString().split("T")[0]
+        })
+
+        lastYearToday.setMonth(lastYearToday.getMonth() + 1)
+      }
 
       entityAlerts.forEach(alert => {
         const alertCreatedAt = alert.createdAt.value
-        if (countByTimePeriod.length < 1) {
-          alertCreatedAt.setDate(1)
-          const count = {
-            countCritical: alert.level.value === "CRITICAL" ? 1 : 0, 
-            countWarning: alert.level.value === "WARNING" ? 1 : 0, 
-            time: alertCreatedAt.toISOString().split("T")[0]
-          }
-          countByTimePeriod.push(count)
-        } else {
-          alertCreatedAt.setDate(1)
-          const monthWithAlert = countByTimePeriod.find(c => c.time === alertCreatedAt.toISOString().split("T")[0])
-          if (monthWithAlert) {
-            if (alert.level.value === "CRITICAL") {
-              monthWithAlert.countCritical += 1
-            } else {
-              monthWithAlert.countWarning += 1
-            }
-          } else {
-            alertCreatedAt.setDate(1)
-            const count = {
-              countCritical: alert.level.value === "CRITICAL" ? 1 : 0, 
-              countWarning: alert.level.value === "WARNING" ? 1 : 0, 
-              time: alertCreatedAt.toISOString().split("T")[0]
-            }
-            countByTimePeriod.push(count)
+        
+        alertCreatedAt.setDate(1)
+        const count = countByTimePeriod.find(c => c.time === alertCreatedAt.toISOString().split("T")[0])
+
+        if (count) {
+          if (alert.level.value === "CRITICAL") {
+            count.criticalCount += 1
+          } else if (alert.level.value === "WARNING") {
+            count.warningCount += 1
           }
         }
       })
@@ -211,32 +206,28 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
       })
 
       const entityAlerts = prismaAlerts.map(PrismaAlertMapper.toEntity)
-      const countByTimePeriod:{countCritical: number, countWarning: number, time: string}[] = []
+      const countByTimePeriod:{criticalCount: number, warningCount: number, time: string}[] = []
+
+      for (let i = 0; i < 7; i++) {
+        countByTimePeriod.push({
+          criticalCount: 0,
+          warningCount: 0,
+          time: lastWeekToday.toISOString().split("T")[0]
+        })
+
+        lastWeekToday.setDate(lastWeekToday.getDate() + 1)
+      }
 
       entityAlerts.forEach(alert => {
         const alertCreatedAt = alert.createdAt.value
-        if (countByTimePeriod.length < 1) {
-          const count = {
-            countCritical: alert.level.value === "CRITICAL" ? 1 : 0, 
-            countWarning: alert.level.value === "WARNING" ? 1 : 0, 
-            time: alertCreatedAt.toISOString().split("T")[0]
-          }
-          countByTimePeriod.push(count)
-        } else {
-          const monthWithAlert = countByTimePeriod.find(c => c.time === alertCreatedAt.toISOString().split("T")[0])
-          if (monthWithAlert) {
-            if (alert.level.value === "CRITICAL") {
-              monthWithAlert.countCritical += 1
-            } else {
-              monthWithAlert.countWarning += 1
-            }
-          } else {
-            const count = {
-              countCritical: alert.level.value === "CRITICAL" ? 1 : 0, 
-              countWarning: alert.level.value === "WARNING" ? 1 : 0, 
-              time: alertCreatedAt.toISOString().split("T")[0]
-            }
-            countByTimePeriod.push(count)
+        
+        const count = countByTimePeriod.find(c => c.time === alertCreatedAt.toISOString().split("T")[0])
+
+        if (count) {
+          if (alert.level.value === "CRITICAL") {
+            count.criticalCount += 1
+          } else if (alert.level.value === "WARNING") {
+            count.warningCount += 1
           }
         }
       })

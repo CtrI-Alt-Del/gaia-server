@@ -124,6 +124,7 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
     
     const today = new Date()
     if (timePeriod === "MONTHLY") {
+      today.setMonth(today.getMonth() + 1)
       const lastYearToday = new Date(today)
       lastYearToday.setFullYear(today.getFullYear() - 1)
 
@@ -133,8 +134,8 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
         },
         where: {
           AND: [
-             {createdAt: {gt: lastYearToday}},
-             {createdAt: {lt: today}}
+            {createdAt: {lte: today}},
+            {createdAt: {gte: lastYearToday}},
           ]
         },
         include: {
@@ -181,6 +182,7 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
       return countByTimePeriod
       
     } else {
+      today.setDate(today.getDate() + 1)
       const lastWeekToday = new Date(today)
       lastWeekToday.setDate(lastWeekToday.getDate() - 7)
 
@@ -190,8 +192,8 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
         },
         where: {
           AND: [
-             {createdAt: {gt: lastWeekToday}},
-             {createdAt: {lt: today}}
+            {createdAt: {gte: lastWeekToday}},
+            {createdAt: {lte: today}}
           ]
         },
         include: {

@@ -2,7 +2,7 @@ import { CursorPaginationDto } from '@/core/global/domain/structures/dtos'
 import { UseCase } from '@/core/global/interfaces'
 import { MeasurementDto } from '../domain/dtos/measurement-dto'
 import { MeasurementRepository } from '../interfaces/measurement-repository'
-import { Id, PlusInteger, Status, Text } from '@/core/global/domain/structures'
+import { Id, PlusInteger, Status, Text, Timestamp } from '@/core/global/domain/structures'
 
 type Request = {
   name?: string
@@ -31,7 +31,7 @@ export class ListMeasurementsUseCase
       status: params.status ? Status.create(params.status) : undefined,
       stationId: params.stationId ? Text.create(params.stationId) : undefined,
       parameterId: params.parameterId ? Text.create(params.parameterId) : undefined,
-      date: params.date ? Text.create(params.date) : undefined,
+      date: params.date ? Timestamp.createFromString(params.date) : undefined,
     })
 
     return pagination.map((measurement) => measurement.dto).dto

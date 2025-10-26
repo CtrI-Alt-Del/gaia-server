@@ -1,8 +1,15 @@
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 import { Prisma as PrismaClient } from '../prisma'
-import { CursorPagination, Id, PlusInteger } from '@/core/global/domain/structures'
+import {
+  CursorPagination,
+  Id,
+  PlusInteger,
+  Timestamp,
+} from '@/core/global/domain/structures'
 import { CursorPaginationParams } from '@/core/global/domain/types/cursor-pagination-params'
 import { AppError } from '@/core/global/domain/errors'
+import { DatetimeProvider } from '@/core/global/interfaces'
+import { DEPENDENCIES } from '@/infra/constants'
 
 export interface CursorPaginationQuery {
   model: any
@@ -22,7 +29,20 @@ export interface CursorPaginationResult<T> {
 
 @Injectable()
 export abstract class PrismaRepository {
-  constructor(protected readonly prisma: PrismaClient) {}
+  constructor(
+    protected readonly prisma: PrismaClient,
+    @Inject(DEPENDENCIES.provision.datetimeProvider)
+    private readonly datetimeProvider: DatetimeProvider,
+  ) {}
+
+  protected createDateQuery(date: Timestamp) {
+    const startOfDay = this.datetimeProvider.getStartOf(date.value)
+    const endOfDay = this.datetimeProvider.getEndOf(date.value)
+    return {
+      gte: startOfDay,
+      lte: endOfDay,
+    }
+  }
 
   protected async paginateWithCursor<T>(
     query: CursorPaginationQuery,

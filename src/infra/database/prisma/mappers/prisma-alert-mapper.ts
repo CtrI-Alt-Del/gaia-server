@@ -7,7 +7,7 @@ export class PrismaAlertMapper {
       id: prismaAlert.id,
       message: prismaAlert.alarm.message,
       level: prismaAlert.alarm.level as 'WARNING' | 'CRITICAL',
-      createdAt: prismaAlert.alarm.createdAt,
+      createdAt: prismaAlert.createdAt,
       parameterName: prismaAlert.stationParameter.parameter.name,
       parameterUnitOfMeasure: prismaAlert.stationParameter.parameter.unitOfMeasure,
       parameterStationName: prismaAlert.stationParameter.station.name,

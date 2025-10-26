@@ -70,8 +70,7 @@ export class Alert extends Entity<AlertProps> {
     return this.props.isRead
   }
 
-  get dto(): AlertDto {
-    console.log(this.id.value)
+  get dto(): AlertDto {    
     return {
       id: this.id.value,
       message: this.message.value,

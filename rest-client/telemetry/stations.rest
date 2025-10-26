@@ -1,11 +1,11 @@
 @URL = {{BASE_URL}}/telemetry/stations
 @ID = cmg2unkjg037y0wv2hw285w11
 
-#### list stations
+### list stations
 GET {{URL}}
 ?pageSize=5
 
-#### create station
+### create station
 POST {{URL}}
 Content-Type: application/json
 
@@ -20,7 +20,7 @@ Content-Type: application/json
   "parameterIds": ["param1", "param2", "param3"]
 }
 
-#### update station
+### update station
 PUT {{URL}}/{{ID}}
 Content-Type: application/json
 
@@ -35,18 +35,22 @@ Content-Type: application/json
   "parameterIds": ["param1", "param2", "param4"]
 }
 
-#### deactivate station
+### deactivate station
 DELETE {{URL}}/{{ID}}
 Content-Type: application/json
 
-#### activate station
+### activate station
 PATCH {{URL}}/{{ID}}
 Content-Type: application/json
 
-#### station details
+### station details
 GET {{URL}}/{{ID}}
 Content-Type: application/json
 
-#### station parameters
+### station parameters
 GET {{URL}}/parameters/{{ID}}
+Content-Type: application/json
+
+### list stations by coords
+GET {{URL}}/box/coords?lat1=&long1=&lat2=&long2=
 Content-Type: application/json

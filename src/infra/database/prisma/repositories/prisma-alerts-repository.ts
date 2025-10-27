@@ -123,6 +123,7 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
   async countByTimePeriod(timePeriod: 'MONTHLY' | 'WEEKLY'): Promise<{criticalCount: number, warningCount: number, time: string}[]> {
     
     const today = new Date()
+    today.setUTCHours(-3)
     if (timePeriod === "MONTHLY") {
       today.setMonth(today.getMonth() + 1)
       const lastYearToday = new Date(today)
@@ -134,8 +135,8 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
         },
         where: {
           AND: [
-            {createdAt: {lte: today}},
-            {createdAt: {gte: lastYearToday}},
+            {createdAt: {lt: today}},
+            {createdAt: {gt: lastYearToday}},
           ]
         },
         include: {
@@ -152,16 +153,17 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
       const entityAlerts = prismaAlerts.map(PrismaAlertMapper.toEntity)
 
       const countByTimePeriod:{criticalCount: number, warningCount: number, time: string}[] = []
-      lastYearToday.setDate(1)
+      const countBytTimePeriodDate = new Date(lastYearToday)
+      countBytTimePeriodDate.setDate(1)
 
       for (let i = 0; i < 12; i++) {
         countByTimePeriod.push({
           criticalCount: 0,
           warningCount: 0,
-          time: lastYearToday.toISOString().split("T")[0]
+          time: countBytTimePeriodDate.toISOString().split("T")[0]
         })
 
-        lastYearToday.setMonth(lastYearToday.getMonth() + 1)
+        countBytTimePeriodDate.setMonth(countBytTimePeriodDate.getMonth() + 1)
       }
 
       entityAlerts.forEach(alert => {

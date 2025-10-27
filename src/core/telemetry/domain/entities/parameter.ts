@@ -1,13 +1,15 @@
 import { Entity } from '@/core/global/domain/abstracts'
-import { Logical, Text, Timestamp } from '@/core/global/domain/structures'
-import { Integer } from '@/core/global/domain/structures/integer'
+import { Logical, Numeric, Text, Timestamp } from '@/core/global/domain/structures'
 import { ParameterDto } from '@/core/telemetry/domain/dtos/parameter-dto'
+import { Reading } from './reading'
+import { Measurement } from './measurement'
 
 type ParameterProps = {
   name: Text
   unitOfMeasure: Text
-  factor: Integer
-  offset: Integer
+  code: Text
+  factor: Numeric
+  offset: Numeric
   isActive: Logical
   createdAt: Timestamp
   updatedAt?: Timestamp
@@ -18,8 +20,9 @@ export class Parameter extends Entity<ParameterProps> {
       {
         name: Text.create(dto.name),
         unitOfMeasure: Text.create(dto.unitOfMeasure),
-        factor: Integer.create(dto.factor),
-        offset: Integer.create(dto.offset),
+        code: Text.create(dto.code),
+        factor: Numeric.create(dto.factor),
+        offset: Numeric.create(dto.offset),
         isActive: Logical.create(dto.isActive ?? true),
         createdAt: Timestamp.create(dto.createdAt ?? new Date()),
         updatedAt: dto.updatedAt ? Timestamp.create(dto.updatedAt) : undefined,
@@ -28,19 +31,34 @@ export class Parameter extends Entity<ParameterProps> {
     )
   }
 
+  parseReading(reading: Reading): Measurement {
+    const parsedValue = reading.value.multiply(this.factor).divide(this.offset)
+    return Measurement.create({
+      value: parsedValue.value,
+      createdAt: new Date(),
+      parameter: {
+        id: this.id.value,
+      },
+    })
+  }
+
   get name(): Text {
     return this.props.name
+  }
+
+  get code(): Text {
+    return this.props.code
   }
 
   get unitOfMeasure(): Text {
     return this.props.unitOfMeasure
   }
 
-  get factor(): Integer {
+  get factor(): Numeric {
     return this.props.factor
   }
 
-  get offset(): Integer {
+  get offset(): Numeric {
     return this.props.offset
   }
 
@@ -52,10 +70,10 @@ export class Parameter extends Entity<ParameterProps> {
       this.props.unitOfMeasure = Text.create(partialDto.unitOfMeasure)
     }
     if (partialDto.factor !== undefined) {
-      this.props.factor = Integer.create(partialDto.factor)
+      this.props.factor = Numeric.create(partialDto.factor)
     }
     if (partialDto.offset !== undefined) {
-      this.props.offset = Integer.create(partialDto.offset)
+      this.props.offset = Numeric.create(partialDto.offset)
     }
     this.refreshLastUpdate()
     return this
@@ -65,6 +83,7 @@ export class Parameter extends Entity<ParameterProps> {
     return {
       id: this.id.value,
       name: this.name.value,
+      code: this.code.value,
       unitOfMeasure: this.unitOfMeasure.value,
       factor: this.factor.value,
       offset: this.offset.value,

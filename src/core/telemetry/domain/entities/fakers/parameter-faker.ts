@@ -11,6 +11,7 @@ export class ParameterFaker {
   static fakeDto(baseDto?: Partial<ParameterDto>): ParameterDto {
     return {
       name: faker.person.fullName(),
+      code: faker.string.uuid(),
       unitOfMeasure: faker.helpers.arrayElement([
         '°C',
         '°F',

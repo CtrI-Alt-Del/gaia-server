@@ -34,4 +34,20 @@ export class Numeric {
   isEqual(other: Numeric): Logical {
     return Logical.create(this.value === other.value)
   }
+
+  plus(other: Numeric): Numeric {
+    return Numeric.create(this.value + other.value)
+  }
+
+  minus(other: Numeric): Numeric {
+    return Numeric.create(this.value - other.value)
+  }
+
+  multiply(other: Numeric): Numeric {
+    return Numeric.create(this.value * other.value)
+  }
+
+  divide(other: Numeric): Numeric {
+    return Numeric.create(this.value / other.value)
+  }
 }

@@ -36,6 +36,7 @@ export class PrismaAlarmMapper {
         entity: {
           name: alarm.StationParameter.parameter.name,
           unitOfMeasure: alarm.StationParameter.parameter.unitOfMeasure,
+          stationId: alarm.StationParameter.station.id,
           stationName: alarm.StationParameter.station.name,
         },
       },

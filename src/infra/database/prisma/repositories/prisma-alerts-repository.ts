@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 
 import { AlertsRepository } from '@/core/alerting/interfaces'
-import { Id, Numeric } from '@/core/global/domain/structures'
+import { Id, Numeric, TimePeriod } from '@/core/global/domain/structures'
 import { Alert } from '@/core/alerting/domain/entities'
 import { AlertListingParams } from '@/core/global/types/alerts-listing-params'
 import { CursorPagination } from '@/core/global/domain/structures'
@@ -120,18 +120,21 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
     })
   }
 
-  async countByTimePeriod(timePeriod: 'MONTHLY' | 'WEEKLY'): Promise<{criticalCount: number, warningCount: number, time: string}[]> {
-    
+  async countByTimePeriod(
+    timePeriod: TimePeriod,
+  ): Promise<{ criticalCount: number; warningCount: number; time: string }[]> {
     const today = new Date()
+    
     today.setUTCHours(-3)
     if (timePeriod === "MONTHLY") {
       today.setMonth(today.getMonth() + 1)
       const lastYearToday = new Date(today)
+      lastYearToday.setHours(today.getHours() - 3)
       lastYearToday.setFullYear(today.getFullYear() - 1)
 
       const prismaAlerts = await this.prisma.alert.findMany({
         orderBy: {
-          createdAt: "asc"
+          createdAt: 'asc',
         },
         where: {
           AND: [
@@ -144,10 +147,10 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
           stationParameter: {
             include: {
               parameter: true,
-              station: true
-            }
-          }
-        }
+              station: true,
+            },
+          },
+        },
       })
 
       const entityAlerts = prismaAlerts.map(PrismaAlertMapper.toEntity)
@@ -166,23 +169,24 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
         countBytTimePeriodDate.setMonth(countBytTimePeriodDate.getMonth() + 1)
       }
 
-      entityAlerts.forEach(alert => {
+      entityAlerts.forEach((alert) => {
         const alertCreatedAt = alert.createdAt.value
-        
+
         alertCreatedAt.setDate(1)
-        const count = countByTimePeriod.find(c => c.time === alertCreatedAt.toISOString().split("T")[0])
+        const count = countByTimePeriod.find(
+          (c) => c.time === alertCreatedAt.toISOString().split('T')[0],
+        )
 
         if (count) {
-          if (alert.level.value === "CRITICAL") {
+          if (alert.level.value === 'CRITICAL') {
             count.criticalCount += 1
-          } else if (alert.level.value === "WARNING") {
+          } else if (alert.level.value === 'WARNING') {
             count.warningCount += 1
           }
         }
       })
 
       return countByTimePeriod
-      
     } else {
       today.setDate(today.getDate() + 1)
       const lastWeekToday = new Date(today)
@@ -190,7 +194,7 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
 
       const prismaAlerts = await this.prisma.alert.findMany({
         orderBy: {
-          createdAt: "asc"
+          createdAt: 'asc',
         },
         where: {
           AND: [
@@ -203,10 +207,10 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
           stationParameter: {
             include: {
               parameter: true,
-              station: true
-            }
-          }
-        }
+              station: true,
+            },
+          },
+        },
       })
 
       const entityAlerts = prismaAlerts.map(PrismaAlertMapper.toEntity)
@@ -216,21 +220,23 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
         countByTimePeriod.push({
           criticalCount: 0,
           warningCount: 0,
-          time: lastWeekToday.toISOString().split("T")[0]
+          time: lastWeekToday.toISOString().split('T')[0],
         })
 
         lastWeekToday.setDate(lastWeekToday.getDate() + 1)
       }
 
-      entityAlerts.forEach(alert => {
+      entityAlerts.forEach((alert) => {
         const alertCreatedAt = alert.createdAt.value
-        
-        const count = countByTimePeriod.find(c => c.time === alertCreatedAt.toISOString().split("T")[0])
+
+        const count = countByTimePeriod.find(
+          (c) => c.time === alertCreatedAt.toISOString().split('T')[0],
+        )
 
         if (count) {
-          if (alert.level.value === "CRITICAL") {
+          if (alert.level.value === 'CRITICAL') {
             count.criticalCount += 1
-          } else if (alert.level.value === "WARNING") {
+          } else if (alert.level.value === 'WARNING') {
             count.warningCount += 1
           }
         }

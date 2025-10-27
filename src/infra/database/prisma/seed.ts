@@ -26,7 +26,7 @@ export async function seed() {
     await prisma.alarm.deleteMany()
     console.log('✅ Alarms removidos')
 
-    await prisma.measure.deleteMany()
+    await prisma.measurement.deleteMany()
     console.log('✅ Measures removidos')
 
     await prisma.alert.deleteMany()
@@ -66,7 +66,11 @@ export async function seed() {
 
     console.log(`✅ ${users.length} usuários adicionados com sucesso!`)
 
+    const mainParameter = ParameterFaker.fake({
+      code: 'plu',
+    })
     const parameters = ParameterFaker.fakeMany(50)
+    parameters.push(mainParameter)
     const prismaParameters = parameters.map(PrismaParameterMapper.toPrisma)
 
     await prisma.parameter.createMany({
@@ -75,16 +79,16 @@ export async function seed() {
     })
 
     console.log(`✅ ${parameters.length} parâmetros adicionados com sucesso!`)
-    
+
     const stationsParameter: {
-        id: string
-        stationId: string
-        parameterId: string
-      }[] = []
+      id: string
+      stationId: string
+      parameterId: string
+    }[] = []
 
     let countMeasure = 0
 
-    const stations = StationsFaker.fakeMany(1000)
+    const stations = StationsFaker.fakeMany(100)
 
     for (const station of stations) {
       const stationData = {
@@ -103,15 +107,22 @@ export async function seed() {
         data: stationData,
       })
 
+      let isMainParameterUsed = false
       const randomParameters = parameters.slice(0, Math.floor(Math.random() * 5) + 1)
 
       for (const parameter of randomParameters) {
         const stationParameter = await prisma.stationParameter.create({
           data: {
             stationId: station.id.value,
-            parameterId: parameter.id.value,
+            parameterId: !isMainParameterUsed
+              ? mainParameter.id.value
+              : parameter.id.value,
           },
         })
+
+        if (!isMainParameterUsed) {
+          isMainParameterUsed = true
+        }
 
         stationsParameter.push(stationParameter)
 
@@ -124,20 +135,16 @@ export async function seed() {
             stationsParameter[Math.floor(Math.random() * stationsParameter.length)]
 
           const measurementData = {
-            id: measurement.id.value,
             value: measurement.value.value,
-            unitOfMeasure: parameters.find(
-              (p) => p.id.value === randomStationParameter.parameterId,
-            )?.unitOfMeasure.value as string,
             createdAt: measurement.createdAt.value,
             stationParameter: {
               connect: {
-                id: stationParameter.id,
+                id: randomStationParameter.id,
               },
             },
           }
 
-          await prisma.measure.create({
+          await prisma.measurement.create({
             data: measurementData,
           })
         }
@@ -169,7 +176,7 @@ export async function seed() {
     console.log(`✅ ${alarms.length} alarmes adicionados com sucesso!`)
 
     const createdAlarms = await prisma.alarm.findMany()
-    const createdMeasures = await prisma.measure.findMany()
+    const createdMeasures = await prisma.measurement.findMany()
 
     for (let i = 0; i < 50; i++) {
       const randomAlarm = createdAlarms[Math.floor(Math.random() * createdAlarms.length)]
@@ -178,8 +185,10 @@ export async function seed() {
 
       const randomYear = Math.floor(Math.random() * (2025 - 2023 + 1) + 2023).toString()
       const randomMonth = Math.floor(Math.random() * (12 - 1 + 1) + 1).toString()
-      const randomDay = Math.floor(Math.random() * ((randomMonth === "2" ? 28 : 30) - 1 + 1) + 1).toString()
-      
+      const randomDay = Math.floor(
+        Math.random() * ((randomMonth === '2' ? 28 : 30) - 1 + 1) + 1,
+      ).toString()
+
       const randomDate = new Date(`${randomYear}-${randomMonth}-${randomDay} 01:00`)
 
       await prisma.alert.create({
@@ -187,7 +196,7 @@ export async function seed() {
           alarmId: randomAlarm.id,
           measurementValue: randomMeasure.value,
           stationParameterId: randomMeasure.stationParameterId,
-          createdAt: randomDate.toISOString()
+          createdAt: randomDate.toISOString(),
         },
       })
     }

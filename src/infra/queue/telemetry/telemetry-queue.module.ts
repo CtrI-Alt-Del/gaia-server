@@ -3,8 +3,9 @@ import { BullModule } from '@nestjs/bull'
 
 import { DatabaseModule } from '@/infra/database/database.module'
 import { BullTelemetryBroker } from '../bull/brokers'
-import { ParseMeasurementsJob } from './jobs/parse-measurements.job'
+import { ParseReadingsJob } from './jobs/parse-readings.job'
 import { DEPENDENCIES } from '@/infra/constants'
+import { BullTelemetryProcessor } from '../bull/processors'
 
 @Module({
   imports: [
@@ -14,11 +15,12 @@ import { DEPENDENCIES } from '@/infra/constants'
     DatabaseModule,
   ],
   providers: [
+    BullTelemetryProcessor,
     {
       provide: DEPENDENCIES.queue.telemetryBroker,
       useClass: BullTelemetryBroker,
     },
-    ParseMeasurementsJob,
+    ParseReadingsJob,
   ],
   exports: [DEPENDENCIES.queue.telemetryBroker],
 })

@@ -1,10 +1,7 @@
+import { ParameterAggregateDto } from '@/core/alerting/dtos/parameter-aggregate-dto'
+
 export type MeasurementDto = {
-  id?: string
-  stationId: string
-  parameterId: string
-  stationName: string
-  parameterName: string
-  unitOfMeasure: string
   value: number
   createdAt: Date
+  parameter: ParameterAggregateDto
 }

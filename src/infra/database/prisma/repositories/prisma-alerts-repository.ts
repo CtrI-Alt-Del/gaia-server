@@ -124,9 +124,9 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
     timePeriod: TimePeriod,
   ): Promise<{ criticalCount: number; warningCount: number; time: string }[]> {
     const today = new Date()
-    console.log(timePeriod.value)
     if (timePeriod.value === 'MONTHLY') {
       const lastYearToday = new Date(today)
+      lastYearToday.setHours(today.getHours() - 3)
       lastYearToday.setFullYear(today.getFullYear() - 1)
 
       const prismaAlerts = await this.prisma.alert.findMany({

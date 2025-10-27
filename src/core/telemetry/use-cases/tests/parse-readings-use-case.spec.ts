@@ -19,7 +19,7 @@ import {
 
 const FIXED_RECEIVED_AT = new Date('2024-01-01T00:00:00Z').getTime()
 
-describe('ParseReadingsUseCase', () => {
+describe('Parse Readings Use Case', () => {
   let broker: MockProxy<Broker>
   let readingsRepository: MockProxy<ReadingsRepository>
   let measurementsRepository: MockProxy<MeasurementsRepository>
@@ -80,7 +80,9 @@ describe('ParseReadingsUseCase', () => {
 
     await useCase.execute()
 
-    expect(parametersRepository.findParameterByCode).toHaveBeenCalledTimes(readings.length)
+    expect(parametersRepository.findParameterByCode).toHaveBeenCalledTimes(
+      readings.length,
+    )
 
     const [persistedMeasurements] = measurementsRepository.createMany.mock.calls[0]
     expect(persistedMeasurements).toHaveLength(readings.length)

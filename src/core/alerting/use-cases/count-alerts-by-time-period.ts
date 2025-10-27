@@ -1,15 +1,22 @@
-import { AlertsRepository, UseCase } from "@/core/global/interfaces"
+import { TimePeriod } from '@/core/global/domain/structures'
+import { AlertsRepository, UseCase } from '@/core/global/interfaces'
 
 type Request = {
-    timePeriod: 'MONTHLY' | 'WEEKLY'
+  timePeriod: string
 }
 
-export class CountAlertsByTimePeriod implements UseCase<Request, {criticalCount: number, warningCount: number, time: string}[]> {
-    constructor(private readonly repository: AlertsRepository) {}
+type Response = {
+  criticalCount: number
+  warningCount: number
+  time: string
+}
 
-    async execute(params: Request): Promise<{criticalCount: number, warningCount: number, time: string}[]> {
-        const alerts = await this.repository.countByTimePeriod(params.timePeriod)
+export class CountAlertsByTimePeriod implements UseCase<Request, Response[]> {
+  constructor(private readonly repository: AlertsRepository) {}
 
-        return alerts
-    }
+  async execute({ timePeriod }: Request): Promise<Response[]> {
+    const alerts = await this.repository.countByTimePeriod(TimePeriod.create(timePeriod))
+
+    return alerts
+  }
 }

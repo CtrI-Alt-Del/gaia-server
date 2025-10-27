@@ -1,20 +1,16 @@
-import { Job } from 'bull'
 import { Processor, Process } from '@nestjs/bull'
 
-import { EventPayload } from '@/core/global/domain/types/event-payload'
-import { MeasurementCreatedEvent } from '@/core/telemetry/domain/events'
+import { ReadingsCollectedEvent } from '@/core/telemetry/domain/events'
 
 import { DEPENDENCIES } from '@/infra/constants'
-import { CreateAlertJob } from '../../alerting/jobs'
+import { ParseReadingsJob } from '../../telemetry/jobs'
 
 @Processor(DEPENDENCIES.queue.telemetryQueue)
 export class BullTelemetryProcessor {
-  constructor(private readonly createAlertJob: CreateAlertJob) {}
+  constructor(private readonly parseReadingsJob: ParseReadingsJob) {}
 
-  @Process(MeasurementCreatedEvent._NAME)
-  async processMeasurementCreatedEvent(
-    job: Job<EventPayload<typeof MeasurementCreatedEvent>>,
-  ) {
-    await this.createAlertJob.handle(job.data)
+  @Process(ReadingsCollectedEvent._NAME)
+  async processReadingsCollectedEvent() {
+    await this.parseReadingsJob.handle()
   }
 }

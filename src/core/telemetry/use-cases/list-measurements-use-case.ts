@@ -1,8 +1,8 @@
 import { CursorPaginationDto } from '@/core/global/domain/structures/dtos'
+import { Id, PlusInteger, Status, Text, Timestamp } from '@/core/global/domain/structures'
 import { UseCase } from '@/core/global/interfaces'
 import { MeasurementDto } from '../domain/dtos/measurement-dto'
-import { MeasurementRepository } from '../interfaces/measurement-repository'
-import { Id, PlusInteger, Status, Text, Timestamp } from '@/core/global/domain/structures'
+import { MeasurementsRepository } from '../interfaces/measurements-repository'
 
 type Request = {
   name?: string
@@ -18,7 +18,7 @@ type Request = {
 export class ListMeasurementsUseCase
   implements UseCase<Request, CursorPaginationDto<MeasurementDto>>
 {
-  constructor(private readonly repository: MeasurementRepository) {}
+  constructor(private readonly repository: MeasurementsRepository) {}
 
   async execute(params: Request): Promise<CursorPaginationDto<MeasurementDto>> {
     const pagination = await this.repository.findMany({

@@ -7,6 +7,7 @@ import z from 'zod'
 
 export const parameterSchema = z.object({
   name: stringSchema,
+  code: stringSchema,
   unitOfMeasure: stringSchema,
   factor: numberSchema.min(0),
   isActive: booleanSchema.optional(),

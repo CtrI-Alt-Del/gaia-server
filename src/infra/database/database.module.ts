@@ -8,15 +8,14 @@ import {
   PrismaUsersRepository,
 } from './prisma/repositories'
 import { EnvProviderModule } from '@/infra/provision/env/env-provider.module'
+import { MongooseModule } from '@nestjs/mongoose'
+
+import { EnvProvider } from '@/infra/provision/env/env-provider'
+import { ReadingModel } from '@/infra/database/mongoose/models/reading-model'
 import { PrismaMeasurementsRepository } from './prisma/repositories/prisma-measurements-repository'
 import { PrismaAlertsRepository } from './prisma/repositories/prisma-alerts-repository'
-import { MongooseModule } from '@nestjs/mongoose'
-import {
-  MongooseMeasurementsRepository,
-  RawMeasurementModel,
-} from '@/infra/database/mongo'
-import { RawMeasurementSchema } from '@/infra/database/mongo/schemas/raw-measurement-schema'
-import { EnvProvider } from '@/infra/provision/env/env-provider'
+import { ReadingSchema } from './mongoose/schemas'
+import { MongooseReadingsRepository } from './mongoose/repositories'
 import { DatetimeProviderModule } from '../provision/datetime/datetime-provider.module'
 
 @Module({
@@ -47,8 +46,8 @@ import { DatetimeProviderModule } from '../provision/datetime/datetime-provider.
       useClass: PrismaAlertsRepository,
     },
     {
-      provide: DatabaseModule.MONGO_MEASUREMENTS_REPOSITORY,
-      useClass: MongooseMeasurementsRepository,
+      provide: DatabaseModule.READINGS_REPOSITORY,
+      useClass: MongooseReadingsRepository,
     },
   ],
   imports: [
@@ -57,19 +56,11 @@ import { DatetimeProviderModule } from '../provision/datetime/datetime-provider.
     MongooseModule.forRootAsync({
       imports: [EnvProviderModule],
       inject: [EnvProvider],
-      useFactory: async (envProvider: EnvProvider) => {
-        const mongoUri = envProvider.get('MONGO_URI')
-        if (!mongoUri) {
-          throw new Error('MONGO_URI is not defined in environment variables')
-        }
-        return {
-          uri: mongoUri,
-        }
-      },
+      useFactory: async (envProvider: EnvProvider) => ({
+        uri: envProvider.get('MONGO_URI'),
+      }),
     }),
-    MongooseModule.forFeature([
-      { name: RawMeasurementModel.name, schema: RawMeasurementSchema },
-    ]),
+    MongooseModule.forFeature([{ name: ReadingModel.name, schema: ReadingSchema }]),
   ],
   exports: [
     Prisma,
@@ -79,7 +70,7 @@ import { DatetimeProviderModule } from '../provision/datetime/datetime-provider.
     DatabaseModule.STATIONS_REPOSITORY,
     DatabaseModule.MEASUREMENTS_REPOSITORY,
     DatabaseModule.ALERTS_REPOSITORY,
-    DatabaseModule.MONGO_MEASUREMENTS_REPOSITORY,
+    DatabaseModule.READINGS_REPOSITORY,
   ],
 })
 export class DatabaseModule {
@@ -89,5 +80,5 @@ export class DatabaseModule {
   static readonly STATIONS_REPOSITORY = 'STATIONS_REPOSITORY'
   static readonly MEASUREMENTS_REPOSITORY = 'MEASUREMENTS_REPOSITORY'
   static readonly ALERTS_REPOSITORY = 'ALERTS_REPOSITORY'
-  static readonly MONGO_MEASUREMENTS_REPOSITORY = 'MONGO_MEASUREMENTS_REPOSITORY'
+  static readonly READINGS_REPOSITORY = 'READINGS_REPOSITORY'
 }

@@ -51,4 +51,8 @@ export class Timestamp {
   toDate(): Date {
     return this.value
   }
+
+  get time(): number {
+    return this.value.getTime()
+  }
 }

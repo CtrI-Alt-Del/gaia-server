@@ -8,7 +8,7 @@ import { alarmSchema } from '@/infra/validation/schemas/zod/alerting/alarm-schem
 import { DatabaseModule } from '@/infra/database/database.module'
 import { AlarmsController } from './alarms.controller'
 
-class RequestBody extends createZodDto(alarmSchema) {}
+class CreateAlarmsRequestBody extends createZodDto(alarmSchema) {}
 
 @AlarmsController()
 export class CreateAlarmsController {
@@ -19,7 +19,7 @@ export class CreateAlarmsController {
 
   @Post()
   @UsePipes(new ZodValidationPipe(alarmSchema))
-  async handle(@Body() body: RequestBody) {
+  async handle(@Body() body: CreateAlarmsRequestBody) {
     const useCase = new CreateAlarmUseCase(this.repository)
     return await useCase.execute(body)
   }

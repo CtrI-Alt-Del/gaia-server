@@ -7,6 +7,7 @@ export const parameterSchema = z.object({
     .object({
       name: stringSchema,
       unitOfMeasure: stringSchema,
+      stationId: stringSchema,
       stationName: stringSchema,
     })
     .optional(),

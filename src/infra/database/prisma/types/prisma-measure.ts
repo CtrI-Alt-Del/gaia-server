@@ -1,6 +1,6 @@
-import { Measure, Parameter, Station, StationParameter } from '@prisma/client'
+import { Measurement, Parameter, Station, StationParameter } from '@prisma/client'
 
-export type PrismaMeasure = Measure & {
+export type PrismaMeasure = Measurement & {
   stationParameter: StationParameter & {
     parameter: Parameter
     station: Station

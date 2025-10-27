@@ -1,9 +1,10 @@
 import { Get, Inject, Param } from '@nestjs/common'
 
-import { DatabaseModule } from '@/infra/database/database.module'
-import { AlertsController } from './alerts.controller'
 import { AlertsRepository } from '@/core/alerting/interfaces/alerts-repository'
 import { CountAlertsByTimePeriod } from '@/core/alerting/use-cases'
+
+import { DatabaseModule } from '@/infra/database/database.module'
+import { AlertsController } from './alerts.controller'
 
 @AlertsController('/count/:timePeriod')
 export class CountAlertsByTimePeriodController {
@@ -13,9 +14,9 @@ export class CountAlertsByTimePeriodController {
   ) {}
 
   @Get()
-  async handle(@Param("timePeriod") timePeriod: "MONTHLY" | "WEEKLY") {
+  async handle(@Param('timePeriod') timePeriod: string) {
     const useCase = new CountAlertsByTimePeriod(this.repository)
-    const result = await useCase.execute({timePeriod: timePeriod})
+    const result = await useCase.execute({ timePeriod: timePeriod })
     return result
   }
 }

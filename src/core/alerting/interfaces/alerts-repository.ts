@@ -1,4 +1,9 @@
-import { CursorPagination, Id, Numeric } from '@/core/global/domain/structures'
+import {
+  CursorPagination,
+  Id,
+  Numeric,
+  TimePeriod,
+} from '@/core/global/domain/structures'
 import { AlertListingParams } from '@/core/global/types/'
 import { Alert } from '../domain/entities'
 import { AlarmLevel } from '../domain/structures'
@@ -10,5 +15,7 @@ export interface AlertsRepository {
   findLast(): Promise<Alert[]>
   countByAlarmLevel(alertLevel: AlarmLevel): Promise<number>
   replace(alert: Alert): Promise<void>
-  countByTimePeriod(timePeriod: "MONTHLY" | "WEEKLY"): Promise<{criticalCount: number, warningCount: number, time: string}[]>
+  countByTimePeriod(
+    timePeriod: TimePeriod,
+  ): Promise<{ criticalCount: number; warningCount: number; time: string }[]>
 }

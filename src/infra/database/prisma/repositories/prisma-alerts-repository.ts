@@ -126,7 +126,7 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
     const today = new Date()
     
     today.setUTCHours(-3)
-    if (timePeriod === "MONTHLY") {
+    if (timePeriod.value === "MONTHLY") {
       today.setMonth(today.getMonth() + 1)
       const lastYearToday = new Date(today)
       lastYearToday.setHours(today.getHours() - 3)

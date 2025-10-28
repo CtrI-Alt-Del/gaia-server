@@ -27,7 +27,11 @@ export class CreateAlertJob {
 
   @OnEvent(MeasurementCreatedEvent._NAME)
   async handle(payload: Payload) {
-    const useCase = new CreateAlertUseCase(this.alarmsRepository, this.alertsRepository)
+    const useCase = new CreateAlertUseCase(
+      this.alarmsRepository,
+      this.alertsRepository,
+      this.cacheProvider,
+    )
     await useCase.execute({
       measurementValue: payload.measurementValue,
       stationParameterId: payload.stationParameterId,

@@ -1,6 +1,8 @@
 import { Id, Numeric } from '@/core/global/domain/structures'
+import { CacheProvider } from '@/core/global/interfaces'
 import { AlertsRepository } from '../interfaces/alerts-repository'
 import { AlarmsRepository } from '../interfaces'
+import { CACHE } from '@/infra/constants'
 
 type Request = {
   stationParameterId: string
@@ -11,6 +13,7 @@ export class CreateAlertUseCase {
   constructor(
     private readonly alarmsRepository: AlarmsRepository,
     private readonly alertsRepository: AlertsRepository,
+    private readonly cacheProvider: CacheProvider,
   ) {}
 
   async execute(request: Request): Promise<void> {
@@ -20,6 +23,8 @@ export class CreateAlertUseCase {
     const alarms =
       await this.alarmsRepository.findAllByStationParameter(stationParameterId)
     const promises: Promise<void>[] = []
+
+    console.log({ alarms })
 
     for (const alarm of alarms) {
       const shouldCreateAlert = alarm.rule.apply(measurementValue)
@@ -31,5 +36,7 @@ export class CreateAlertUseCase {
     }
 
     await Promise.all(promises)
+
+    await this.cacheProvider.clear(CACHE.lastAlerts.key)
   }
 }

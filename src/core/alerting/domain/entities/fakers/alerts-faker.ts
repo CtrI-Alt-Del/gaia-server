@@ -12,7 +12,7 @@ export class AlertFaker {
       id: faker.string.uuid(),
       level: faker.helpers.arrayElement(['WARNING', 'CRITICAL']),
       message: faker.lorem.sentence(),
-      createdAt: faker.date.recent(),
+      createdAt: faker.date.between({ from: '2024-08-01', to: '2025-10-20' }),
       measurementValue: faker.number.float(),
       parameterName: faker.lorem.word(),
       parameterUnitOfMeasure: faker.lorem.word(),

@@ -22,6 +22,7 @@ export class PrismaParameterMapper {
       updatedAt: parameter.updatedAt?.value,
     }
   }
+
   static toDto(parameter: Prisma.Parameter): ParameterDto {
     return {
       id: parameter.id,

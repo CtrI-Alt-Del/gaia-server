@@ -3,7 +3,7 @@
 
 ### list stations
 GET {{URL}}
-?pageSize=5
+?pageSize=100
 
 ### create station
 POST {{URL}}

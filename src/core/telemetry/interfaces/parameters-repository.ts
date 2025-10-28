@@ -8,7 +8,10 @@ export interface ParametersRepository {
   findMany(params: ParametersListParams): Promise<CursorPagination<Parameter>>
   findManyByIds(ids: Id[]): Promise<Parameter[]>
   findParametersByStationId(stationId: Id): Promise<Parameter[]>
-  findParameterByCode(code: Text): Promise<Parameter | null>
+  findParameterByCodeAndStationUid(
+    code: Text,
+    stationUid: Text,
+  ): Promise<Parameter | null>
   replace(parameter: Parameter): Promise<void>
   deleteById(id: Id): Promise<void>
 }

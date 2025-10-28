@@ -1,6 +1,6 @@
 @URL = {{BASE_URL}}/alerting/alarms
 
-#### List alarms
+### List alarms
 GET {{URL}}
 ?pageSize=20
 &status=all

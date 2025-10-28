@@ -8,7 +8,7 @@ export class CreateAlarmUseCase implements UseCase<AlarmDto, AlarmDto> {
 
   async execute(data: AlarmDto): Promise<AlarmDto> {
     const alarm = Alarm.create(data)
-    this.repository.add(alarm)
+    await this.repository.add(alarm)
     return alarm.dto
   }
 }

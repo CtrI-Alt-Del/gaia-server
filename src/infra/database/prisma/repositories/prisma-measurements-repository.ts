@@ -27,7 +27,7 @@ export class PrismaMeasurementsRepository
       ...(stationId
         ? { stationParameter: { stationId: { equals: stationId.value } } }
         : {}),
-      ...(stationId && parameterId
+      ...(stationId && parameterId && parameterId.value !== 'all'
         ? {
             AND: [
               { stationParameter: { stationId: { equals: stationId.value } } },

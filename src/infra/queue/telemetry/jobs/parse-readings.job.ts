@@ -13,7 +13,7 @@ import { ParseReadingsUseCase } from '@/core/telemetry/use-cases'
 @Injectable()
 export class ParseReadingsJob {
   constructor(
-    @Inject(DEPENDENCIES.queue.telemetryBroker)
+    @Inject(DEPENDENCIES.queue.alertingBroker)
     private readonly broker: Broker,
     @Inject(DatabaseModule.READINGS_REPOSITORY)
     private readonly readingsRepository: ReadingsRepository,

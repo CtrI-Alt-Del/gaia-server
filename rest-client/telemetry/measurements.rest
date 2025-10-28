@@ -2,6 +2,5 @@
 
 #### List measurements
 GET {{URL}}
-?pageSize=20
-&date=2025-10-27T00:32:48.248Z
+?pageSize=100
 

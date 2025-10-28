@@ -63,25 +63,38 @@ export class PrismaParametersRepository
     }
   }
 
-  async findParameterByCode(code: Text): Promise<Parameter | null> {
-    const prismaParameter = await this.prisma.parameter.findUnique({
-      where: { code: code.value },
-      include: {
-        stationParameter: {
-          select: {
-            id: true,
-          },
+  async findParameterByCodeAndStationUid(
+    code: Text,
+    stationUid: Text,
+  ): Promise<Parameter | null> {
+    const stationParameter = await this.prisma.stationParameter.findFirst({
+      where: {
+        station: {
+          uid: stationUid.value,
+        },
+        parameter: {
+          code: code.value,
         },
       },
     })
 
-    if (!prismaParameter || prismaParameter.stationParameter.length === 0) {
+    if (!stationParameter) {
+      return null
+    }
+
+    const prismaParameter = await this.prisma.parameter.findUnique({
+      where: {
+        id: stationParameter.parameterId,
+      },
+    })
+
+    if (!prismaParameter) {
       return null
     }
 
     return PrismaParameterMapper.toEntity({
       ...prismaParameter,
-      id: prismaParameter.stationParameter[0].id,
+      id: stationParameter.id,
     })
   }
 

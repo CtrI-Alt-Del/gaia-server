@@ -6,6 +6,7 @@ import { ParameterFaker } from '@/core/telemetry/domain/entities/fakers/paramete
 import { PrismaUserMapper, PrismaParameterMapper } from './mappers'
 import { AlarmsFaker } from '@/core/alerting/domain/entities/fakers/alarms-faker'
 import { MeasurementFaker } from '@/core/telemetry/domain/entities/fakers/measurement-faker'
+import { faker } from '@faker-js/faker'
 
 export async function seed() {
   const prisma = new PrismaClient({
@@ -297,7 +298,7 @@ export async function seed() {
       //   Math.random() * ((randomMonth === '2' ? 28 : 30) - 1 + 1) + 1,
       // ).toString()
 
-      const randomDate = new Date(`${randomYear}-${randomMonth}-${randomDay} 06:00`)
+      // const randomDate = new Date(`${randomYear}-${randomMonth}-${randomDay} 06:00`)
 
       await prisma.alert.create({
         data: {
@@ -305,7 +306,7 @@ export async function seed() {
           measurementValue: randomMeasure.value,
           stationParameterId: randomMeasure.stationParameterId,
           isRead: true,
-          createdAt: randomDate,
+          createdAt: faker.date.between({ from: '2024-08-01', to: '2025-10-20' }),
         },
       })
     }

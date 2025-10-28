@@ -40,7 +40,7 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
   }
 
   private async process(reading: Reading): Promise<Measurement> {
-    const parameter = await this.findParameter(reading.parameterCode)
+    const parameter = await this.findParameter(reading.parameterCode, reading.stationUid)
     const measurement = parameter.parseReading(reading)
     const event = new MeasurementCreatedEvent({
       measurementValue: measurement.value.value,
@@ -69,8 +69,11 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
     return measurements
   }
 
-  private async findParameter(parameterCode: Text): Promise<Parameter> {
-    const parameter = await this.parametersRepository.findParameterByCode(parameterCode)
+  private async findParameter(parameterCode: Text, stationUid: Text): Promise<Parameter> {
+    const parameter = await this.parametersRepository.findParameterByCodeAndStationUid(
+      parameterCode,
+      stationUid,
+    )
     if (!parameter) {
       throw new ParameterNotFoundError()
     }

@@ -32,7 +32,7 @@ export class Parameter extends Entity<ParameterProps> {
   }
 
   parseReading(reading: Reading): Measurement {
-    const parsedValue = reading.value.multiply(this.factor).divide(this.offset)
+    const parsedValue = reading.value.multiply(this.factor).plus(this.offset)
     return Measurement.create({
       value: parsedValue.value,
       createdAt: new Date(),

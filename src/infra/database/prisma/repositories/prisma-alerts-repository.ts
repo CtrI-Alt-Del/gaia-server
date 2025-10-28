@@ -124,9 +124,9 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
     timePeriod: TimePeriod,
   ): Promise<{ criticalCount: number; warningCount: number; time: string }[]> {
     const today = new Date()
-    
+
     today.setUTCHours(-3)
-    if (timePeriod.value === "MONTHLY") {
+    if (timePeriod.value === 'MONTHLY') {
       today.setMonth(today.getMonth() + 1)
       const lastYearToday = new Date(today)
       lastYearToday.setHours(today.getHours() - 3)
@@ -134,13 +134,10 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
 
       const prismaAlerts = await this.prisma.alert.findMany({
         orderBy: {
-          createdAt: 'asc',
+          createdAt: 'desc',
         },
         where: {
-          AND: [
-            {createdAt: {lt: today}},
-            {createdAt: {gt: lastYearToday}},
-          ]
+          AND: [{ createdAt: { lt: today } }, { createdAt: { gt: lastYearToday } }],
         },
         include: {
           alarm: true,
@@ -155,7 +152,11 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
 
       const entityAlerts = prismaAlerts.map(PrismaAlertMapper.toEntity)
 
-      const countByTimePeriod:{criticalCount: number, warningCount: number, time: string}[] = []
+      const countByTimePeriod: {
+        criticalCount: number
+        warningCount: number
+        time: string
+      }[] = []
       const countBytTimePeriodDate = new Date(lastYearToday)
       countBytTimePeriodDate.setDate(1)
 
@@ -163,7 +164,7 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
         countByTimePeriod.push({
           criticalCount: 0,
           warningCount: 0,
-          time: countBytTimePeriodDate.toISOString().split("T")[0]
+          time: countBytTimePeriodDate.toISOString().split('T')[0],
         })
 
         countBytTimePeriodDate.setMonth(countBytTimePeriodDate.getMonth() + 1)
@@ -190,17 +191,14 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
     } else {
       today.setDate(today.getDate() + 1)
       const lastWeekToday = new Date(today)
-      lastWeekToday.setDate(lastWeekToday.getDate() - 7)
+      lastWeekToday.setDate(lastWeekToday.getDate() - 6)
 
       const prismaAlerts = await this.prisma.alert.findMany({
         orderBy: {
           createdAt: 'asc',
         },
         where: {
-          AND: [
-            {createdAt: {gte: lastWeekToday}},
-            {createdAt: {lte: today}}
-          ]
+          AND: [{ createdAt: { gte: lastWeekToday } }, { createdAt: { lte: today } }],
         },
         include: {
           alarm: true,
@@ -214,16 +212,21 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
       })
 
       const entityAlerts = prismaAlerts.map(PrismaAlertMapper.toEntity)
-      const countByTimePeriod: {criticalCount: number, warningCount: number, time: string}[] = []
+      const countByTimePeriod: {
+        criticalCount: number
+        warningCount: number
+        time: string
+      }[] = []
+      const countBytTimePeriodDate = new Date(lastWeekToday)
 
       for (let i = 0; i < 7; i++) {
         countByTimePeriod.push({
           criticalCount: 0,
           warningCount: 0,
-          time: lastWeekToday.toISOString().split('T')[0],
+          time: countBytTimePeriodDate.toISOString().split('T')[0],
         })
 
-        lastWeekToday.setDate(lastWeekToday.getDate() + 1)
+        countBytTimePeriodDate.setDate(countBytTimePeriodDate.getDate() + 1)
       }
 
       entityAlerts.forEach((alert) => {

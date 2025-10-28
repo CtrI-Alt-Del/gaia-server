@@ -191,7 +191,7 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
     } else {
       today.setDate(today.getDate() + 1)
       const lastWeekToday = new Date(today)
-      lastWeekToday.setDate(lastWeekToday.getDate() - 7)
+      lastWeekToday.setDate(lastWeekToday.getDate() - 6)
 
       const prismaAlerts = await this.prisma.alert.findMany({
         orderBy: {
@@ -217,15 +217,16 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
         warningCount: number
         time: string
       }[] = []
+      const countBytTimePeriodDate = new Date(lastWeekToday)
 
       for (let i = 0; i < 7; i++) {
         countByTimePeriod.push({
           criticalCount: 0,
           warningCount: 0,
-          time: lastWeekToday.toISOString().split('T')[0],
+          time: countBytTimePeriodDate.toISOString().split('T')[0],
         })
 
-        lastWeekToday.setDate(lastWeekToday.getDate() + 1)
+        countBytTimePeriodDate.setDate(countBytTimePeriodDate.getDate() + 1)
       }
 
       entityAlerts.forEach((alert) => {

@@ -6,6 +6,7 @@ import { ParameterFaker } from '@/core/telemetry/domain/entities/fakers/paramete
 import { PrismaUserMapper, PrismaParameterMapper } from './mappers'
 import { AlarmsFaker } from '@/core/alerting/domain/entities/fakers/alarms-faker'
 import { MeasurementFaker } from '@/core/telemetry/domain/entities/fakers/measurement-faker'
+import { faker } from '@faker-js/faker'
 
 export async function seed() {
   const prisma = new PrismaClient({
@@ -28,12 +29,6 @@ export async function seed() {
 
     await prisma.measurement.deleteMany()
     console.log('✅ Measures removidos')
-
-    await prisma.alert.deleteMany()
-    console.log('✅ Alerts removidos')
-
-    await prisma.alarm.deleteMany()
-    console.log('✅ Alarms removidos')
 
     await prisma.stationParameter.deleteMany()
     console.log('✅ StationParameters removidos')
@@ -67,10 +62,86 @@ export async function seed() {
     console.log(`✅ ${users.length} usuários adicionados com sucesso!`)
 
     const mainParameter = ParameterFaker.fake({
+      name: 'Pluviosidade',
       code: 'plu',
+      factor: 2,
+      offset: 0,
+      unitOfMeasure: 'mm',
     })
-    const parameters = ParameterFaker.fakeMany(50)
-    parameters.push(mainParameter)
+    const parameters = [
+      ParameterFaker.fake({
+        name: 'Temperatura do ar',
+        code: 'tmp',
+        unitOfMeasure: '°C',
+      }),
+      ParameterFaker.fake({
+        name: 'Umidade relativa',
+        code: 'hum',
+        unitOfMeasure: '%',
+      }),
+      ParameterFaker.fake({
+        name: 'Pressão atmosférica',
+        code: 'prs',
+        unitOfMeasure: 'hPa',
+      }),
+      ParameterFaker.fake({
+        name: 'Velocidade do vento',
+        code: 'wnd_spd',
+        unitOfMeasure: 'm/s',
+      }),
+      ParameterFaker.fake({
+        name: 'Direção do vento',
+        code: 'wnd_dir',
+        unitOfMeasure: '°',
+      }),
+      ParameterFaker.fake({
+        name: 'Rajada de vento',
+        code: 'wnd_gst',
+        unitOfMeasure: 'm/s',
+      }),
+      ParameterFaker.fake({
+        name: 'Pluviosidade',
+        code: 'plu',
+        unitOfMeasure: 'mm',
+      }),
+      ParameterFaker.fake({
+        name: 'Radiação solar global',
+        code: 'rad',
+        unitOfMeasure: 'W/m²',
+      }),
+      ParameterFaker.fake({
+        name: 'Índice UV',
+        code: 'uvi',
+        unitOfMeasure: 'índice',
+      }),
+      ParameterFaker.fake({
+        name: 'Ponto de orvalho',
+        code: 'dwp',
+        unitOfMeasure: '°C',
+      }),
+      ParameterFaker.fake({
+        name: 'Nebulosidade',
+        code: 'cld',
+        unitOfMeasure: '%',
+      }),
+      ParameterFaker.fake({
+        name: 'Evapotranspiração',
+        code: 'etp',
+        unitOfMeasure: 'mm/dia',
+      }),
+      ParameterFaker.fake({
+        name: 'Sensação térmica',
+        code: 'st',
+        unitOfMeasure: '°C',
+      }),
+      ParameterFaker.fake({
+        name: 'Visibilidade horizontal',
+        code: 'vis',
+        unitOfMeasure: 'km',
+      }),
+    ]
+
+    parameters.unshift(mainParameter)
     const prismaParameters = parameters.map(PrismaParameterMapper.toPrisma)
 
     await prisma.parameter.createMany({
@@ -88,7 +159,14 @@ export async function seed() {
 
     let countMeasure = 0
 
-    const stations = StationsFaker.fakeMany(100)
+    const stations = StationsFaker.fakeMany(99)
+    const mainStation = StationsFaker.fake({
+      name: 'Estação principal',
+      address: 'São José dos Campos - SP',
+      latitude: -23.1794,
+      longitude: -45.8869,
+    })
+    stations.push(mainStation)
 
     for (const station of stations) {
       const stationData = {
@@ -111,12 +189,14 @@ export async function seed() {
       const randomParameters = parameters.slice(0, Math.floor(Math.random() * 5) + 1)
 
       for (const parameter of randomParameters) {
+        const parameterId = !isMainParameterUsed
+          ? mainParameter.id.value
+          : parameter.id.value
+
         const stationParameter = await prisma.stationParameter.create({
           data: {
             stationId: station.id.value,
-            parameterId: !isMainParameterUsed
-              ? mainParameter.id.value
-              : parameter.id.value,
+            parameterId: parameterId,
           },
         })
 
@@ -155,25 +235,54 @@ export async function seed() {
 
     console.log(`✅ ${countMeasure} measurements adicionadas com sucesso!`)
 
-    const alarms = AlarmsFaker.fakeMany(100)
+    let alarmCount = 0
 
-    for (const alarm of alarms) {
+    while (alarmCount < 9) {
+      const randomStationParameter =
+        stationsParameter[Math.floor(Math.random() * stationsParameter.length)]
+
+      if (randomStationParameter.parameterId === mainParameter.id.value) {
+        continue
+      }
+      const alarm = AlarmsFaker.fake()
       await prisma.alarm.create({
         data: {
           message: alarm.message.value,
-          value: alarm.rule.threshold.value,
+          value: 1000,
           operation: alarm.rule.operation.toString() as $Enums.Operation,
           level: alarm.level.value,
-          stationParameterId:
-            stationsParameter[Math.floor(Math.random() * stationsParameter.length)].id,
+          stationParameterId: randomStationParameter.id,
           isActive: alarm.isActive.value,
           createdAt: alarm.createdAt.value,
           updatedAt: alarm.updatedAt?.value,
         },
       })
+      alarmCount++
     }
 
-    console.log(`✅ ${alarms.length} alarmes adicionados com sucesso!`)
+    const mainStationParameter = await prisma.stationParameter.findFirst({
+      where: {
+        parameterId: mainParameter.id.value,
+        stationId: mainStation.id.value,
+      },
+    })
+
+    await prisma.alarm.create({
+      data: {
+        message: 'Pluviosidade muito alta',
+        value: 99,
+        operation: 'GREATER_THAN',
+        level: 'CRITICAL',
+        stationParameterId: mainStationParameter?.id as string,
+        isActive: true,
+        createdAt: new Date(),
+      },
+    })
+    alarmCount++
+
+    console.log(`✅ ${alarmCount} alarmes adicionados com sucesso!`)
+
+    console.log(`Estação com alerta principal: ${mainStation.name.value}`)
 
     const createdAlarms = await prisma.alarm.findMany()
     const createdMeasures = await prisma.measurement.findMany()
@@ -183,25 +292,26 @@ export async function seed() {
       const randomMeasure =
         createdMeasures[Math.floor(Math.random() * createdMeasures.length)]
 
-      const randomYear = Math.floor(Math.random() * (2025 - 2023 + 1) + 2023).toString()
-      const randomMonth = Math.floor(Math.random() * (12 - 1 + 1) + 1).toString()
-      const randomDay = Math.floor(
-        Math.random() * ((randomMonth === '2' ? 28 : 30) - 1 + 1) + 1,
-      ).toString()
+      // const randomYear = Math.floor(Math.random() * (2025 - 2023 + 1) + 2023).toString()
+      // const randomMonth = Math.floor(Math.random() * (12 - 1 + 1) + 1).toString()
+      // const randomDay = Math.floor(
+      //   Math.random() * ((randomMonth === '2' ? 28 : 30) - 1 + 1) + 1,
+      // ).toString()
 
-      const randomDate = new Date(`${randomYear}-${randomMonth}-${randomDay} 01:00`)
+      // const randomDate = new Date(`${randomYear}-${randomMonth}-${randomDay} 06:00`)
 
       await prisma.alert.create({
         data: {
           alarmId: randomAlarm.id,
           measurementValue: randomMeasure.value,
           stationParameterId: randomMeasure.stationParameterId,
-          createdAt: randomDate.toISOString(),
+          isRead: true,
+          createdAt: faker.date.between({ from: '2024-08-01', to: '2025-10-20' }),
         },
       })
     }
 
-    console.log('✅ 50 alerts adicionados com sucesso!')
+    console.log('✅ 50 alertas adicionados com sucesso!')
   } catch (error) {
     console.error('❌ Erro durante o seed:', error)
   } finally {

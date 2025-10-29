@@ -33,7 +33,7 @@ jobs:
 
       - name: "Approve valid merge"
         if: (github.base_ref == 'production' && github.head_ref == 'main') || (github.base_ref == 'main' && github.head_ref != 'production')
-        run: echo "\o/ tudo correto, pode prosseguir!"
+        run: echo "✅ Tudo correto, pode prosseguir!"
 
   build:
     name: "Build Application"
@@ -70,6 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: build
+    if: github.event_name == 'pull_request'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -101,6 +102,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: [build, typecheck]
+    if: github.event_name == 'pull_request'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -132,6 +134,7 @@ jobs:
   #   runs-on: ubuntu-latest
   #   timeout-minutes: 5
   #   needs: [unit-tests]
+  #   if: github.event_name == 'pull_request'
   #   steps:
   #     - name: Checkout repository
   #       uses: actions/checkout@v4
@@ -156,4 +159,4 @@ jobs:
   #       run: npm ci
 
   #     - name: Run integration tests
-  #       run: npm run test:integration
+  #       run: npm run test:e2e

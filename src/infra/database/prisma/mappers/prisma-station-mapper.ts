@@ -36,15 +36,16 @@ export class PrismaStationMapper {
       isActive: station.isActive.value,
       createdAt: station.createdAt.value,
       updatedAt: station.createdAt.value,
-      stationParameter: parametersIds.length > 0
-        ? {
-            create: parametersIds.map((paramId) => ({
-              parameter: {
-                connect: { id: paramId.value },
-              },
-            })),
-          }
-        : undefined,
+      stationParameter:
+        parametersIds.length > 0
+          ? {
+              create: parametersIds.map((paramId) => ({
+                parameter: {
+                  connect: { id: paramId.value },
+                },
+              })),
+            }
+          : undefined,
     }
   }
   static toDto(prismaStation: PrismaStationWithRelations): StationDto {
@@ -57,7 +58,7 @@ export class PrismaStationMapper {
       longitude: prismaStation.longitude,
       isActive: prismaStation.isActive,
       quantityOfParameters: prismaStation._count?.stationParameter ?? 0,
-      lastReadAt: null,
+      lastReadAt: prismaStation.lastReadAt,
       createdAt: prismaStation.createdAt,
       updatedAt: prismaStation.updatedAt,
     }

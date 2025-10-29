@@ -1,11 +1,11 @@
 import { Id } from '@/core/global/domain/structures'
-import { StationsRepository } from '../interfaces/stations-repository'
 import { UseCase } from '@/core/global/interfaces'
-import { ParametersRepository } from '../interfaces/parameters-repository'
 import { StationDto } from '@/core/telemetry/domain/dtos/station-dto'
 import { Station } from '@/core/telemetry/domain/entities/station'
 import { ParameterNotFoundError } from '@/core/telemetry/domain/errors/parameter-not-found-error'
 import { StationNotFoundError } from '@/core/telemetry/domain/errors/station-not-found-error'
+import { ParametersRepository } from '../interfaces/parameters-repository'
+import { StationsRepository } from '../interfaces/stations-repository'
 
 type Request = {
   stationId: string
@@ -35,7 +35,10 @@ export class UpdateStationUseCase implements UseCase<Request, StationDto> {
       address: stationDto.address,
     })
 
-    await this.stationsRepository.replace(updatedStation, updatedParametersIds)
+    await this.stationsRepository.replaceWithParameters(
+      updatedStation,
+      updatedParametersIds,
+    )
     return updatedStation.dto
   }
 

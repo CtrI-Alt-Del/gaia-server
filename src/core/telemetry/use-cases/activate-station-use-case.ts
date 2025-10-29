@@ -21,7 +21,7 @@ export class ActivateStationUseCase implements UseCase<Request, void> {
 
     station.activate()
 
-    await this.repository.replace(station, [])
+    await this.repository.replaceWithParameters(station, [])
   }
 
   async findById(id: Id): Promise<Station> {

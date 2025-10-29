@@ -1,14 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common'
-
-import { Broker } from '@/core/global/interfaces'
-
-import { DEPENDENCIES } from '@/infra/constants'
 import { Cron, CronExpression } from '@nestjs/schedule'
+
+import { Broker, StationsRepository } from '@/core/global/interfaces'
+
 import { ReadingsRepository } from '@/core/telemetry/interfaces'
 import { MeasurementsRepository } from '@/core/telemetry/interfaces/measurements-repository'
 import { ParametersRepository } from '@/core/telemetry/interfaces/parameters-repository'
-import { DatabaseModule } from '@/infra/database/database.module'
 import { ParseReadingsUseCase } from '@/core/telemetry/use-cases'
+
+import { DEPENDENCIES } from '@/infra/constants'
+import { DatabaseModule } from '@/infra/database/database.module'
 
 @Injectable()
 export class ParseReadingsJob {
@@ -21,6 +22,8 @@ export class ParseReadingsJob {
     private readonly measurementsRepository: MeasurementsRepository,
     @Inject(DatabaseModule.PARAMETERS_REPOSITORY)
     private readonly parametersRepository: ParametersRepository,
+    @Inject(DatabaseModule.STATIONS_REPOSITORY)
+    private readonly stationsRepository: StationsRepository,
   ) {}
 
   @Cron(CronExpression.EVERY_5_SECONDS)
@@ -30,6 +33,7 @@ export class ParseReadingsJob {
       this.readingsRepository,
       this.measurementsRepository,
       this.parametersRepository,
+      this.stationsRepository,
     )
     try {
       await useCase.execute()

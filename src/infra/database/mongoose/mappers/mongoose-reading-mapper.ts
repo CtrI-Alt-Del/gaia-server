@@ -29,7 +29,6 @@ export class MongooseReadingMapper {
       throw new AppError('Invalid reading format')
     }
     const value = mongooseReading[parameterCode]
-    console.log({ value })
     return {
       id: mongooseReading._id.toString(),
       stationUid: mongooseReading.uid,

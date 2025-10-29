@@ -29,9 +29,9 @@ describe('DeactivateStationUseCase', () => {
     const inactiveStation = StationsFaker.fake({ isActive: false })
     repository.findById.mockResolvedValue(inactiveStation)
 
-    await expect(
-      useCase.execute({ id: inactiveStation.id.value }),
-    ).rejects.toThrow(StationAlreadyDeactivatedError)
+    await expect(useCase.execute({ id: inactiveStation.id.value })).rejects.toThrow(
+      StationAlreadyDeactivatedError,
+    )
   })
 
   it('should deactivate a station and save it to the repository', async () => {
@@ -43,10 +43,8 @@ describe('DeactivateStationUseCase', () => {
 
     await useCase.execute({ id: activeStation.id.value })
 
-    expect(repository.findById).toHaveBeenCalledWith(
-      Id.create(activeStation.id.value),
-    )
+    expect(repository.findById).toHaveBeenCalledWith(Id.create(activeStation.id.value))
     expect(deactivateSpy).toHaveBeenCalledOnce()
-    expect(repository.replace).toHaveBeenCalledWith(activeStation, [])
+    expect(repository.replaceWithParameters).toHaveBeenCalledWith(activeStation, [])
   })
 })

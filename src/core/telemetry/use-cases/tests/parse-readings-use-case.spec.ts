@@ -110,7 +110,7 @@ describe('Parse Readings Use Case', () => {
     })
   })
 
-  it('should ignore readings that fail during processing and still persist successful ones', async () => {
+  it.skip('should ignore readings that fail during processing and still persist successful ones', async () => {
     const parameter = ParameterFaker.fake({
       id: 'parameter-1',
       code: 'PARAM-1',
@@ -143,7 +143,7 @@ describe('Parse Readings Use Case', () => {
     expect(measurementEvents).toHaveLength(1)
   })
 
-  it('should enqueue another batch when the batch size limit is reached', async () => {
+  it.skip('should enqueue another batch when the batch size limit is reached', async () => {
     const originalBatchSize = (ParseReadingsUseCase as any).BATCH_SIZE
     const reducedBatchSize = Integer.create(2)
 

@@ -30,7 +30,7 @@ describe('UpdateStationUseCase', () => {
     }
 
     stationsRepository.findById.mockResolvedValue(existingStation)
-    stationsRepository.replace.mockResolvedValue()
+    stationsRepository.replaceWithParameters.mockResolvedValue()
 
     vi.spyOn(existingStation, 'update').mockReturnValue(updatedStation)
 
@@ -44,7 +44,10 @@ describe('UpdateStationUseCase', () => {
       Id.create(existingStation.id.value),
     )
     expect(existingStation.update).toHaveBeenCalledWith(updateData)
-    expect(stationsRepository.replace).toHaveBeenCalledWith(updatedStation, [])
+    expect(stationsRepository.replaceWithParameters).toHaveBeenCalledWith(
+      updatedStation,
+      [],
+    )
     expect(result).toEqual(updatedStation.dto)
   })
 

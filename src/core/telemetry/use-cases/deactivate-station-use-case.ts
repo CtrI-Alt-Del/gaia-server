@@ -19,7 +19,7 @@ export class DeactivateStationUseCase implements UseCase<Request, void> {
       throw new StationAlreadyDeactivatedError()
     }
     station.deactivate()
-    await this.repository.replace(station, [])
+    await this.repository.replaceWithParameters(station, [])
   }
 
   async findById(id: Id): Promise<Station> {

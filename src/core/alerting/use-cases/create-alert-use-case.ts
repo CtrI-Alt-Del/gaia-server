@@ -24,8 +24,6 @@ export class CreateAlertUseCase {
       await this.alarmsRepository.findAllByStationParameter(stationParameterId)
     const promises: Promise<void>[] = []
 
-    console.log({ alarms })
-
     for (const alarm of alarms) {
       const shouldCreateAlert = alarm.rule.apply(measurementValue)
       if (shouldCreateAlert.isTrue) {

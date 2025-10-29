@@ -41,7 +41,23 @@ export class PrismaStationsRepository
     }
     return PrismaStationMapper.toEntity(prismaStation)
   }
-  async replace(station: Station, parametersIds: Id[]): Promise<void> {
+
+  async replace(station: Station): Promise<void> {
+    await this.prisma.station.update({
+      where: { id: station.id.value },
+      data: {
+        name: station.name.value,
+        uid: station.uid.value.value,
+        address: station.address.value,
+        latitude: station.coordinate.latitude.value,
+        longitude: station.coordinate.longitude.value,
+        isActive: station.isActive.value,
+        lastReadAt: station.lastReadAt?.value ?? new Date(),
+      },
+    })
+  }
+
+  async replaceWithParameters(station: Station, parametersIds: Id[]): Promise<void> {
     const { stationParameter, ...stationData } = PrismaStationMapper.toPrisma(
       station,
       parametersIds,
@@ -66,6 +82,34 @@ export class PrismaStationsRepository
       where: { id: station.id.value },
       data: stationData,
     })
+  }
+
+  async findByParameterId(stationParameterId: Id): Promise<Station | null> {
+    const station = await this.prisma.station.findFirst({
+      where: {
+        stationParameter: {
+          some: {
+            id: stationParameterId.value,
+          },
+        },
+      },
+      include: {
+        _count: {
+          select: { stationParameter: true },
+        },
+        stationParameter: {
+          include: {
+            parameter: true,
+          },
+        },
+      },
+    })
+
+    if (!station) {
+      return null
+    }
+
+    return PrismaStationMapper.toEntity(station)
   }
 
   async findMany({

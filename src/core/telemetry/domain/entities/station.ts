@@ -67,14 +67,13 @@ export class Station extends Entity<StationProps> {
       this.props.uid = UnsignedId.create(partialDto.uid)
     }
 
-
     if (partialDto.latitude !== undefined || partialDto.longitude !== undefined) {
       this.props.coordinate = Coordinate.create(
         partialDto.latitude ?? this.coordinate.latitude.value,
         partialDto.longitude ?? this.coordinate.longitude.value,
       )
     }
-    
+
     if (partialDto.lastReadAt) {
       this.props.lastReadAt = Timestamp.create(partialDto.lastReadAt)
     }
@@ -83,6 +82,12 @@ export class Station extends Entity<StationProps> {
       this.props.address = Text.create(partialDto.address)
     }
 
+    this.refreshLastUpdate()
+    return this
+  }
+
+  updateLastReadAt() {
+    this.props.lastReadAt = Timestamp.createFromNow()
     this.refreshLastUpdate()
     return this
   }

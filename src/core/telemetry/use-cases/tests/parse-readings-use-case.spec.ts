@@ -1,7 +1,7 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest'
 import { mock, MockProxy } from 'vitest-mock-extended'
 
-import type { Broker } from '@/core/global/interfaces'
+import type { Broker, StationsRepository } from '@/core/global/interfaces'
 import { Integer } from '@/core/global/domain/structures/integer'
 import type {
   MeasurementsRepository,
@@ -24,6 +24,7 @@ describe('Parse Readings Use Case', () => {
   let readingsRepository: MockProxy<ReadingsRepository>
   let measurementsRepository: MockProxy<MeasurementsRepository>
   let parametersRepository: MockProxy<ParametersRepository>
+  let stationsRepository: MockProxy<StationsRepository>
   let useCase: ParseReadingsUseCase
 
   beforeEach(() => {
@@ -33,6 +34,7 @@ describe('Parse Readings Use Case', () => {
     readingsRepository = mock<ReadingsRepository>()
     measurementsRepository = mock<MeasurementsRepository>()
     parametersRepository = mock<ParametersRepository>()
+    stationsRepository = mock<StationsRepository>()
 
     broker.publish.mockResolvedValue()
     readingsRepository.deleteMany.mockResolvedValue()
@@ -43,6 +45,7 @@ describe('Parse Readings Use Case', () => {
       readingsRepository,
       measurementsRepository,
       parametersRepository,
+      stationsRepository,
     )
   })
 

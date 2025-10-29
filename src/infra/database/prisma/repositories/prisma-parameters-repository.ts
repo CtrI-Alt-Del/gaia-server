@@ -71,6 +71,7 @@ export class PrismaParametersRepository
       where: {
         station: {
           uid: stationUid.value,
+          isActive: true,
         },
         parameter: {
           code: code.value,
@@ -126,7 +127,22 @@ export class PrismaParametersRepository
           },
         },
       },
+      include: {
+        stationParameter: {
+          where: {
+            stationId: stationId.value,
+          },
+          select: {
+            id: true,
+          },
+        },
+      },
     })
-    return prismaParameters.map(PrismaParameterMapper.toEntity)
+    return prismaParameters.map((prismaParameter) => {
+      return PrismaParameterMapper.toEntity({
+        ...prismaParameter,
+        id: prismaParameter.stationParameter[0].id,
+      })
+    })
   }
 }

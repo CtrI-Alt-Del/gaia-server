@@ -1,4 +1,5 @@
-import { Get, Inject, Query, UsePipes } from '@nestjs/common'
+import { Inject, Query, Sse, UsePipes } from '@nestjs/common'
+import { defer, map, repeat } from 'rxjs'
 
 import { createZodDto, ZodValidationPipe } from 'nestjs-zod'
 import z from 'zod'
@@ -33,10 +34,20 @@ export class ListMeasurementController {
     private readonly repository: MeasurementsRepository,
   ) {}
 
-  @Get()
+  @Sse()
   @UsePipes(ZodValidationPipe)
   async handle(@Query() query: ListMeasurementsControllerRequestQuery) {
-    const useCase = new ListMeasurementsUseCase(this.repository)
-    return await useCase.execute(query)
+    return defer(async () => {
+      const useCase = new ListMeasurementsUseCase(this.repository)
+      return await useCase.execute(query)
+    }).pipe(
+      repeat({
+        delay: 1000,
+      }),
+      map((measurements) => ({
+        type: 'message',
+        data: measurements,
+      })),
+    )
   }
 }

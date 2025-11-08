@@ -19,7 +19,7 @@ env:
   CONTAINER_NAME: ${{ inputs.environment }}-gaia-server
 
 jobs:
-  deployment:
+  deploy: # Corrigido de 'deployment' para 'deploy' para corresponder ao seu arquivo
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -59,16 +59,31 @@ jobs:
           # 1. Baixa a definição da task ATIVA
           TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_FAMILY }} --query taskDefinition)
 
+          # --- INÍCIO DA CORREÇÃO ---
           # 2. Prepara o novo payload da task definition
           #    - Atualiza a imagem do contêiner para a nova versão
-          #    - Usa 'del()' para remover todos os campos que não são aceitos pelo 'register-task-definition'
+          #    - Reconstrói o JSON apenas com campos válidos para 'register'
+          #    - Usa '// []' para substituir 'null' por uma lista vazia '[]' em campos opcionais
           NEW_TASK_DEF_PAYLOAD=$(echo $TASK_DEFINITION | \
             jq --arg IMAGE_URI "${{ steps.build_push_image.outputs.image_uri }}" \
             '
-              ( .containerDefinitions[] | select(.name == "${{ env.CONTAINER_NAME }}") ).image = $IMAGE_URI | 
-              del(.taskDefinitionArn, .revision, .status, .requiresAttributes, .compatibilities, .registeredAt, .registeredBy, .deregisteredAt)
+              ( .containerDefinitions[] | select(.name == "${{ env.CONTAINER_NAME }}") ).image = $IMAGE_URI |
+              {
+                family: .family,
+                taskRoleArn: .taskRoleArn,
+                executionRoleArn: .executionRoleArn,
+                networkMode: .networkMode,
+                containerDefinitions: .containerDefinitions,
+                volumes: .volumes // [],
+                placementConstraints: .placementConstraints // [],
+                requiresCompatibilities: .requiresCompatibilities,
+                cpu: .cpu,
+                memory: .memory,
+                tags: .tags // []
+              }
             '
           )
+          # --- FIM DA CORREÇÃO ---
 
           # ETAPA DE DEPURAÇÃO (opcional): Descomente a linha abaixo para ver o JSON final antes de ser enviado
           # echo "$NEW_TASK_DEF_PAYLOAD"

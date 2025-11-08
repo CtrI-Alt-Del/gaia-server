@@ -1,0 +1,2 @@
+### Check server health
+GET {{BASE_URL}}/health

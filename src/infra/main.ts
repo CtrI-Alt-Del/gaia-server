@@ -33,8 +33,8 @@ async function bootstrap() {
       content: document,
     }),
   )
-
   app.useGlobalFilters(new RestExceptionsFilter())
+  app.setGlobalPrefix('server')
   await app.listen(port)
 }
 bootstrap()

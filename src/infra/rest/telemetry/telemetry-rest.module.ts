@@ -15,11 +15,13 @@ import {
   ListMeasurementController,
   ListStationsByCoordsController,
   CountStationsController,
+  StationReportController,
 } from './controllers'
 import { DatabaseModule } from '@/infra/database/database.module'
+import { DatetimeProviderModule } from '@/infra/provision/datetime/datetime-provider.module'
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, DatetimeProviderModule],
   controllers: [
     CountStationsController,
     CreateParameterController,
@@ -36,6 +38,7 @@ import { DatabaseModule } from '@/infra/database/database.module'
     GetStationParametersController,
     ListStationsByCoordsController,
     ListMeasurementController,
+    StationReportController,
   ],
 })
 export class TelemetryRestModule {}

@@ -1,6 +1,7 @@
 import {
   CursorPagination,
   Id,
+  Integer,
   Numeric,
   TimePeriod,
 } from '@/core/global/domain/structures'
@@ -18,4 +19,6 @@ export interface AlertsRepository {
   countByTimePeriod(
     timePeriod: TimePeriod,
   ): Promise<{ criticalCount: number; warningCount: number; time: string }[]>
+  countAlertsCriticalByStationParameterId(stationId: Id): Promise<Integer>
+  countAlertsWarningByStationParameterId(stationId: Id): Promise<Integer>
 }

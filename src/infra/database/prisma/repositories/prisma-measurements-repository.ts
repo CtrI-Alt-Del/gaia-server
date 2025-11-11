@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 
-import { CursorPagination } from '@/core/global/domain/structures'
+import { CursorPagination, Id, Timestamp } from '@/core/global/domain/structures'
 import { Measurement } from '@/core/telemetry/domain/entities/measurement'
 import { MeasurementListParams } from '@/core/global/types/measurement-list-params'
 import { MeasurementsRepository } from '@/core/telemetry/interfaces/measurements-repository'
@@ -37,8 +37,6 @@ export class PrismaMeasurementsRepository
         : {}),
     }
 
-    console.log(date?.value)
-
     const include = {
       stationParameter: {
         include: {
@@ -73,5 +71,50 @@ export class PrismaMeasurementsRepository
         stationParameterId: measurement.parameter.id.value,
       })),
     })
+  }
+
+  async findManyMeasurementsByStationId(stationId: Id): Promise<Measurement[]> {
+    const result = await this.prisma.measurement.findMany({
+      where: {
+        stationParameter: { stationId: { equals: stationId.value } },
+      },
+      orderBy: { id: 'desc' },
+      include: {
+        stationParameter: {
+          include: {
+            parameter: true,
+            station: true,
+          },
+        },
+      },
+    })
+
+    return result.map(PrismaMeasurementMapper.toEntity)
+  }
+
+  async getMonthlyAverageByStationParameter(
+    stationId: Id,
+    parameterId: Id,
+    month: Timestamp,
+  ): Promise<number> {
+    const reference = month.value
+    const startOfMonth = new Date(reference.getFullYear(), reference.getMonth(), 1)
+    const endOfMonth = new Date(reference.getFullYear(), reference.getMonth() + 1, 0, 23, 59, 59, 999)
+
+    const aggregate = await this.prisma.measurement.aggregate({
+      _avg: { value: true },
+      where: {
+        createdAt: {
+          gte: startOfMonth,
+          lte: endOfMonth,
+        },
+        stationParameter: {
+          stationId: { equals: stationId.value },
+          parameterId: { equals: parameterId.value },
+        },
+      },
+    })
+
+    return aggregate._avg.value ?? 0
   }
 }

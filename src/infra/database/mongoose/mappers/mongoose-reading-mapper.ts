@@ -32,7 +32,7 @@ export class MongooseReadingMapper {
     return {
       id: mongooseReading._id.toString(),
       stationUid: mongooseReading.uid,
-      receivedAt: mongooseReading.receivedAt.getTime() / 1000,
+      receivedAt: mongooseReading.uxt,
       parameterCode: parameterCode,
       value: value,
     }

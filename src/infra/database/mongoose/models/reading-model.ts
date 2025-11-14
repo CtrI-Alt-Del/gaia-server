@@ -11,7 +11,7 @@ export class ReadingModel {
   uid: string
 
   @Prop({ required: true })
-  receivedAt: Date
+  uxt: number
 
   @Prop({ required: true })
   topic: string

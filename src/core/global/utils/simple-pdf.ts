@@ -19,8 +19,8 @@ export function generateSimplePdf(title: string, sections: Section[]): Buffer {
   const contentParts: string[] = []
   contentParts.push('BT')
   contentParts.push('/F1 12 Tf')
-  contentParts.push('1 0 0 1 72 760 Tm') // text matrix, starting near top-left
-  contentParts.push('14 TL') // leading
+  contentParts.push('1 0 0 1 72 760 Tm')
+  contentParts.push('14 TL')
 
   contentParts.push('/F1 18 Tf')
   contentParts.push(`(${escapePdfText(title)}) Tj`)

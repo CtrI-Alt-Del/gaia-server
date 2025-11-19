@@ -19,9 +19,10 @@ import {
 } from './controllers'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { DatetimeProviderModule } from '@/infra/provision/datetime/datetime-provider.module'
+import { PdfProviderModule } from '@/infra/provision/pdf/pdf-provider.module'
 
 @Module({
-  imports: [DatabaseModule, DatetimeProviderModule],
+  imports: [DatabaseModule, DatetimeProviderModule, PdfProviderModule],
   controllers: [
     CountStationsController,
     CreateParameterController,

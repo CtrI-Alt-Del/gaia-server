@@ -3,7 +3,11 @@ import type {
   ParametersRepository,
   StationsRepository,
 } from '@/core/telemetry/interfaces'
-import type { AlertsRepository, DatetimeProvider } from '@/core/global/interfaces'
+import type {
+  AlertsRepository,
+  DatetimeProvider,
+  PdfProvider,
+} from '@/core/global/interfaces'
 import { StationReportUseCase } from '@/core/telemetry/use-cases'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { StationsController } from '@/infra/rest/telemetry/controllers/stations/stations.controller'
@@ -23,6 +27,8 @@ export class StationReportController {
     private readonly alertsRepository: AlertsRepository,
     @Inject(DEPENDENCIES.provision.datetimeProvider)
     private readonly datetimeProvider: DatetimeProvider,
+    @Inject(DEPENDENCIES.provision.pdfProvider)
+    private readonly pdfProvider: PdfProvider,
   ) {}
   @Get(':stationId')
   async handle(@Param('stationId') stationId: string) {
@@ -32,6 +38,7 @@ export class StationReportController {
       this.parametersRepository,
       this.alertsRepository,
       this.datetimeProvider,
+      this.pdfProvider,
     )
 
     const pdf = await useCase.execute({ stationId })

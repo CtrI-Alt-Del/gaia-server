@@ -2,6 +2,7 @@ import {
   AlertsRepository,
   DatetimeProvider,
   ParametersRepository,
+  PdfProvider,
   StationsRepository,
   UseCase,
 } from '@/core/global/interfaces'
@@ -11,10 +12,6 @@ import { Id, Integer, Numeric, Timestamp } from '@/core/global/domain/structures
 import { ParameterDto } from '../domain/dtos'
 import { StationNotFoundError } from '../domain/errors/station-not-found-error'
 import { Measurement } from '../domain/entities/measurement'
-import {
-  generateStationReportPdf,
-  ParameterSection,
-} from './station-report-pdf'
 
 type Request = {
   stationId: string
@@ -37,6 +34,15 @@ const NUMBER_FORMATTER = new Intl.NumberFormat('pt-BR', {
 
 type TemporalGranularity = 'hour' | 'day'
 
+type StationReportParameterSection = {
+  header: string
+  description: string
+  tables: Array<{
+    title: string
+    rows: Array<{ period: string; value: string }>
+  }>
+}
+
 export class StationReportUseCase implements UseCase<Request, Buffer> {
   constructor(
     private readonly stationsRepository: StationsRepository,
@@ -44,6 +50,7 @@ export class StationReportUseCase implements UseCase<Request, Buffer> {
     private readonly parametersRepository: ParametersRepository,
     private readonly alertsRepository: AlertsRepository,
     private readonly datetimeProvider: DatetimeProvider,
+    private readonly pdfProvider: PdfProvider,
   ) {}
 
   async execute(params: Request): Promise<Buffer> {
@@ -98,7 +105,7 @@ export class StationReportUseCase implements UseCase<Request, Buffer> {
     })
 
     const stationUid = station.uid.value.value
-    const pdf = generateStationReportPdf({
+    const pdf = await this.pdfProvider.generateStationReport({
       headerTitle: 'Relatório de Estação de Monitoramento',
       brandName: 'tecsus',
       stationTitle: `Estação: ${station.name.value} (${stationUid})`,
@@ -173,7 +180,9 @@ export class StationReportUseCase implements UseCase<Request, Buffer> {
     return months.reverse()
   }
 
-  private groupMeasurementsByParameter(measurements: Measurement[]): Map<string, Measurement[]> {
+  private groupMeasurementsByParameter(
+    measurements: Measurement[],
+  ): Map<string, Measurement[]> {
     const groups = new Map<string, Measurement[]>()
 
     for (const measurement of measurements) {
@@ -195,11 +204,10 @@ export class StationReportUseCase implements UseCase<Request, Buffer> {
     parameters: ParameterDto[]
     measurementGroups: Map<string, Measurement[]>
     monthsAverages: MonthlyAverageEntry[]
-  }): ParameterSection[] {
+  }): StationReportParameterSection[] {
     const validParameters = parameters.filter(
       (parameter): parameter is ParameterDto & { id: string } => Boolean(parameter.id),
     )
-
     return validParameters.map((parameter) => ({
       header: `Parâmetro: ${parameter.name}`,
       description: `Código: ${parameter.code} • Unidade: ${parameter.unitOfMeasure}`,
@@ -276,7 +284,10 @@ export class StationReportUseCase implements UseCase<Request, Buffer> {
     const limited = orderedBuckets.slice(0, limit).reverse()
 
     return limited.map((bucket) => ({
-      period: granularity === 'hour' ? this.formatDateTime(bucket.date) : this.formatDate(bucket.date),
+      period:
+        granularity === 'hour'
+          ? this.formatDateTime(bucket.date)
+          : this.formatDate(bucket.date),
       value: `${this.formatNumber(bucket.sum / bucket.count)} ${unit}`,
     }))
   }
@@ -301,7 +312,15 @@ export class StationReportUseCase implements UseCase<Request, Buffer> {
 
   private truncateDate(date: Date, granularity: TemporalGranularity): Date {
     if (granularity === 'hour') {
-      return new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), 0, 0, 0)
+      return new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        date.getHours(),
+        0,
+        0,
+        0,
+      )
     }
 
     return new Date(date.getFullYear(), date.getMonth(), date.getDate())

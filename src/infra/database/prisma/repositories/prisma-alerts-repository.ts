@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 
 import { AlertsRepository } from '@/core/alerting/interfaces'
-import { Id, Numeric, TimePeriod } from '@/core/global/domain/structures'
+import { Id, Integer, Numeric, TimePeriod } from '@/core/global/domain/structures'
 import { Alert } from '@/core/alerting/domain/entities'
 import { AlertListingParams } from '@/core/global/types/alerts-listing-params'
 import { CursorPagination } from '@/core/global/domain/structures'
@@ -247,5 +247,35 @@ export class PrismaAlertsRepository extends PrismaRepository implements AlertsRe
 
       return countByTimePeriod
     }
+  }
+
+  async countAlertsCriticalByStationParameterId(stationId: Id): Promise<Integer> {
+    const count = await this.prisma.alert.count({
+      where: {
+        stationParameter: {
+          stationId: stationId.value,
+        },
+        alarm: {
+          level: 'CRITICAL',
+        },
+      },
+    })
+
+    return Integer.create(count)
+  }
+
+  async countAlertsWarningByStationParameterId(stationId: Id): Promise<Integer> {
+    const count = await this.prisma.alert.count({
+      where: {
+        stationParameter: {
+          stationId: stationId.value,
+        },
+        alarm: {
+          level: 'WARNING',
+        },
+      },
+    })
+
+    return Integer.create(count)
   }
 }

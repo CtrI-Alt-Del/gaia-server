@@ -26,7 +26,6 @@ async function bootstrap() {
   }
 
   app.enableCors()
-
   app.use(
     '/server/docs',
     apiReference({

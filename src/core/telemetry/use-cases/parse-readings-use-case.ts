@@ -62,6 +62,7 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
         measurementValue: measurement.value.value,
         stationParameterId: parameter.id.value,
       })
+      console.log(`previous station: ${measurement.value.value}`)
       await this.updateStationLastReadingDate(parameter.id.value)
       console.log(`updating station: ${measurement.value.value}`)
       await this.broker.publish(event)

@@ -37,12 +37,6 @@ RUN npm run build
 FROM base AS runner
 WORKDIR /app
 
-# Instala fontes necessárias para o pdfmake funcionar no Alpine
-RUN apk add --no-cache ttf-dejavu
-
-# Diz ao pdfmake onde estão as fontes no Alpine
-ENV PDF_FONTS_DIR=/usr/share/fonts/TTF
-
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nestjs

@@ -32,6 +32,7 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
     const promises = await Promise.allSettled(
       readings.map((reading) => this.process(reading)),
     )
+    console.log(`promises: ${promises.length}`)
     const measurements = this.handleMeasumentPromises(promises)
     console.log(`measurements: ${measurements.length}`)
 
@@ -49,13 +50,13 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
     if (!parameter) return
     console.log(`parameter: ${parameter.name.value}`)
     const measurement = parameter.parseReading(reading)
-    console.log(`measurement: ${measurement.value.value}`)
     const event = new MeasurementCreatedEvent({
       measurementValue: measurement.value.value,
       stationParameterId: parameter.id.value,
     })
     await this.updateStationLastReadingDate(parameter.id.value)
     await this.broker.publish(event)
+    console.log(`published measurement: ${measurement.value.value}`)
     return measurement
   }
 

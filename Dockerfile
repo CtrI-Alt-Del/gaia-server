@@ -31,6 +31,9 @@ RUN npm run build
 FROM base AS runner
 WORKDIR /app
 
+# Instala fontes necessárias para o pdfmake funcionar no Alpine
+RUN apk add --no-cache font-noto font-noto-emoji ttf-dejavu
+
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nestjs

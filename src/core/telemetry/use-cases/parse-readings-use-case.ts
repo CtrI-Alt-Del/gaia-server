@@ -33,6 +33,7 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
       readings.map((reading) => this.process(reading)),
     )
     const measurements = this.handleMeasumentPromises(promises)
+    console.log(`measurements: ${measurements.length}`)
 
     await this.measurementsRepository.createMany(measurements)
     console.log(`Created ${measurements.length} measurements`)
@@ -46,6 +47,7 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
   private async process(reading: Reading) {
     const parameter = await this.findParameter(reading.parameterCode, reading.stationUid)
     if (!parameter) return
+    console.log(`parameter: ${parameter.name.value}`)
     const measurement = parameter.parseReading(reading)
     console.log(`measurement: ${measurement.value.value}`)
     const event = new MeasurementCreatedEvent({

@@ -4,6 +4,13 @@
   "sourceRoot": "src",
   "entryFile": "infra/main",
   "compilerOptions": {
+    "assets": [
+      {
+        "include": "infra/assets/**/*",
+        "outDir": "dist/src"
+      }
+    ],
+    "watchAssets": true,
     "deleteOutDir": true
   }
 }

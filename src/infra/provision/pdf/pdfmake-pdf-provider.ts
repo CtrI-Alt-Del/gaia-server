@@ -63,7 +63,9 @@ function pathExists(p: string): boolean {
 }
 
 function findFontSet(): FontSet {
-  const envDir = process.env.PDF_FONTS_DIR
+  // const envDir = process.env.PDF_FONTS_DIR
+  const envDir = '/usr/share/fonts/TTF'
+  console.log({ envDir })
 
   if (envDir && pathExists(envDir)) {
     const files = {

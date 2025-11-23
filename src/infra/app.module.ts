@@ -30,7 +30,9 @@ import { AlertingQueueModule } from './queue/alerting/alerting-queue.module'
           host: envProvider.get('REDIS_HOST'),
           port: envProvider.get('REDIS_PORT'),
           password: envProvider.get('REDIS_PASSWORD'),
-          tls: {},
+          tls: {
+            rejectUnauthorized: false,
+          },
         },
         defaultJobOptions: {
           removeOnComplete: 100,

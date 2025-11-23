@@ -32,8 +32,13 @@ FROM base AS runner
 WORKDIR /app
 
 # Instala fontes necessárias para o pdfmake funcionar no Alpine
-RUN apk add --no-cache font-noto font-noto-emoji ttf-dejavu
+# RUN apk add --no-cache font-noto font-noto-emoji ttf-dejavu
+RUN apt-get update && \
+  apt-get install -y fonts-dejavu-core && \
+  rm -rf /var/lib/apt/lists/*
 
+# Diz ao pdfmake onde estão as fontes
+ENV PDF_FONTS_DIR=/usr/share/fonts/truetype/dejavu
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nestjs

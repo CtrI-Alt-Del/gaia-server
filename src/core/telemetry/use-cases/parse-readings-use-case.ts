@@ -56,14 +56,13 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
         reading.stationUid,
       )
       if (!parameter) return
-      console.log(`parameter: ${parameter.name.value}`)
       const measurement = parameter.parseReading(reading)
       const event = new MeasurementCreatedEvent({
         measurementValue: measurement.value.value,
         stationParameterId: parameter.id.value,
       })
-      console.log(`previous station: ${measurement.value.value}`)
-      await this.updateStationLastReadingDate(parameter.id.value)
+      console.log(`previous station; parameter id: ${parameter.id.value}`)
+      await this.updateStationLastReadingDate(parameter.id)
       console.log(`updating station: ${measurement.value.value}`)
       await this.broker.publish(event)
       console.log(`published measurement: ${measurement.value.value}`)
@@ -93,11 +92,17 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
     return measurements
   }
 
-  async updateStationLastReadingDate(stationParameterId: string) {
-    const station = await this.findStation(Id.create(stationParameterId))
-    if (!station) return
-    station.updateLastReadAt()
-    await this.stationsRepository.replace(station)
+  async updateStationLastReadingDate(stationParameterId: Id) {
+    try {
+      const station = await this.findStation(stationParameterId)
+      console.log(`station: ${station?.name.value}`)
+      if (!station) return
+      station.updateLastReadAt()
+      await this.stationsRepository.replace(station)
+      console.log(`updated station: ${station?.name.value}`)
+    } catch (error) {
+      console.error('Error updating station last reading date:', error)
+    }
   }
 
   async findStation(stationParameterId: Id) {

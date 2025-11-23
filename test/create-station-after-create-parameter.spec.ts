@@ -27,7 +27,7 @@ describe("CreateStationAfterCreateParameter", () => {
 
         const createParameterRequest = {
             name: "wind-speed",
-            code: "123456789",
+            code: "987654321",
             unitOfMeasure: "m/s",
             factor: 0.01,
             offset: 2,

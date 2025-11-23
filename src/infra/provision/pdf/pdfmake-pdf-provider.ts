@@ -1,4 +1,5 @@
 import PdfPrinter from 'pdfmake'
+import PdfFonts from 'pdfmake/build/vfs_fonts'
 import path from 'node:path'
 import fs from 'node:fs'
 
@@ -539,6 +540,7 @@ export class PdfmakePdfProvider implements PdfProvider {
 
   private render(docDefinition: TDocumentDefinitions): Promise<Buffer> {
     return new Promise((resolve, reject) => {
+      // @ts-ignore
       const pdfDoc = printer.createPdfKitDocument(docDefinition)
       const chunks: Buffer[] = []
 

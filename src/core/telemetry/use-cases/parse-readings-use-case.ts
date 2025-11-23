@@ -8,11 +8,8 @@ import { UseCase } from '@/core/global/interfaces'
 import { Integer } from '@/core/global/domain/structures/integer'
 import { Id, Text } from '@/core/global/domain/structures'
 import { Reading } from '../domain/entities/reading'
-import { ParameterNotFoundError } from '../domain/errors/parameter-not-found-error'
-import { Parameter } from '../domain/entities/parameter'
 import { Measurement } from '../domain/entities/measurement'
 import { MeasurementCreatedEvent, ReadingsCollectedEvent } from '../domain/events'
-import { StationNotFoundError } from '../domain/errors/station-not-found-error'
 
 export class ParseReadingsUseCase implements UseCase<void, void> {
   private static readonly BATCH_SIZE = Integer.create(1000)
@@ -46,8 +43,9 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
     }
   }
 
-  private async process(reading: Reading): Promise<Measurement> {
+  private async process(reading: Reading) {
     const parameter = await this.findParameter(reading.parameterCode, reading.stationUid)
+    if (!parameter) return
     const measurement = parameter.parseReading(reading)
     console.log(`measurement: ${measurement.value.value}`)
     const event = new MeasurementCreatedEvent({
@@ -60,12 +58,13 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
   }
 
   private handleMeasumentPromises(
-    promises: PromiseSettledResult<Measurement>[],
+    promises: PromiseSettledResult<Measurement | undefined>[],
   ): Measurement[] {
     const measurements: Measurement[] = []
 
     for (const promise of promises) {
       if (promise.status === 'fulfilled') {
+        if (!promise.value) continue
         measurements.push(promise.value)
       }
       if (promise.status === 'rejected') {
@@ -80,24 +79,21 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
 
   async updateStationLastReadingDate(stationParameterId: string) {
     const station = await this.findStation(Id.create(stationParameterId))
+    if (!station) return
     station.updateLastReadAt()
     await this.stationsRepository.replace(station)
   }
 
   async findStation(stationParameterId: Id) {
     const station = await this.stationsRepository.findByParameterId(stationParameterId)
-    if (!station) throw new StationNotFoundError()
     return station
   }
 
-  private async findParameter(parameterCode: Text, stationUid: Text): Promise<Parameter> {
+  private async findParameter(parameterCode: Text, stationUid: Text) {
     const parameter = await this.parametersRepository.findParameterByCodeAndStationUid(
       parameterCode,
       stationUid,
     )
-    if (!parameter) {
-      throw new ParameterNotFoundError()
-    }
     return parameter
   }
 }

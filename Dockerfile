@@ -37,7 +37,6 @@ RUN npm run build
 FROM base AS runner
 WORKDIR /app
 
-# Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nestjs
 

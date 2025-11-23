@@ -119,9 +119,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Generate Prisma client
-        run: npx prisma generate --schema=src/infra/database/prisma/schema.prisma
-
       - name: Install dependencies
         run: npm ci
 

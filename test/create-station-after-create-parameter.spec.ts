@@ -41,13 +41,14 @@ describe("CreateStationAfterCreateParameter", () => {
             longitude: -45.8872,
         }
 
-        vi.mocked(Parameter.create).mockResolvedValue(mockParameter)
+        vi.mocked(Parameter.create).mockReturnValue(mockParameter)
         parametersRepository.add.mockResolvedValue()
 
         const resultCreateParameter = await createParameterUseCase.execute(createParameterRequest)
         const createdParameterId = [resultCreateParameter.id as string] 
 
-        vi.mocked(Station.create).mockResolvedValue(mockStation)
+        vi.mocked(Station.create).mockReturnValue(mockStation)
+        parametersRepository.findManyByIds.mockResolvedValue([mockParameter])
         stationsRepository.add.mockResolvedValue()
 
         const resultCreateStation = await createStationUseCase.execute({
@@ -59,11 +60,11 @@ describe("CreateStationAfterCreateParameter", () => {
             [Id.create(resultCreateParameter.id)],
         )
         expect(Parameter.create).toHaveBeenCalledWith({
-            name: resultCreateParameter.name,
-            code: resultCreateParameter.code,
-            unitOfMeasure: resultCreateParameter.unitOfMeasure,
-            factor: resultCreateParameter.factor,
-            offset: resultCreateParameter.offset,
+            name: createParameterRequest.name,
+            code: createParameterRequest.code,
+            unitOfMeasure: createParameterRequest.unitOfMeasure,
+            factor: createParameterRequest.factor,
+            offset: createParameterRequest.offset,
         })
         expect(Station.create).toHaveBeenCalledWith({
             name: createStationRequest.name,

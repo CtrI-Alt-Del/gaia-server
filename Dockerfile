@@ -51,8 +51,4 @@ EXPOSE 3333
 ENV NODE_ENV=production
 ENV PORT=3333
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3333/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })" || exit 1
-
-CMD ["sh", "-c", "npx prisma migrate reset --schema=src/infra/database/prisma/schema.prisma --force && node dist/infra/main.js"]
+CMD ["sh", "-c", "npx prisma migrate reset --schema=src/infra/database/prisma/schema.prisma --force && node dist/src/infra/main.js"]

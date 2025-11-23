@@ -47,10 +47,9 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
   }
 
   private async process(reading: Reading): Promise<Measurement> {
-    console.log(`Parameter code: ${reading.parameterCode.value}`)
-    console.log(`Station uid: ${reading.stationUid.value}`)
     const parameter = await this.findParameter(reading.parameterCode, reading.stationUid)
     const measurement = parameter.parseReading(reading)
+    console.log(`measurement: ${measurement.value.value}`)
     const event = new MeasurementCreatedEvent({
       measurementValue: measurement.value.value,
       stationParameterId: parameter.id.value,

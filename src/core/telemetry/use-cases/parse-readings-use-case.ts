@@ -27,15 +27,15 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
       const readings = await this.readingsRepository.findMany(
         ParseReadingsUseCase.BATCH_SIZE,
       )
-      console.log(`Found ${readings.length} readings`)
+      // console.log(`Found ${readings.length} readings`)
       if (readings.length === 0) return
 
       const promises = await Promise.allSettled(
         readings.map((reading) => this.process(reading)),
       )
-      console.log(`promises: ${promises.length}`)
+      // console.log(`promises: ${promises.length}`)
       const measurements = this.handleMeasumentPromises(promises)
-      console.log(`measurements: ${measurements.length}`)
+      // console.log(`measurements: ${measurements.length}`)
 
       await this.measurementsRepository.createMany(measurements)
       console.log(`Created ${measurements.length} measurements`)
@@ -61,7 +61,7 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
         measurementValue: measurement.value.value,
         stationParameterId: parameter.id.value,
       })
-      console.log(`previous station; parameter id: ${parameter.id.value}`)
+      // console.log('CADE?')
       await this.updateStationLastReadingDate(parameter.id)
       console.log(`updating station: ${measurement.value.value}`)
       await this.broker.publish(event)
@@ -93,16 +93,10 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
   }
 
   async updateStationLastReadingDate(stationParameterId: Id) {
-    try {
-      const station = await this.findStation(stationParameterId)
-      console.log(`station: ${station?.name.value}`)
-      if (!station) return
-      station.updateLastReadAt()
-      await this.stationsRepository.replace(station)
-      console.log(`updated station: ${station?.name.value}`)
-    } catch (error) {
-      console.error('Error updating station last reading date:', error)
-    }
+    const station = await this.findStation(stationParameterId)
+    if (!station) return
+    station.updateLastReadAt()
+    await this.stationsRepository.replace(station)
   }
 
   async findStation(stationParameterId: Id) {

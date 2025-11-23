@@ -55,5 +55,4 @@ EXPOSE 3333
 ENV NODE_ENV=production
 ENV PORT=3333
 
-# ⚠ cuidado: migrate reset apaga o banco inteiro sempre que o container sobe
 CMD ["sh", "-c", "npx prisma migrate reset --schema=src/infra/database/prisma/schema.prisma --force && node dist/src/infra/main.js"]

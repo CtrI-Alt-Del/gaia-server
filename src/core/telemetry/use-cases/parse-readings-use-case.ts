@@ -23,25 +23,29 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
   ) {}
 
   async execute(): Promise<void> {
-    const readings = await this.readingsRepository.findMany(
-      ParseReadingsUseCase.BATCH_SIZE,
-    )
-    console.log(`Found ${readings.length} readings`)
-    if (readings.length === 0) return
+    try {
+      const readings = await this.readingsRepository.findMany(
+        ParseReadingsUseCase.BATCH_SIZE,
+      )
+      console.log(`Found ${readings.length} readings`)
+      if (readings.length === 0) return
 
-    const promises = await Promise.allSettled(
-      readings.map((reading) => this.process(reading)),
-    )
-    console.log(`promises: ${promises.length}`)
-    const measurements = this.handleMeasumentPromises(promises)
-    console.log(`measurements: ${measurements.length}`)
+      const promises = await Promise.allSettled(
+        readings.map((reading) => this.process(reading)),
+      )
+      console.log(`promises: ${promises.length}`)
+      const measurements = this.handleMeasumentPromises(promises)
+      console.log(`measurements: ${measurements.length}`)
 
-    await this.measurementsRepository.createMany(measurements)
-    console.log(`Created ${measurements.length} measurements`)
-    await this.readingsRepository.deleteMany(readings.map((reading) => reading.id))
+      await this.measurementsRepository.createMany(measurements)
+      console.log(`Created ${measurements.length} measurements`)
+      await this.readingsRepository.deleteMany(readings.map((reading) => reading.id))
 
-    if (readings.length >= ParseReadingsUseCase.BATCH_SIZE.value) {
-      await this.broker.publish(new ReadingsCollectedEvent())
+      if (readings.length >= ParseReadingsUseCase.BATCH_SIZE.value) {
+        await this.broker.publish(new ReadingsCollectedEvent())
+      }
+    } catch (error) {
+      console.error('Error parsing readings:', error)
     }
   }
 

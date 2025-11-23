@@ -26,7 +26,7 @@ describe("CreateStationAfterCreateParameter", () => {
         const mockParameter = {dto: {id: 'parameter-test-321'}} as Parameter
 
         const createParameterRequest = {
-            name: "wind-speed",
+            name: "test-wind-speed",
             code: "987654321",
             unitOfMeasure: "m/s",
             factor: 0.01,

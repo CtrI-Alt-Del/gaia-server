@@ -19,14 +19,14 @@ export class GetStationParametersUseCase implements UseCase<Request, ParameterDt
     const station = await this.findById(Id.create(params.stationId))
     return this.findParametersByStationId(station.id)
   }
-  async findById(stationId: Id): Promise<Station> {
+  private async findById(stationId: Id): Promise<Station> {
     const station = await this.stationRepository.findById(stationId)
     if (!station) {
       throw new StationNotFoundError()
     }
     return station
   }
-  async findParametersByStationId(stationId: Id): Promise<ParameterDto[]> {
+  private async findParametersByStationId(stationId: Id): Promise<ParameterDto[]> {
     const parameters =
       await this.parametersRepository.findParametersByStationId(stationId)
     return parameters.map((parameter) => parameter.dto)

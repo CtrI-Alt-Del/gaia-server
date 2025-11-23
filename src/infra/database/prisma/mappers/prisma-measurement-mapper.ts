@@ -13,7 +13,7 @@ export class PrismaMeasurementMapper {
       value: measurement.value,
       createdAt: measurement.createdAt,
       parameter: {
-        id: measurement.stationParameter.parameter.id,
+        id: measurement.stationParameter.id,
         entity: {
           name: measurement.stationParameter.parameter.name,
           unitOfMeasure: measurement.stationParameter.parameter.unitOfMeasure,

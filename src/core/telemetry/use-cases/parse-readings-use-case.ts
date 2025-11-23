@@ -50,18 +50,26 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
   }
 
   private async process(reading: Reading) {
-    const parameter = await this.findParameter(reading.parameterCode, reading.stationUid)
-    if (!parameter) return
-    console.log(`parameter: ${parameter.name.value}`)
-    const measurement = parameter.parseReading(reading)
-    const event = new MeasurementCreatedEvent({
-      measurementValue: measurement.value.value,
-      stationParameterId: parameter.id.value,
-    })
-    await this.updateStationLastReadingDate(parameter.id.value)
-    await this.broker.publish(event)
-    console.log(`published measurement: ${measurement.value.value}`)
-    return measurement
+    try {
+      const parameter = await this.findParameter(
+        reading.parameterCode,
+        reading.stationUid,
+      )
+      if (!parameter) return
+      console.log(`parameter: ${parameter.name.value}`)
+      const measurement = parameter.parseReading(reading)
+      const event = new MeasurementCreatedEvent({
+        measurementValue: measurement.value.value,
+        stationParameterId: parameter.id.value,
+      })
+      await this.updateStationLastReadingDate(parameter.id.value)
+      console.log(`updating station: ${measurement.value.value}`)
+      await this.broker.publish(event)
+      console.log(`published measurement: ${measurement.value.value}`)
+      return measurement
+    } catch (error) {
+      console.error('Error processing reading:', error)
+    }
   }
 
   private handleMeasumentPromises(

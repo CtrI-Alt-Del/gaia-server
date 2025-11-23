@@ -20,9 +20,6 @@ export class CreateAlertUseCase {
     const measurementValue = Numeric.create(request.measurementValue)
     const stationParameterId = Id.create(request.stationParameterId)
 
-    console.log('CreateAlertUseCase measurementValue', measurementValue.value)
-    console.log('CreateAlertUseCase stationParameterId', stationParameterId.value)
-
     const alarms =
       await this.alarmsRepository.findAllByStationParameter(stationParameterId)
     const promises: Promise<void>[] = []

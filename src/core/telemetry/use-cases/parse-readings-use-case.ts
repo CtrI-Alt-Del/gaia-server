@@ -27,6 +27,10 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
       const readings = await this.readingsRepository.findMany(
         ParseReadingsUseCase.BATCH_SIZE,
       )
+      console.log(
+        'readins ids',
+        readings.map((reading) => reading.id),
+      )
       console.log(`Found ${readings.length} readings`)
       if (readings.length === 0) return
 
@@ -37,10 +41,6 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
 
       await this.measurementsRepository.createMany(measurements)
       console.log(`Created ${measurements.length} measurements`)
-      console.log(
-        'readins ids',
-        readings.map((reading) => reading.id),
-      )
       await this.readingsRepository.deleteMany(readings.map((reading) => reading.id))
 
       if (readings.length >= ParseReadingsUseCase.BATCH_SIZE.value) {
@@ -63,8 +63,8 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
         measurementValue: measurement.value.value,
         stationParameterId: parameter.id.value,
       })
-      // console.log('CADE?')
       await this.updateStationLastReadingDate(parameter.id)
+      console.log('CADE?')
       await this.broker.publish(event)
       console.log(`published measurement: ${measurement.value.value}`)
       return measurement

@@ -28,7 +28,7 @@ export async function seed() {
     console.log('✅ Alarms removidos')
 
     await prisma.measurement.deleteMany()
-    console.log('✅ Measures removidos')
+    console.log('✅ Measurements removed')
 
     await prisma.stationParameter.deleteMany()
     console.log('✅ StationParameters removidos')

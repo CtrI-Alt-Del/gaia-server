@@ -99,7 +99,15 @@ export class PrismaMeasurementsRepository
   ): Promise<number> {
     const reference = month.value
     const startOfMonth = new Date(reference.getFullYear(), reference.getMonth(), 1)
-    const endOfMonth = new Date(reference.getFullYear(), reference.getMonth() + 1, 0, 23, 59, 59, 999)
+    const endOfMonth = new Date(
+      reference.getFullYear(),
+      reference.getMonth() + 1,
+      0,
+      23,
+      59,
+      59,
+      999,
+    )
 
     const aggregate = await this.prisma.measurement.aggregate({
       _avg: { value: true },
@@ -109,8 +117,8 @@ export class PrismaMeasurementsRepository
           lte: endOfMonth,
         },
         stationParameter: {
+          id: { equals: parameterId.value },
           stationId: { equals: stationId.value },
-          parameterId: { equals: parameterId.value },
         },
       },
     })

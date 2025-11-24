@@ -26,15 +26,14 @@ async function bootstrap() {
   }
 
   app.enableCors()
-
   app.use(
-    '/docs',
+    '/server/docs',
     apiReference({
       content: document,
     }),
   )
-
   app.useGlobalFilters(new RestExceptionsFilter())
+  app.setGlobalPrefix('server')
   await app.listen(port)
 }
 bootstrap()

@@ -24,7 +24,7 @@ export class MongooseReadingsRepository implements ReadingsRepository {
       .limit(limit.value)
       .exec()
 
-    return documents.map(MongooseReadingMapper.toStructure)
+    return documents.flatMap(MongooseReadingMapper.toStructure)
   }
 
   async deleteMany(ids: Id[]): Promise<void> {

@@ -1,21 +1,25 @@
 # Multi-stage build for production optimization
 FROM node:22-alpine AS base
 
-# Install dependencies only when needed
+# ----------------------
+# deps: dependências de produção
+# ----------------------
 FROM base AS deps
-# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+# libc6-compat às vezes é necessário para algumas libs nativas
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
+# Instala apenas dependências de produção
 COPY package.json package-lock.json* ./
 RUN npm ci --only=production && npm cache clean --force
 
-# Rebuild the source code only when needed
+# ----------------------
+# builder: build da aplicação
+# ----------------------
 FROM base AS builder
 WORKDIR /app
 
-# Install ALL dependencies (including devDependencies) for building
+# Instala TODAS as dependências (incluindo dev) para build
 COPY package.json package-lock.json* ./
 RUN npm ci && npm cache clean --force
 
@@ -27,21 +31,21 @@ RUN npx prisma generate --schema=src/infra/database/prisma/schema.prisma
 # Build the application
 RUN npm run build
 
-# Production image, copy all the files and run nest
+# ----------------------
+# runner: imagem final de produção
+# ----------------------
 FROM base AS runner
 WORKDIR /app
 
-# Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nestjs
 
-# Copy the built application
+# Copia apenas o que é necessário para rodar
 COPY --from=builder --chown=nestjs:nodejs /app/dist ./dist
-COPY --from=builder --chown=nestjs:nodejs /app/node_modules ./node_modules
+COPY --from=deps    --chown=nestjs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nestjs:nodejs /app/package.json ./package.json
 
-
-# Copy Prisma schema (optional, useful for migrations at runtime)
+# Copy Prisma schema (opcional, útil para migrations em runtime)
 COPY --from=builder --chown=nestjs:nodejs /app/src/infra/database/prisma ./src/infra/database/prisma
 
 USER nestjs
@@ -51,8 +55,4 @@ EXPOSE 3333
 ENV NODE_ENV=production
 ENV PORT=3333
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3333/health', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })" || exit 1
-
-CMD ["sh", "-c", "npx prisma migrate reset --schema=src/infra/database/prisma/schema.prisma --force && node dist/infra/main.js"]
+CMD ["sh", "-c", "npx prisma migrate reset --schema=src/infra/database/prisma/schema.prisma --force && node dist/src/infra/main.js"]

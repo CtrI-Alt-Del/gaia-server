@@ -8,11 +8,8 @@ import { UseCase } from '@/core/global/interfaces'
 import { Integer } from '@/core/global/domain/structures/integer'
 import { Id, Text } from '@/core/global/domain/structures'
 import { Reading } from '../domain/entities/reading'
-import { ParameterNotFoundError } from '../domain/errors/parameter-not-found-error'
-import { Parameter } from '../domain/entities/parameter'
 import { Measurement } from '../domain/entities/measurement'
 import { MeasurementCreatedEvent, ReadingsCollectedEvent } from '../domain/events'
-import { StationNotFoundError } from '../domain/errors/station-not-found-error'
 
 export class ParseReadingsUseCase implements UseCase<void, void> {
   private static readonly BATCH_SIZE = Integer.create(1000)
@@ -26,45 +23,63 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
   ) {}
 
   async execute(): Promise<void> {
-    const readings = await this.readingsRepository.findMany(
-      ParseReadingsUseCase.BATCH_SIZE,
-    )
-    console.log(`Found ${readings.length} readings`)
-    if (readings.length === 0) return
+    try {
+      const readings = await this.readingsRepository.findMany(
+        ParseReadingsUseCase.BATCH_SIZE,
+      )
+      console.log(
+        'readins ids',
+        readings.map((reading) => reading.id),
+      )
+      console.log(`Found ${readings.length} readings`)
+      if (readings.length === 0) return
 
-    const promises = await Promise.allSettled(
-      readings.map((reading) => this.process(reading)),
-    )
-    const measurements = this.handleMeasumentPromises(promises)
+      const promises = await Promise.allSettled(
+        readings.map((reading) => this.process(reading)),
+      )
+      const measurements = this.handleMeasumentPromises(promises)
 
-    await this.measurementsRepository.createMany(measurements)
-    console.log(`Created ${measurements.length} measurements`)
-    await this.readingsRepository.deleteMany(readings.map((reading) => reading.id))
+      await this.measurementsRepository.createMany(measurements)
+      console.log(`Created ${measurements.length} measurements`)
+      await this.readingsRepository.deleteMany(readings.map((reading) => reading.id))
 
-    if (readings.length >= ParseReadingsUseCase.BATCH_SIZE.value) {
-      await this.broker.publish(new ReadingsCollectedEvent())
+      if (readings.length >= ParseReadingsUseCase.BATCH_SIZE.value) {
+        await this.broker.publish(new ReadingsCollectedEvent())
+      }
+    } catch (error) {
+      console.error('Error parsing readings:', error)
     }
   }
 
-  private async process(reading: Reading): Promise<Measurement> {
-    const parameter = await this.findParameter(reading.parameterCode, reading.stationUid)
-    const measurement = parameter.parseReading(reading)
-    const event = new MeasurementCreatedEvent({
-      measurementValue: measurement.value.value,
-      stationParameterId: parameter.id.value,
-    })
-    await this.updateStationLastReadingDate(parameter.id.value)
-    await this.broker.publish(event)
-    return measurement
+  private async process(reading: Reading) {
+    try {
+      const parameter = await this.findParameter(
+        reading.parameterCode,
+        reading.stationUid,
+      )
+      if (!parameter) return
+      const measurement = parameter.parseReading(reading)
+      const event = new MeasurementCreatedEvent({
+        measurementValue: measurement.value.value,
+        stationParameterId: parameter.id.value,
+      })
+      await this.updateStationLastReadingDate(parameter.id)
+      await this.broker.publish(event)
+      console.log(`published measurement: ${measurement.value.value}`)
+      return measurement
+    } catch (error) {
+      console.error('Error processing reading:', error)
+    }
   }
 
   private handleMeasumentPromises(
-    promises: PromiseSettledResult<Measurement>[],
+    promises: PromiseSettledResult<Measurement | undefined>[],
   ): Measurement[] {
     const measurements: Measurement[] = []
 
     for (const promise of promises) {
       if (promise.status === 'fulfilled') {
+        if (!promise.value) continue
         measurements.push(promise.value)
       }
       if (promise.status === 'rejected') {
@@ -77,26 +92,23 @@ export class ParseReadingsUseCase implements UseCase<void, void> {
     return measurements
   }
 
-  async updateStationLastReadingDate(stationParameterId: string) {
-    const station = await this.findStation(Id.create(stationParameterId))
+  async updateStationLastReadingDate(stationParameterId: Id) {
+    const station = await this.findStation(stationParameterId)
+    if (!station) return
     station.updateLastReadAt()
     await this.stationsRepository.replace(station)
   }
 
   async findStation(stationParameterId: Id) {
     const station = await this.stationsRepository.findByParameterId(stationParameterId)
-    if (!station) throw new StationNotFoundError()
     return station
   }
 
-  private async findParameter(parameterCode: Text, stationUid: Text): Promise<Parameter> {
+  private async findParameter(parameterCode: Text, stationUid: Text) {
     const parameter = await this.parametersRepository.findParameterByCodeAndStationUid(
       parameterCode,
       stationUid,
     )
-    if (!parameter) {
-      throw new ParameterNotFoundError()
-    }
     return parameter
   }
 }

@@ -12,11 +12,15 @@ export class RedisCacheProvider implements CacheProvider {
     this.redis = new Redis({
       host: envProvider.get('REDIS_HOST'),
       port: envProvider.get('REDIS_PORT'),
+      password: envProvider.get('REDIS_PASSWORD'),
+      tls: {
+        rejectUnauthorized: false,
+      },
     })
     this.redis.on('error', (error) => {
       console.error('Redis error:', error)
     })
-    this.redis.on('connect', () => {
+    this.redis.on('ready', () => {
       console.log('🍱 Redis connected')
     })
   }

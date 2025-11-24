@@ -16,25 +16,30 @@ export class MongooseReadingMapper {
     'isProcessed',
   ]
 
-  static toStructure(mongooseReading: MongooseReading) {
-    return Reading.create(MongooseReadingMapper.toDto(mongooseReading))
+  static toStructure(mongooseReading: MongooseReading): Reading[] {
+    const readings = MongooseReadingMapper.toDto(mongooseReading)
+    return readings.map(Reading.create)
   }
 
-  static toDto(mongooseReading: MongooseReading): ReadingDto {
+  static toDto(mongooseReading: MongooseReading): ReadingDto[] {
     const keys = Object.keys(mongooseReading)
-    const parameterCode = keys.find(
+    const parametersCode = keys.filter(
       (key) => !MongooseReadingMapper.META_KEYS.includes(key),
     )
-    if (!parameterCode) {
-      throw new AppError('Invalid reading format')
+    const readings: ReadingDto[] = []
+
+    for (const parameterCode of parametersCode) {
+      const value = mongooseReading[parameterCode]
+      if (!value) throw new AppError('Missing parameter value')
+
+      readings.push({
+        id: mongooseReading._id.toString(),
+        stationUid: mongooseReading.uid,
+        receivedAt: mongooseReading.uxt * 1000,
+        parameterCode: parameterCode,
+        value: value,
+      })
     }
-    const value = mongooseReading[parameterCode]
-    return {
-      id: mongooseReading._id.toString(),
-      stationUid: mongooseReading.uid,
-      receivedAt: mongooseReading.receivedAt.getTime() / 1000,
-      parameterCode: parameterCode,
-      value: value,
-    }
+    return readings
   }
 }

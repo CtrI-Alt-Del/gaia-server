@@ -35,10 +35,6 @@ export class ParseReadingsJob {
       this.parametersRepository,
       this.stationsRepository,
     )
-    try {
-      await useCase.execute()
-    } catch (error) {
-      console.error(error)
-    }
+    await useCase.execute()
   }
 }

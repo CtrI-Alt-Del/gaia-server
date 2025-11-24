@@ -1,4 +1,5 @@
 import PdfPrinter from 'pdfmake'
+import PdfFonts from 'pdfmake/build/vfs_fonts'
 import path from 'node:path'
 import fs from 'node:fs'
 
@@ -47,109 +48,21 @@ type TDocumentDefinitions = {
   [key: string]: any
 }
 
-type FontSet = {
-  family: string
-  dir: string
-  files: { normal: string; bold: string; italics: string; bolditalics: string }
-}
-
-function pathExists(p: string): boolean {
-  try {
-    return fs.existsSync(p)
-  } catch {
-    return false
-  }
-}
-
-function findFontSet(): FontSet {
-  const envDir = process.env.PDF_FONTS_DIR
-
-  if (envDir && pathExists(envDir)) {
-    const files = {
-      normal: 'Roboto-Regular.ttf',
-      bold: 'Roboto-Medium.ttf',
-      italics: 'Roboto-Italic.ttf',
-      bolditalics: 'Roboto-MediumItalic.ttf',
-    }
-    const allExist = Object.values(files).every((f) => pathExists(path.join(envDir, f)))
-    if (allExist) return { family: 'Default', dir: envDir, files }
-  }
-
-  const winFonts = 'C:\\Windows\\Fonts'
-  if (process.platform === 'win32' && pathExists(winFonts)) {
-    const files = {
-      normal: 'arial.ttf',
-      bold: 'arialbd.ttf',
-      italics: 'ariali.ttf',
-      bolditalics: 'arialbi.ttf',
-    }
-    const allExist = Object.values(files).every((f) => pathExists(path.join(winFonts, f)))
-    if (allExist) return { family: 'Default', dir: winFonts, files }
-  }
-
-  const linuxDejaVu = '/usr/share/fonts/truetype/dejavu'
-  if (pathExists(linuxDejaVu)) {
-    const files = {
-      normal: 'DejaVuSans.ttf',
-      bold: 'DejaVuSans-Bold.ttf',
-      italics: 'DejaVuSans-Oblique.ttf',
-      bolditalics: 'DejaVuSans-BoldOblique.ttf',
-    }
-    const allExist = Object.values(files).every((f) =>
-      pathExists(path.join(linuxDejaVu, f)),
-    )
-    if (allExist) return { family: 'Default', dir: linuxDejaVu, files }
-  }
-
-  const macFonts = '/System/Library/Fonts/Supplemental'
-  if (pathExists(macFonts)) {
-    const files = {
-      normal: 'Arial.ttf',
-      bold: 'Arial Bold.ttf',
-      italics: 'Arial Italic.ttf',
-      bolditalics: 'Arial Bold Italic.ttf',
-    }
-    const allExist = Object.values(files).every((f) => pathExists(path.join(macFonts, f)))
-    if (allExist) return { family: 'Default', dir: macFonts, files }
-  }
-
-  const examplesDir = path.join(
-    process.cwd(),
-    'node_modules',
-    'pdfmake',
-    'examples',
-    'fonts',
-  )
-  if (pathExists(examplesDir)) {
-    const files = {
-      normal: 'Roboto-Regular.ttf',
-      bold: 'Roboto-Medium.ttf',
-      italics: 'Roboto-Italic.ttf',
-      bolditalics: 'Roboto-MediumItalic.ttf',
-    }
-    const allExist = Object.values(files).every((f) =>
-      pathExists(path.join(examplesDir, f)),
-    )
-    if (allExist) return { family: 'Default', dir: examplesDir, files }
-  }
-
-  throw new Error(
-    'No TTF fonts found for pdfmake. Configure PDF_FONTS_DIR env var to a directory containing Roboto (or compatible) TTF files, or install system fonts (Arial/DejaVu).',
-  )
-}
-
-const fontSet = findFontSet()
-
-const printer = new PdfPrinter({
-  Default: {
-    normal: path.join(fontSet.dir, fontSet.files.normal),
-    bold: path.join(fontSet.dir, fontSet.files.bold),
-    italics: path.join(fontSet.dir, fontSet.files.italics),
-    bolditalics: path.join(fontSet.dir, fontSet.files.bolditalics),
-  },
-})
-
 export class PdfmakePdfProvider implements PdfProvider {
+  private printer: PdfPrinter
+
+  constructor() {
+    const fonts = {
+      Roboto: {
+        normal: path.resolve(__dirname, '../../assets/fonts/Roboto-Regular.ttf'),
+        bold: path.resolve(__dirname, '../../assets/fonts/Roboto-Bold.ttf'),
+        italics: path.resolve(__dirname, '../../assets/fonts/Roboto-Italic.ttf'),
+        bolditalics: path.resolve(__dirname, '../../assets/fonts/Roboto-BoldItalic.ttf'),
+      },
+    }
+    this.printer = new PdfPrinter(fonts)
+  }
+
   async generateStationReport(payload: StationReportPdfPayload): Promise<Buffer> {
     const docDefinition: TDocumentDefinitions = {
       info: {
@@ -164,8 +77,8 @@ export class PdfmakePdfProvider implements PdfProvider {
       content: this.buildContent(payload),
       styles: this.buildStyles(),
       defaultStyle: {
-        font: 'Default',
-        fontSize: 11,
+        font: 'Roboto',
+        fontSize: 12,
         color: '#1c1c1c',
       },
     }
@@ -539,7 +452,8 @@ export class PdfmakePdfProvider implements PdfProvider {
 
   private render(docDefinition: TDocumentDefinitions): Promise<Buffer> {
     return new Promise((resolve, reject) => {
-      const pdfDoc = printer.createPdfKitDocument(docDefinition)
+      // @ts-ignore
+      const pdfDoc = this.printer.createPdfKitDocument(docDefinition)
       const chunks: Buffer[] = []
 
       pdfDoc.on('data', (chunk) => chunks.push(chunk))
